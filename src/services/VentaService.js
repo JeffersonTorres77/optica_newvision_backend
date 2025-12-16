@@ -314,7 +314,8 @@ const VentaService = {
                 referencia: pago.referencia,
                 bancoCodigo: pago.bancoCodigo,
                 bancoNombre: pago.bancoNombre,
-                monto_en_moneda_de_venta: pago.monto_moneda_base
+                monto_en_moneda_de_venta: pago.monto_moneda_base,
+                fechaRegistro: pago.created_at
             });
         }
 

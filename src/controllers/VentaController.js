@@ -35,7 +35,7 @@ const VentaController = {
 
         const objVenta = {
             venta_key: await VentaService.generate_venta_key(),
-            numero_control: await VentaService.get_numero_control(),
+            numero_control: await VentaService.get_numero_control(req.sede.id),
             sede: req.sede.id,
             paciente_key: (objPaciente) ? objPaciente.pkey : null,
             cliente_tipo: cliente.tipo,
