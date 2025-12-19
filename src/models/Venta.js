@@ -5,6 +5,7 @@ const VentaProducto = require('./VentaProducto');
 const VentaCashea = require('./VentaCashea');
 const VentaCasheaCuota = require('./VentaCasheaCuota');
 const Usuario = require('./Usuario');
+const VentaPagoAgrupado = require('./VentaPagoAgrupado');
 
 const Venta = sequelize.define('Venta', {
   id: {
@@ -148,6 +149,12 @@ Venta.hasMany(VentaPago, {
   foreignKey: 'venta_key',
   sourceKey: 'venta_key',
   as: 'array_pagos'
+});
+
+Venta.hasMany(VentaPagoAgrupado, {
+  foreignKey: 'venta_key',
+  sourceKey: 'venta_key',
+  as: 'array_pagos_agrupados'
 });
 
 Venta.hasMany(VentaProducto, {

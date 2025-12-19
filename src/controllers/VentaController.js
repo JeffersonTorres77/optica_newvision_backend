@@ -11,6 +11,7 @@ const FormatUtils = require('../utils/FormatUtils');
 const Venta = require('./../models/Venta');
 const Cliente = require('../models/Cliente');
 const Paciente = require('../models/Paciente');
+const VentaPagoAgrupado = require('../models/VentaPagoAgrupado');
 
 const VentaController = {
     add: async (req, res) => {
@@ -122,6 +123,7 @@ const VentaController = {
             where: { venta_key: objVenta.venta_key },
             include: [
                 { model: VentaPago, as: 'array_pagos' },
+                { model: VentaPagoAgrupado, as: 'array_pagos_agrupados' },
                 {
                     model: VentaProducto,
                     as: 'array_productos',
@@ -200,6 +202,7 @@ const VentaController = {
             where,
             include: [
                 { model: VentaPago, as: 'array_pagos' },
+                { model: VentaPagoAgrupado, as: 'array_pagos_agrupados' },
                 {
                     model: VentaProducto,
                     as: 'array_productos',
@@ -301,6 +304,7 @@ const VentaController = {
             where: { venta_key: objVenta.venta_key },
             include: [
                 { model: VentaPago, as: 'array_pagos' },
+                { model: VentaPagoAgrupado, as: 'array_pagos_agrupados' },
                 {
                     model: VentaProducto,
                     as: 'array_productos',
@@ -328,12 +332,9 @@ const VentaController = {
         const venta_key = req.params.venta_key;
 
         const {
-            tipo,
-            monto,
-            moneda,
-            referencia,
-            bancoCodigo,
-            bancoNombre
+            montoAbonado,
+            metodosPago,
+            observaciones
         } = req.body;
 
         const objVenta = await Venta.findOne({
@@ -348,40 +349,44 @@ const VentaController = {
             throw { message: `No se puede modificar ventas de otra sede.` };
         }
 
-        const objTasaPago = await VentaService.get_tasa(moneda);
         const objTasaVenta = await VentaService.get_tasa(objVenta.moneda);
-
-        const monto_moneda_base = ((FormatUtils.float(monto) * objTasaPago.valor) / objTasaVenta.valor);
-
-        const pagos = await VentaPago.findAll({ where: { venta_key: objVenta.venta_key } });
-        let total_pagado = monto_moneda_base;
-        for (const pago of pagos) {
-            total_pagado += pago.monto_moneda_base;
-        }
-        total_pagado = FormatUtils.float(total_pagado);
+        const pagos_preparados = await VentaService.prepare_metodos_de_pago_array(metodosPago, objTasaVenta);
 
         const t = await sequelize.transaction();
         try {
-            // Registrar Venta
-            await VentaPago.create({
+            const maxNumero = await VentaPagoAgrupado.max('numero_pago', { where: { venta_key: objVenta.venta_key }, transaction: t });
+            const numero_pago = (maxNumero || 0) + 1;
+
+            await VentaPagoAgrupado.create({
                 venta_key: objVenta.venta_key,
-                tipo: tipo,
-                monto: FormatUtils.float(monto),
-                moneda_id: objTasaPago.id,
-                tasa_moneda: objTasaPago.valor,
-                monto_moneda_base: FormatUtils.float(monto_moneda_base),
-                referencia: referencia,
-                bancoCodigo: bancoCodigo,
-                bancoNombre: bancoNombre,
+                numero_pago: numero_pago,
+                monto_abonado: montoAbonado,
+                observaciones: observaciones,
                 created_by: req.user.cedula
             }, { transaction: t });
 
-            // Modificar venta
-            console.error(total_pagado, objVenta.total, total_pagado >= objVenta.total);
+            for (let pago of pagos_preparados) {
+                await VentaPago.create({
+                    venta_key: objVenta.venta_key,
+                    numero_pago: numero_pago,
+                    tipo: pago.tipo,
+                    monto: pago.monto,
+                    moneda_id: pago.moneda_id,
+                    tasa_moneda: pago.tasa_moneda,
+                    monto_moneda_base: pago.monto_moneda_base,
+                    referencia: pago.referencia,
+                    bancoCodigo: pago.bancoCodigo,
+                    bancoNombre: pago.bancoNombre,
+                    created_by: req.user.cedula
+                }, { transaction: t });
+            }
+
+            const total_pagado = await VentaPago.sum('monto_moneda_base', { where: { venta_key: objVenta.venta_key }, transaction: t });
+
             if (total_pagado >= objVenta.total) {
                 objVenta.estatus_venta = 'completada';
                 objVenta.estatus_pago = 'completada';
-                objVenta.pago_completo = 1;
+                objVenta.pago_completo = true;
                 await objVenta.save({ transaction: t });
             }
 
@@ -396,6 +401,7 @@ const VentaController = {
             where: { venta_key: objVenta.venta_key },
             include: [
                 { model: VentaPago, as: 'array_pagos' },
+                { model: VentaPagoAgrupado, as: 'array_pagos_agrupados' },
                 {
                     model: VentaProducto,
                     as: 'array_productos',

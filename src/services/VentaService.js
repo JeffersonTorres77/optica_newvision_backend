@@ -8,6 +8,7 @@ const Venta = require("../models/Venta");
 const Producto = require("../models/Producto");
 const VentaProducto = require("../models/VentaProducto");
 const VentaPago = require("../models/VentaPago");
+const VentaPagoAgrupado = require("../models/VentaPagoAgrupado");
 const VentaCasheaCuota = require("../models/VentaCasheaCuota");
 const VentaCashea = require("../models/VentaCashea");
 const VerificationUtils = require("../utils/VerificationUtils");
@@ -200,9 +201,13 @@ const VentaService = {
             }, { transaction: t });
         }
 
+        let monto_abonado = 0;
         for (let pago of venta_completa.pagos) {
+            monto_abonado += pago.monto_moneda_base;
+
             await VentaPago.create({
                 venta_key: venta_completa.venta_key,
+                numero_pago: 1,
                 tipo: pago.tipo,
                 monto: pago.monto,
                 moneda_id: pago.moneda_id,
@@ -214,6 +219,14 @@ const VentaService = {
                 created_by: venta_completa.created_by
             }, { transaction: t });
         }
+
+        await VentaPagoAgrupado.create({
+            venta_key: venta_completa.venta_key,
+            numero_pago: 1,
+            monto_abonado: monto_abonado,
+            observaciones: null,
+            created_by: venta_completa.created_by
+        }, { transaction: t });
 
         if (venta_completa.forma_pago === 'cashea') {
             await VentaCashea.create({
@@ -303,19 +316,34 @@ const VentaService = {
     },
 
     async formatear_venta_output(objVenta) {
+        const metodosPagos = [];
         let total_pagado = 0;
-        const pagos = [];
-        for (const pago of objVenta.array_pagos) {
-            total_pagado += pago.monto_moneda_base;
-            pagos.push({
-                tipo: pago.tipo,
-                monto: pago.monto,
-                moneda_id: pago.moneda_id,
-                referencia: pago.referencia,
-                bancoCodigo: pago.bancoCodigo,
-                bancoNombre: pago.bancoNombre,
-                monto_en_moneda_de_venta: pago.monto_moneda_base,
-                fechaRegistro: pago.created_at
+        for (let pagoAgrupado of objVenta.array_pagos_agrupados) {
+            const pagos = [];
+            for (let pago of objVenta.array_pagos) {
+                if (pago.numero_pago !== pagoAgrupado.numero_pago) {
+                    continue;
+                }
+
+                pagos.push({
+                    tipo: pago.tipo,
+                    monto: pago.monto,
+                    moneda_id: pago.moneda_id,
+                    tasa_moneda: pago.tasa_moneda,
+                    monto_moneda_base: pago.monto_moneda_base,
+                    referencia: pago.referencia,
+                    bancoCodigo: pago.bancoCodigo,
+                    bancoNombre: pago.bancoNombre,
+                    fechaRegistro: pago.created_at
+                });
+            }
+
+            total_pagado += pagoAgrupado.monto_abonado;
+            metodosPagos.push({
+                numero_pago: pagoAgrupado.numero_pago,
+                montoAbonado: pagoAgrupado.monto_abonado,
+                metodosPago: pagos,
+                observaciones: pagoAgrupado.observaciones
             });
         }
 
@@ -437,7 +465,7 @@ const VentaService = {
                 nombre: objVenta.asesor_user.nombre
             },
             productos: productos,
-            metodosPago: pagos,
+            metodosPago: metodosPagos,
             formaPago: formaPago,
             auditoria: {
                 usuarioCreacion: {

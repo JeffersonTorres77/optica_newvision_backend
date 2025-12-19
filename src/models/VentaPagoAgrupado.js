@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db'); // Ajusta la ruta según tu estructura
 
-const VentaPago = sequelize.define('VentaPago', {
+const VentaPagoAgrupado = sequelize.define('VentaPagoAgrupado', {
   id: {
     type: DataTypes.BIGINT,
     primaryKey: true,
@@ -16,36 +16,12 @@ const VentaPago = sequelize.define('VentaPago', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  tipo: {
-    type: DataTypes.STRING(100),
-    allowNull: false
-  },
-  monto: {
+  monto_abonado: {
     type: DataTypes.FLOAT,
     allowNull: false
   },
-  moneda_id: {
-    type: DataTypes.STRING(20),
-    allowNull: false
-  },
-  tasa_moneda: {
-    type: DataTypes.FLOAT,
-    allowNull: false
-  },
-  monto_moneda_base: {
-    type: DataTypes.FLOAT,
-    allowNull: false
-  },
-  referencia: {
-    type: DataTypes.STRING(100),
-    allowNull: true
-  },
-  bancoCodigo: {
-    type: DataTypes.STRING(4),
-    allowNull: true
-  },
-  bancoNombre: {
-    type: DataTypes.STRING(255),
+  observaciones: {
+    type: DataTypes.TEXT,
     allowNull: true
   },
   created_by: {
@@ -61,10 +37,10 @@ const VentaPago = sequelize.define('VentaPago', {
     allowNull: false
   }
 }, {
-  tableName: 'ventas_pagos',
+  tableName: 'ventas_pagos_agrupados',
   timestamps: true,
   createdAt: 'created_at',
   updatedAt: 'updated_at',
 });
 
-module.exports = VentaPago;
+module.exports = VentaPagoAgrupado;
