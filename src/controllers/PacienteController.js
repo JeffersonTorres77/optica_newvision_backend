@@ -1,5 +1,6 @@
 const VerificationUtils = require('../utils/VerificationUtils');
 const Paciente = require('./../models/Paciente');
+const Cliente = require('./../models/Cliente');
 const HashUtils = require('../utils/HashUtil');
 const { Op } = require('sequelize');
 
@@ -310,7 +311,16 @@ const PacienteController = {
             objPaciente.patologia_ocular = historiaClinica.patologiaOcular;
 
             objPaciente.save();
-            
+
+            // Ajustamos el cliente si existe
+            const objCliente = await Cliente.findOne();
+            if(objCliente) {
+                objCliente.nombre = objPaciente.nombre;
+                objCliente.telefono = objPaciente.telefono;
+                objCliente.email = objPaciente.email;
+                objCliente.save();
+            }
+
             const paciente = objPaciente.get({ plain: true });
             const paciente_output = {
                 id: paciente.id,
