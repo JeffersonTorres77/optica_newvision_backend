@@ -81,7 +81,21 @@ const VentaService = {
         return formato;
     },
 
+    async get_historia_medica_id(historia_medica_id) {
+        if(!historia_medica_id) {
+            return null;
+        }
+        const objHistorial = await HistorialMedico.findOne({ where: { id: historia_medica_id } });
+        if (!objHistorial) {
+            throw { message: `El ID de la historia medica es invalida: ${historia_medica_id}` };
+        }
+        return objHistorial.id;
+    },
+
     async get_historia_medica(historia_medica_id) {
+        if(!historia_medica_id) {
+            return null;
+        }
         const objHistorial = await HistorialMedico.findOne({ where: { id: historia_medica_id } });
         if (!objHistorial) {
             throw { message: `El ID de la historia medica es invalida: ${historia_medica_id}` };
@@ -168,6 +182,7 @@ const VentaService = {
             cliente_informacion_cedula: venta_completa.cliente_informacion_cedula,
             cliente_informacion_telefono: venta_completa.cliente_informacion_telefono,
             cliente_informacion_email: venta_completa.cliente_informacion_email,
+            historia_medica_id: venta_completa.historia_medica_id,
             moneda: venta_completa.moneda,
             tasa_moneda: venta_completa.tasa_moneda,
             forma_pago: venta_completa.forma_pago,

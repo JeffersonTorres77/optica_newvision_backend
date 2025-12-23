@@ -54,6 +54,10 @@ const Venta = sequelize.define('Venta', {
     type: DataTypes.STRING(255),
     allowNull: true
   },
+  historia_medica_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
   moneda: {
     type: DataTypes.STRING(70),
     allowNull: false

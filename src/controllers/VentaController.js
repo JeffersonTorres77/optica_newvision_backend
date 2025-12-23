@@ -28,6 +28,7 @@ const VentaController = {
 
         const objTasa = await VentaService.get_tasa(venta.moneda);
         const objPaciente = await VentaService.get_paciente(req.sede.id, cliente.informacion.cedula);
+        const historia_medica_id = await VentaService.get_historia_medica_id( (cliente && cliente.historiaMedica) ? cliente.historiaMedica.id : null );
         const objAsesor = await VentaService.get_usuario(asesor.id);
         const productos_array_db = await VentaService.add_producto_db(productos);
 
@@ -45,6 +46,7 @@ const VentaController = {
             cliente_informacion_cedula: cliente.informacion.cedula,
             cliente_informacion_telefono: cliente.informacion.telefono,
             cliente_informacion_email: cliente.informacion.email,
+            historia_medica_id: historia_medica_id,
             moneda: objTasa.id,
             tasa_moneda: objTasa.valor,
             forma_pago: venta.formaPago,
