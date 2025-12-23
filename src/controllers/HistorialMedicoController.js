@@ -27,7 +27,6 @@ const HistorialMedicoController = {
             const now = new Date();
             const fecha = now.toISOString().slice(0, 10);
             const fecha_especial = fecha.replaceAll("-", "");
-
             const count_registros_hoy = await HistorialMedico.count({
                 where: { fecha: fecha }
             });
