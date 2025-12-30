@@ -73,7 +73,7 @@ const OrdenTrabajoService = {
                 ventaId: orden.venta_key,
                 sede: orden.sede,
                 cliente: {
-                    ultima_historia_medica: {
+                    historia_medica: {
                         id: historia_medica.id,
                         numero: historia_medica.numero,
                         fecha: historia_medica.fecha,
