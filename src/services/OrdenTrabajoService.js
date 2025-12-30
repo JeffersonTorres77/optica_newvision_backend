@@ -26,6 +26,7 @@ const OrdenTrabajoService = {
             observaciones: null,
             anio: anio,
             consecutivo: consecutivo,
+            archivado: 0,
         }, { transaction: t });
     },
 
