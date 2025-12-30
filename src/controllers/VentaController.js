@@ -13,6 +13,7 @@ const Venta = require('./../models/Venta');
 const Cliente = require('../models/Cliente');
 const Paciente = require('../models/Paciente');
 const VentaPagoAgrupado = require('../models/VentaPagoAgrupado');
+const HistorialMedico = require('../models/HistorialMedico');
 
 const VentaController = {
     add: async (req, res) => {
@@ -24,13 +25,15 @@ const VentaController = {
             productos,
             metodosPago,
             formaPago,
+            generarOrdenTrabajo,
             auditoria,
         } = req.body;
 
         const objTasa = await VentaService.get_tasa(venta.moneda);
         const objPaciente = await VentaService.get_paciente(req.sede.id, cliente.informacion.cedula);
         const historia_medica_id = await VentaService.get_historia_medica_id((cliente && cliente.historiaMedica) ? cliente.historiaMedica.id : null);
-        const objAsesor = await VentaService.get_usuario(asesor.id);
+        const objAsesor = await VentaService.get_usuario_by_id(asesor.id);
+        const objEspecialista = await VentaService.get_usuario_by_cedula(cliente.especialista.cedula);
         const productos_array_db = await VentaService.add_producto_db(productos);
 
         VentaService.validate_forma_pago(venta.formaPago);
@@ -61,6 +64,7 @@ const VentaController = {
             pago_completo: null,
             created_by: req.user.cedula,
             asesor_id: objAsesor.id,
+            especialista_cedula: (objEspecialista) ? objEspecialista.cedula : null,
             estatus_venta: null,
             estatus_pago: null,
             productos: [],
@@ -116,7 +120,7 @@ const VentaController = {
             await VentaService.descontar_inventario(t, objVenta.productos);
             await VentaService.actualizar_numero_control(t, objVenta.numero_control + 1, req.sede.id);
 
-            if (objVenta.cliente_tipo == "paciente") {
+            if (generarOrdenTrabajo) {
                 await OrdenTrabajoService.agregar_orden_trabajo(t, objVenta);
             }
 
@@ -147,6 +151,8 @@ const VentaController = {
                 { model: VentaCasheaCuota, as: 'cuotas_cashea' },
                 { model: Usuario, as: 'creater_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'asesor_user', attributes: ['id', 'cedula', 'nombre'] },
+                { model: Usuario, as: 'especialista_user', attributes: ['id', 'cedula', 'nombre'] },
+                { model: HistorialMedico, as: 'historia_medica' },
             ]
         });
 
@@ -226,6 +232,8 @@ const VentaController = {
                 { model: VentaCasheaCuota, as: 'cuotas_cashea' },
                 { model: Usuario, as: 'creater_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'asesor_user', attributes: ['id', 'cedula', 'nombre'] },
+                { model: Usuario, as: 'especialista_user', attributes: ['id', 'cedula', 'nombre'] },
+                { model: HistorialMedico, as: 'historia_medica' },
             ],
             order: [['fecha', 'DESC']],
             limit,
@@ -328,6 +336,8 @@ const VentaController = {
                 { model: VentaCasheaCuota, as: 'cuotas_cashea' },
                 { model: Usuario, as: 'creater_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'asesor_user', attributes: ['id', 'cedula', 'nombre'] },
+                { model: Usuario, as: 'especialista_user', attributes: ['id', 'cedula', 'nombre'] },
+                { model: HistorialMedico, as: 'historia_medica' },
             ]
         });
 
@@ -425,6 +435,8 @@ const VentaController = {
                 { model: VentaCasheaCuota, as: 'cuotas_cashea' },
                 { model: Usuario, as: 'creater_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'asesor_user', attributes: ['id', 'cedula', 'nombre'] },
+                { model: Usuario, as: 'especialista_user', attributes: ['id', 'cedula', 'nombre'] },
+                { model: HistorialMedico, as: 'historia_medica' },
             ]
         });
 

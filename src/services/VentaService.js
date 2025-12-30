@@ -49,12 +49,21 @@ const VentaService = {
         return objPaciente;
     },
 
-    async get_usuario(usuario_id) {
+    async get_usuario_by_id(usuario_id) {
         const objUsuario = await Usuario.findOne({ where: { id: usuario_id } });
         if (!objUsuario) {
             throw { message: `El asesor enviado no existe: ${usuario_id}` };
         }
         return objUsuario;
+    },
+
+    async get_usuario_by_cedula(usuario_cedula) {
+        const objUsuario = await Usuario.findOne({ where: { cedula: usuario_cedula } });
+        if (!objUsuario) {
+            return false;
+        } else {
+            return objUsuario;
+        }
     },
 
     validate_forma_pago(forma_pago) {
@@ -82,7 +91,7 @@ const VentaService = {
     },
 
     async get_historia_medica_id(historia_medica_id) {
-        if(!historia_medica_id) {
+        if (!historia_medica_id) {
             return null;
         }
         const objHistorial = await HistorialMedico.findOne({ where: { id: historia_medica_id } });
@@ -93,7 +102,7 @@ const VentaService = {
     },
 
     async get_historia_medica(historia_medica_id) {
-        if(!historia_medica_id) {
+        if (!historia_medica_id) {
             return null;
         }
         const objHistorial = await HistorialMedico.findOne({ where: { id: historia_medica_id } });
@@ -196,6 +205,7 @@ const VentaService = {
             pago_completo: venta_completa.pago_completo,
             created_by: venta_completa.created_by,
             asesor_id: venta_completa.asesor_id,
+            especialista_cedula: venta_completa.especialista_cedula,
             estatus_venta: venta_completa.estatus_venta,
             estatus_pago: venta_completa.estatus_pago,
             motivo_cancelacion: null
@@ -383,14 +393,6 @@ const VentaService = {
             });
         }
 
-        let ultima_historia_medica = null;
-        if (objVenta.cliente_tipo == 'paciente') {
-            const objPaciente = await Paciente.findOne({ where: { sede_id: objVenta.sede, cedula: objVenta.cliente_informacion_cedula } });
-            if (objPaciente) {
-                ultima_historia_medica = await HistorialMedico.findOne({ where: { paciente_id: objPaciente.id }, order: [['created_at', 'DESC']] });
-            }
-        }
-
         const formaPago = {
             tipo: objVenta.forma_pago,
             montoTotal: objVenta.total,
@@ -464,14 +466,19 @@ const VentaService = {
                 totalPagado: FormatUtils.float(total_pagado),
             },
             cliente: {
-                ultima_historia_medica: ultima_historia_medica,
-                tipo: objVenta.cliente_tipo, //(Cuando es tipo paciente, debes buscar por cedula la ultima historia medica y retornarla en el api del get)
+                historiaMedica: objVenta.historia_medica.numero,
+                tipo: objVenta.cliente_tipo,
                 informacion: {
                     tipoPersona: objVenta.cliente_informacion_persona,
                     nombreCompleto: objVenta.cliente_informacion_nombre,
                     cedula: objVenta.cliente_informacion_cedula,
                     telefono: objVenta.cliente_informacion_telefono,
                     email: objVenta.cliente_informacion_email
+                },
+                especialista: {
+                    id: objVenta.especialista_user.id,
+                    cedula: objVenta.especialista_user.cedula,
+                    nombre: objVenta.especialista_user.nombre,
                 }
             },
             asesor: {
@@ -490,8 +497,7 @@ const VentaService = {
                 },
                 fechaCreacion: objVenta.created_at,
                 fechaModificacion: objVenta.updated_at
-            },
-            ultima_historia_medica: ultima_historia_medica
+            }
         };
     },
 };

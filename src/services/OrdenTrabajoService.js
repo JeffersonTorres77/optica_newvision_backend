@@ -42,22 +42,14 @@ const OrdenTrabajoService = {
                             model: VentaProducto, as: 'array_productos',
                             include: [
                                 {
-                                    model: Producto,
-                                    as: 'datos_producto',
+                                    model: Producto, as: 'datos_producto',
                                     attributes: ['id', 'nombre', 'precio', 'marca', 'codigo', 'modelo']
                                 }
                             ]
                         },
                         { model: Usuario, as: 'asesor_user', attributes: ['id', 'cedula', 'nombre'] },
-                        {
-                            model: HistorialMedico, as: 'historia_medica',
-                            include: [
-                                {
-                                    model: Usuario, as: 'usuario_medico',
-                                    attributes: ['id', 'cedula', 'nombre']
-                                }
-                            ]
-                        },
+                        { model: Usuario, as: 'especialista_user', attributes: ['id', 'cedula', 'nombre'] },
+                        { model: HistorialMedico, as: 'historia_medica' },
                     ]
                 },
             ]
@@ -65,7 +57,7 @@ const OrdenTrabajoService = {
 
         for (let orden of ordenes) {
             const historia_medica = orden.venta.historia_medica;
-            const medico = historia_medica.usuario_medico;
+            const especialista_user = orden.venta.especialista_user;
             const asesor_user = orden.venta.asesor_user;
 
             array_output.push({
@@ -101,12 +93,12 @@ const OrdenTrabajoService = {
                     }
                 },
                 especialista: {
-                    id: (medico) ? medico.id : null,
-                    cedula: historia_medica.medico,
-                    nombre: (medico) ? medico.nombre : null
+                    id: (especialista_user) ? especialista_user.id : null,
+                    cedula: orden.venta.especialista_cedula,
+                    nombre: (especialista_user) ? especialista_user.nombre : null
                 },
                 asesor: {
-                    id: (asesor_user) ? asesor_user.id : null,
+                    id: orden.venta.asesor_id,
                     cedula: (asesor_user) ? asesor_user.cedula : null,
                     nombre: (asesor_user) ? asesor_user.nombre : null
                 },

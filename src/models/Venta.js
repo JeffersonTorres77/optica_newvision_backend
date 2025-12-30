@@ -111,6 +111,10 @@ const Venta = sequelize.define('Venta', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+  especialista_cedula: {
+    type: DataTypes.STRING(20),
+    allowNull: true
+  },
   estatus_venta: {
     type: DataTypes.STRING(50),
     allowNull: false
@@ -178,6 +182,12 @@ Venta.belongsTo(Usuario, {
   foreignKey: 'asesor_id',
   targetKey: 'id',
   as: 'asesor_user'
+});
+
+Venta.belongsTo(Usuario, {
+  foreignKey: 'especialista_cedula',
+  targetKey: 'cedula',
+  as: 'especialista_user'
 });
 
 Venta.belongsTo(HistorialMedico, {
