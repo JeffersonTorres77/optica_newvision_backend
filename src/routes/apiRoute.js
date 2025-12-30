@@ -18,6 +18,7 @@ const EnvioCorreo = require('./../config/correo');
 const CatchGeneric = require('../utils/CatchGeneric');
 const VentaController = require('../controllers/VentaController');
 const ConfiguracionController = require('../controllers/ConfiguracionController');
+const OrdenTrabajoController = require('../controllers/OrdenTrabajoController');
 
 const router = express.Router();
 
@@ -106,5 +107,12 @@ router.get('/clientes-get', authMiddleware, CatchGeneric(ClienteController.get))
 router.post('/clientes-add', authMiddleware, CatchGeneric(ClienteController.add));
 router.put('/clientes-update/:cedula', authMiddleware, CatchGeneric(ClienteController.update));
 router.delete('/clientes-delete/:cedula', authMiddleware, CatchGeneric(ClienteController.delete));
+
+router.get('/orden-trabajo-get', authMiddleware, CatchGeneric(OrdenTrabajoController.get));
+router.put('/orden-trabajo-change-status', authMiddleware, CatchGeneric(OrdenTrabajoController.change_status));
+router.put('/orden-trabajo-change-status-all', authMiddleware, CatchGeneric(OrdenTrabajoController.change_status_all));
+router.put('/orden-trabajo-update-process', authMiddleware, CatchGeneric(OrdenTrabajoController.update_process));
+router.put('/orden-trabajo-archive', authMiddleware, CatchGeneric(OrdenTrabajoController.archive));
+router.put('/orden-trabajo-unarchive', authMiddleware, CatchGeneric(OrdenTrabajoController.unarchive));
 
 module.exports = router;

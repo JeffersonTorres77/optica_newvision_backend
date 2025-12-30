@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
 const Paciente = require('./Paciente');
+const Usuario = require('./Usuario');
 
 const HistorialMedico = sequelize.define('HistorialMedico', {
   id: {
@@ -144,50 +145,56 @@ HistorialMedico.belongsTo(Paciente, {
   as: 'paciente'
 });
 
+HistorialMedico.belongsTo(Usuario, {
+  foreignKey: 'medico',
+  targetKey: 'cedula',
+  as: 'usuario_medico'
+});
+
 function getArray(fieldName) {
-    return function() {
-      const raw = this.getDataValue(fieldName);
-      if(raw == null || raw == "") {
-        return [];
-      } else {
-        return raw.split('|');
-      }
+  return function () {
+    const raw = this.getDataValue(fieldName);
+    if (raw == null || raw == "") {
+      return [];
+    } else {
+      return raw.split('|');
     }
+  }
 }
 
 function setArray(fieldName) {
-    return function(value) {
-        if (value !== null && !Array.isArray(value)) {
-            throw new Error(`${fieldName} debe ser un arreglo.`);
-        }
-        if(value == [] || value == null) {
-            this.setDataValue(fieldName, "");
-        } else {
-            this.setDataValue(fieldName, value.join('|'));
-        }
+  return function (value) {
+    if (value !== null && !Array.isArray(value)) {
+      throw new Error(`${fieldName} debe ser un arreglo.`);
     }
+    if (value == [] || value == null) {
+      this.setDataValue(fieldName, "");
+    } else {
+      this.setDataValue(fieldName, value.join('|'));
+    }
+  }
 }
 
 function getJson(fieldName) {
-    return function() {
-        const raw = this.getDataValue(fieldName);
+  return function () {
+    const raw = this.getDataValue(fieldName);
 
-        try {
-            return JSON.parse(raw);
-        } catch (e) {
-            return [];
-        }
+    try {
+      return JSON.parse(raw);
+    } catch (e) {
+      return [];
     }
+  }
 }
 
 function setJson(fieldName) {
-    return function(value) {
-        if(typeof value !== 'object' || value === null || Array.isArray(value) === false && Object.prototype.toString.call(value) !== '[object Object]') {
-            throw new Error(`El campo '${fieldName}' debe ser un array o un objeto válido.`);
-        }
-
-        this.setDataValue(fieldName, JSON.stringify(value));
+  return function (value) {
+    if (typeof value !== 'object' || value === null || Array.isArray(value) === false && Object.prototype.toString.call(value) !== '[object Object]') {
+      throw new Error(`El campo '${fieldName}' debe ser un array o un objeto válido.`);
     }
+
+    this.setDataValue(fieldName, JSON.stringify(value));
+  }
 }
 
 module.exports = HistorialMedico;

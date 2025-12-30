@@ -7,6 +7,7 @@ const VentaCasheaCuota = require('../models/VentaCasheaCuota');
 const VentaPago = require('../models/VentaPago');
 const VentaProducto = require('../models/VentaProducto');
 const VentaService = require('../services/VentaService');
+const OrdenTrabajoService = require('../services/OrdenTrabajoService');
 const FormatUtils = require('../utils/FormatUtils');
 const Venta = require('./../models/Venta');
 const Cliente = require('../models/Cliente');
@@ -28,7 +29,7 @@ const VentaController = {
 
         const objTasa = await VentaService.get_tasa(venta.moneda);
         const objPaciente = await VentaService.get_paciente(req.sede.id, cliente.informacion.cedula);
-        const historia_medica_id = await VentaService.get_historia_medica_id( (cliente && cliente.historiaMedica) ? cliente.historiaMedica.id : null );
+        const historia_medica_id = await VentaService.get_historia_medica_id((cliente && cliente.historiaMedica) ? cliente.historiaMedica.id : null);
         const objAsesor = await VentaService.get_usuario(asesor.id);
         const productos_array_db = await VentaService.add_producto_db(productos);
 
@@ -114,6 +115,11 @@ const VentaController = {
             await VentaService.guardar_cliente(t, cliente, objVenta.sede);
             await VentaService.descontar_inventario(t, objVenta.productos);
             await VentaService.actualizar_numero_control(t, objVenta.numero_control + 1, req.sede.id);
+
+            if (objVenta.cliente_tipo == "paciente") {
+                await OrdenTrabajoService.agregar_orden_trabajo(t, objVenta);
+            }
+
             await t.commit();
         }
         catch (error) {

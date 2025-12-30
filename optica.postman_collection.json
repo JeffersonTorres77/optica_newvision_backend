@@ -1660,7 +1660,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjY1MjUyOTksImV4cCI6MTc2NjYxMTY5OX0.Q4lBb3NxIrub9I0x7JuEmkXBbOdz1roTkJJyshlIjjU",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwNTI1MTMsImV4cCI6MTc2NzEzODkxM30.eJ5ybLsCMxNG1zx1uQ9qpk4Xig1SbESSQzd3zgACnsk",
 									"type": "string"
 								}
 							]
@@ -1915,6 +1915,224 @@
 								"api",
 								"clientes-delete",
 								"123123123"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Ordenes de Ventas",
+			"item": [
+				{
+					"name": "Get",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwODY2MDAsImV4cCI6MTc2NzE3MzAwMH0.rlSHcUsVYN87k2X-r0onHOHKh9Yjfi9jE32aH2NRwfI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/orden-trabajo-get",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orden-trabajo-get"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cambiar Estado",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwODY2MDAsImV4cCI6MTc2NzE3MzAwMH0.rlSHcUsVYN87k2X-r0onHOHKh9Yjfi9jE32aH2NRwfI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orden_numero\": \"OT-GUARENAS-2025-011\",\r\n    \"estado\": \"en_tienda\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/orden-trabajo-change-status",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orden-trabajo-change-status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cambiar estado a todos",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwODY2MDAsImV4cCI6MTc2NzE3MzAwMH0.rlSHcUsVYN87k2X-r0onHOHKh9Yjfi9jE32aH2NRwfI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"estado_actual\": \"proceso_laboratorio\",\r\n    \"estado_nuevo\": \"en_tienda\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/orden-trabajo-change-status-all",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orden-trabajo-change-status-all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar Progreso",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwODY2MDAsImV4cCI6MTc2NzE3MzAwMH0.rlSHcUsVYN87k2X-r0onHOHKh9Yjfi9jE32aH2NRwfI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orden_numero\": \"OT-GUARENAS-2025-011\",\r\n    \"progreso\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/orden-trabajo-update-process",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orden-trabajo-update-process"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Archivar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwODY2MDAsImV4cCI6MTc2NzE3MzAwMH0.rlSHcUsVYN87k2X-r0onHOHKh9Yjfi9jE32aH2NRwfI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orden_numero\": \"OT-GUARENAS-2025-011\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/orden-trabajo-archive",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orden-trabajo-archive"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Desarchivar",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwODY2MDAsImV4cCI6MTc2NzE3MzAwMH0.rlSHcUsVYN87k2X-r0onHOHKh9Yjfi9jE32aH2NRwfI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orden_numero\": \"OT-GUARENAS-2025-011\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/orden-trabajo-unarchive",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orden-trabajo-unarchive"
 							]
 						}
 					},

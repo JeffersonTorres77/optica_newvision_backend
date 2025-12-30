@@ -6,6 +6,7 @@ const VentaCashea = require('./VentaCashea');
 const VentaCasheaCuota = require('./VentaCasheaCuota');
 const Usuario = require('./Usuario');
 const VentaPagoAgrupado = require('./VentaPagoAgrupado');
+const HistorialMedico = require('./HistorialMedico');
 
 const Venta = sequelize.define('Venta', {
   id: {
@@ -177,6 +178,12 @@ Venta.belongsTo(Usuario, {
   foreignKey: 'asesor_id',
   targetKey: 'id',
   as: 'asesor_user'
+});
+
+Venta.belongsTo(HistorialMedico, {
+  foreignKey: 'historia_medica_id',
+  targetKey: 'id',
+  as: 'historia_medica'
 });
 
 module.exports = Venta;
