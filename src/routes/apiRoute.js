@@ -111,7 +111,7 @@ router.delete('/clientes-delete/:cedula', authMiddleware, CatchGeneric(ClienteCo
 router.get('/orden-trabajo-get', authMiddleware, CatchGeneric(OrdenTrabajoController.get));
 router.put('/orden-trabajo-change-status', authMiddleware, CatchGeneric(OrdenTrabajoController.change_status));
 router.put('/orden-trabajo-change-status-all', authMiddleware, CatchGeneric(OrdenTrabajoController.change_status_all));
-router.put('/orden-trabajo-update-process', authMiddleware, CatchGeneric(OrdenTrabajoController.update_process));
+router.put('/orden-trabajo-update-fecha-entrega-estimada', authMiddleware, CatchGeneric(OrdenTrabajoController.update_fecha_entrega_estimada));
 router.put('/orden-trabajo-archive', authMiddleware, CatchGeneric(OrdenTrabajoController.archive));
 router.put('/orden-trabajo-unarchive', authMiddleware, CatchGeneric(OrdenTrabajoController.unarchive));
 

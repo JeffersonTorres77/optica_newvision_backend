@@ -64,6 +64,8 @@ const OrdenTrabajoService = {
                 id: orden.id,
                 ordenId: orden.orden_key,
                 ventaId: orden.venta_key,
+                numero_venta: "V-" + String(orden.venta.numero_control).padStart(6, "0"),
+                numero_recibo: "R-" + String(orden.venta.numero_control).padStart(6, "0"),
                 sede: orden.sede,
                 cliente: {
                     historia_medica: {

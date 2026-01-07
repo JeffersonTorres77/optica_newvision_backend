@@ -1554,19 +1554,31 @@
 			"item": [
 				{
 					"name": "Get",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjYxNDExMjksImV4cCI6MTc2NjIyNzUyOX0.wjw1CnzxbNgPTDAHXm2u8YWegkygQQoGr1SHehNRlSk",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njc4MTYxOTYsImV4cCI6MTc2NzkwMjU5Nn0.WzT3K0xmomb5tDhP5w8z6tRnKJ0SQqQIFOa0u9mjGY0",
 									"type": "string"
 								}
 							]
 						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{baseURL}}/api/ventas-get",
 							"host": [
@@ -1660,7 +1672,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwNTI1MTMsImV4cCI6MTc2NzEzODkxM30.eJ5ybLsCMxNG1zx1uQ9qpk4Xig1SbESSQzd3zgACnsk",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcxMjI1ODMsImV4cCI6MTc2NzIwODk4M30.JXihSBZfVCBDPd2SWVDVknAQRgQ8qj9msSqBMLAtoro",
 									"type": "string"
 								}
 							]
@@ -1669,7 +1681,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"venta\": {\r\n        \"fecha\": \"2025-12-20T22:38:45.351Z\",\r\n        \"estado\": \"completada\",\r\n        \"estatus_pago\": \"pendiente\",\r\n        \"formaPago\": \"abono\",\r\n        \"moneda\": \"dolar\",\r\n        \"observaciones\": null,\r\n        \"impuesto\": 16,\r\n        \"tasa_cambio\": 285.4024\r\n    },\r\n    \"totales\": {\r\n        \"subtotal\": 676.87,\r\n        \"descuento\": 0,\r\n        \"iva\": 103.9,\r\n        \"total\": 780.77,\r\n        \"totalPagado\": 500\r\n    },\r\n    \"cliente\": {\r\n        \"tipo\": \"paciente\",\r\n        \"informacion\": {\r\n            \"tipoPersona\": \"natural\",\r\n            \"nombreCompleto\": \"Jesus Martinez\",\r\n            \"cedula\": \"267758784\",\r\n            \"telefono\": \"04142134565\",\r\n            \"email\": \"jesusmc@gmail.com\"\r\n        },\r\n        \"historiaMedica\": {\r\n            \"id\": 28,\r\n            \"nHistoria\": \"H-20250812-003\"\r\n        }\r\n    },\r\n    \"asesor\": {\r\n        \"id\": 4\r\n    },\r\n    \"productos\": [\r\n        {\r\n            \"productoId\": \"5\",\r\n            \"cantidad\": 1,\r\n            \"moneda\": \"dolar\"\r\n        },\r\n        {\r\n            \"productoId\": \"6\",\r\n            \"cantidad\": 1,\r\n            \"moneda\": \"dolar\"\r\n        }\r\n    ],\r\n    \"metodosPago\": [\r\n        {\r\n            \"tipo\": \"efectivo\",\r\n            \"monto\": 300,\r\n            \"moneda\": \"dolar\",\r\n            \"referencia\": null,\r\n            \"bancoCodigo\": null,\r\n            \"bancoNombre\": null\r\n        },\r\n        {\r\n            \"tipo\": \"debito\",\r\n            \"monto\": 20000,\r\n            \"moneda\": \"bolivar\",\r\n            \"referencia\": null,\r\n            \"bancoCodigo\": null,\r\n            \"bancoNombre\": null\r\n        },\r\n        {\r\n            \"tipo\": \"pagomovil\",\r\n            \"monto\": 37080.48,\r\n            \"moneda\": \"bolivar\",\r\n            \"referencia\": \"21212212\",\r\n            \"bancoCodigo\": \"0134\",\r\n            \"bancoNombre\": \"Banesco\"\r\n        }\r\n    ],\r\n    \"auditoria\": {\r\n        \"usuarioCreacion\": 4,\r\n        \"fechaCreacion\": \"2025-12-20T22:38:45.351Z\"\r\n    },\r\n    \"formaPagoDetalle\": {\r\n        \"tipo\": \"abono\",\r\n        \"montoAbonado\": 500,\r\n        \"deudaPendiente\": 280.77,\r\n        \"porcentajePagado\": 64.04\r\n    }\r\n}",
+							"raw": "{\r\n    \"venta\": {\r\n        \"fecha\": \"2025-12-30T17:12:48.422Z\",\r\n        \"estado\": \"completada\",\r\n        \"estatus_pago\": \"pendiente\",\r\n        \"formaPago\": \"abono\",\r\n        \"moneda\": \"dolar\",\r\n        \"observaciones\": null,\r\n        \"impuesto\": 16,\r\n        \"tasa_cambio\": 298.1431\r\n    },\r\n    \"totales\": {\r\n        \"subtotal\": 1326.27,\r\n        \"descuento\": 132.63,\r\n        \"iva\": 187.03,\r\n        \"total\": 1380.67,\r\n        \"totalPagado\": 780.67\r\n    },\r\n    \"cliente\": {\r\n        \"tipo\": \"paciente\",\r\n        \"informacion\": {\r\n            \"tipoPersona\": \"natural\",\r\n            \"nombreCompleto\": \"Jesus Martinez\",\r\n            \"cedula\": \"267758784\",\r\n            \"telefono\": \"04142134565\",\r\n            \"email\": \"jesusmc@gmail.com\"\r\n        },\r\n        \"historiaMedica\": {\r\n            \"id\": 27,\r\n            \"key\": 43,\r\n            \"nHistoria\": \"H-20251222-001\",\r\n            \"fechaCreacion\": \"2025-12-22T16:47:17.000Z\"\r\n        },\r\n        \"especialista\": {\r\n            \"cedula\": \"25409904\"\r\n        }\r\n    },\r\n    \"asesor\": {\r\n        \"id\": 4\r\n    },\r\n    \"productos\": [\r\n        {\r\n            \"productoId\": \"5\",\r\n            \"cantidad\": 2,\r\n            \"moneda\": \"dolar\"\r\n        },\r\n        {\r\n            \"productoId\": \"6\",\r\n            \"cantidad\": 1,\r\n            \"moneda\": \"dolar\"\r\n        }\r\n    ],\r\n    \"metodosPago\": [\r\n        {\r\n            \"tipo\": \"efectivo\",\r\n            \"monto\": 700,\r\n            \"moneda\": \"dolar\",\r\n            \"referencia\": null,\r\n            \"bancoCodigo\": null,\r\n            \"bancoNombre\": null\r\n        },\r\n        {\r\n            \"tipo\": \"pagomovil\",\r\n            \"monto\": 24051.2,\r\n            \"moneda\": \"bolivar\",\r\n            \"referencia\": \"21212121\",\r\n            \"bancoCodigo\": \"0134\",\r\n            \"bancoNombre\": \"Banesco\"\r\n        }\r\n    ],\r\n    \"generarOrdenTrabajo\": false,\r\n    \"auditoria\": {\r\n        \"usuarioCreacion\": 4,\r\n        \"fechaCreacion\": \"2025-12-30T17:12:48.422Z\"\r\n    },\r\n    \"formaPagoDetalle\": {\r\n        \"tipo\": \"abono\",\r\n        \"montoAbonado\": 780.67,\r\n        \"deudaPendiente\": 600,\r\n        \"porcentajePagado\": 56.54\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1933,7 +1945,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwODY2MDAsImV4cCI6MTc2NzE3MzAwMH0.rlSHcUsVYN87k2X-r0onHOHKh9Yjfi9jE32aH2NRwfI",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njc4MTYxOTYsImV4cCI6MTc2NzkwMjU5Nn0.WzT3K0xmomb5tDhP5w8z6tRnKJ0SQqQIFOa0u9mjGY0",
 									"type": "string"
 								}
 							]
@@ -1961,7 +1973,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwODY2MDAsImV4cCI6MTc2NzE3MzAwMH0.rlSHcUsVYN87k2X-r0onHOHKh9Yjfi9jE32aH2NRwfI",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njc4MTYxOTYsImV4cCI6MTc2NzkwMjU5Nn0.WzT3K0xmomb5tDhP5w8z6tRnKJ0SQqQIFOa0u9mjGY0",
 									"type": "string"
 								}
 							]
@@ -1970,7 +1982,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"orden_numero\": \"OT-GUARENAS-2025-011\",\r\n    \"estado\": \"en_tienda\"\r\n}",
+							"raw": "{\r\n    \"orden_numero\": \"OT-GUARENAS-2025-001\",\r\n    \"estado\": \"listo_laboratorio\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1985,6 +1997,43 @@
 							"path": [
 								"api",
 								"orden-trabajo-change-status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cambiar fecha entrega estimada",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njc4MTYxOTYsImV4cCI6MTc2NzkwMjU5Nn0.WzT3K0xmomb5tDhP5w8z6tRnKJ0SQqQIFOa0u9mjGY0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orden_numero\": \"OT-GUARENAS-2025-001\",\r\n    \"fecha_entrega_estimada\": \"2026-01-10\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/orden-trabajo-update-fecha-entrega-estimada",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"orden-trabajo-update-fecha-entrega-estimada"
 							]
 						}
 					},
@@ -2022,43 +2071,6 @@
 							"path": [
 								"api",
 								"orden-trabajo-change-status-all"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Actualizar Progreso",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwODY2MDAsImV4cCI6MTc2NzE3MzAwMH0.rlSHcUsVYN87k2X-r0onHOHKh9Yjfi9jE32aH2NRwfI",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"orden_numero\": \"OT-GUARENAS-2025-011\",\r\n    \"progreso\": 0\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/orden-trabajo-update-process",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"orden-trabajo-update-process"
 							]
 						}
 					},
