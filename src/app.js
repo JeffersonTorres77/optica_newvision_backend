@@ -10,6 +10,7 @@ const Paciente = require('./models/Paciente');
 const HistorialMedico = require('./models/HistorialMedico');
 
 require('./crons/RastrearBcv')();
+require('./crons/ArchivarOrdenesTrabajo')();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -42,7 +43,7 @@ app.get('/', async (req, res) => {
 
 //     const pkey = paciente.pkey;
 //     const new_pkey = HashUtils.generate(paciente.id);
-    
+
 //     paciente.pkey = new_pkey;
 //     paciente.save();
 

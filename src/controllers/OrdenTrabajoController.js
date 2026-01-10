@@ -1,4 +1,5 @@
 const { sequelize } = require('../config/db');
+const Configuracion = require('../models/Configuracion');
 const OrdenTrabajo = require('../models/OrdenTrabajo');
 const OrdenTrabajoService = require('../services/OrdenTrabajoService');
 const VerificationUtils = require('../utils/VerificationUtils');
@@ -39,6 +40,10 @@ const OrdenTrabajoController = {
         else if (estado === 'pendiente_retiro') progreso = 100;
         else if (estado === 'entregado') progreso = 100;
 
+        if (estado === 'entregado') {
+            obj_orden_venta.fecha_entregado = new Date();
+        }
+
         obj_orden_venta.progreso = progreso;
         obj_orden_venta.estado = estado;
         await obj_orden_venta.save();
@@ -65,6 +70,9 @@ const OrdenTrabajoController = {
             const array_ordenes = await OrdenTrabajo.findAll({ where: { estado: estado_actual } });
             for (let orden of array_ordenes) {
                 orden.estado = estado_nuevo;
+                if (estado_nuevo === 'entregado') {
+                    orden.fecha_entregado = new Date();
+                }
                 await orden.save({ transaction: t });
 
                 array_ordenes_id.push(orden.id);
@@ -144,6 +152,16 @@ const OrdenTrabajoController = {
 
         const orden_output = (await OrdenTrabajoService.formatear_get_orden_trabajo([obj_orden_venta.id]))[0];
         res.status(200).json({ message: 'ok', ordenes_trabajo: orden_output });
+    },
+
+    update_days_to_archive: async (req, res) => {
+        const { dias } = req.body;
+
+        const objConf = await Configuracion.findOne({ where: { clave: "dias_archivar_ordenes", sede: req.sede.id } });
+        objConf.valor = dias;
+        await objConf.save();
+
+        res.status(200).json({ message: 'ok' });
     },
 };
 

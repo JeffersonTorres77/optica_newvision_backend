@@ -115,5 +115,6 @@ router.put('/orden-trabajo-update-process', authMiddleware, CatchGeneric(OrdenTr
 router.put('/orden-trabajo-update-fecha-entrega-estimada', authMiddleware, CatchGeneric(OrdenTrabajoController.update_fecha_entrega_estimada));
 router.put('/orden-trabajo-archive', authMiddleware, CatchGeneric(OrdenTrabajoController.archive));
 router.put('/orden-trabajo-unarchive', authMiddleware, CatchGeneric(OrdenTrabajoController.unarchive));
+router.put('/orden-trabajo-update-days-to-archive', authMiddleware, CatchGeneric(OrdenTrabajoController.update_days_to_archive));
 
 module.exports = router;

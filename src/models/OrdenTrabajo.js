@@ -53,6 +53,10 @@ const OrdenTrabajo = sequelize.define('OrdenTrabajo', {
     type: DataTypes.TINYINT,
     allowNull: false
   },
+  fecha_entregado: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
   created_at: {
     type: DataTypes.DATE,
     allowNull: false
