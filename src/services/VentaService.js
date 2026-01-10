@@ -54,16 +54,16 @@ const VentaService = {
         if (objUsuario) {
             return objUsuario;
         } else {
-            return null;
+            return false;
         }
     },
 
     async get_usuario_by_cedula(usuario_cedula) {
         const objUsuario = await Usuario.findOne({ where: { cedula: usuario_cedula } });
-        if (!objUsuario) {
-            return false;
-        } else {
+        if (objUsuario) {
             return objUsuario;
+        } else {
+            return false;
         }
     },
 
