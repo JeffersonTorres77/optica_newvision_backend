@@ -33,11 +33,11 @@ const OrdenTrabajoController = {
 
         let progreso = 0;
 
-        if(estado === 'en_tienda') progreso = 0;
-        else if(estado === 'proceso_laboratorio') progreso = 30;
-        else if(estado === 'listo_laboratorio') progreso = 70;
-        else if(estado === 'pendiente_retiro') progreso = 100;
-        else if(estado === 'entregado') progreso = 100;
+        if (estado === 'en_tienda') progreso = 0;
+        else if (estado === 'proceso_laboratorio') progreso = 30;
+        else if (estado === 'listo_laboratorio') progreso = 90;
+        else if (estado === 'pendiente_retiro') progreso = 100;
+        else if (estado === 'entregado') progreso = 100;
 
         obj_orden_venta.progreso = progreso;
         obj_orden_venta.estado = estado;
@@ -76,6 +76,25 @@ const OrdenTrabajoController = {
         }
 
         res.status(200).json({ message: 'ok', ordenes_trabajo: await OrdenTrabajoService.formatear_get_orden_trabajo(array_ordenes_id) });
+    },
+
+    update_process: async (req, res) => {
+        const { orden_numero, progreso } = req.body;
+
+        const obj_orden_trabajo = await OrdenTrabajo.findOne({ where: { orden_key: orden_numero } });
+        if (!obj_orden_trabajo) {
+            throw { message: `Orden ${orden_numero} no encontrada` };
+        }
+
+        if (!VerificationUtils.verify_numero(progreso) || progreso < 0 || progreso > 100) {
+            throw { message: `El progreso debe ser un numero entre 0 y 100: ${progreso}` };
+        }
+
+        obj_orden_trabajo.progreso = progreso;
+        await obj_orden_trabajo.save();
+
+        const orden_output = (await OrdenTrabajoService.formatear_get_orden_trabajo([obj_orden_trabajo.id]))[0];
+        res.status(200).json({ message: 'ok', ordenes_trabajo: orden_output });
     },
 
     update_fecha_entrega_estimada: async (req, res) => {

@@ -109,7 +109,7 @@ const Venta = sequelize.define('Venta', {
   },
   asesor_id: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true
   },
   especialista_cedula: {
     type: DataTypes.STRING(20),

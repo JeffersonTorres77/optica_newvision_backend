@@ -63,7 +63,7 @@ const VentaController = {
             fecha: fecha,
             pago_completo: null,
             created_by: req.user.cedula,
-            asesor_id: objAsesor.id,
+            asesor_id: (objAsesor) ? objAsesor.id : null,
             especialista_cedula: (objEspecialista) ? objEspecialista.cedula : null,
             estatus_venta: null,
             estatus_pago: null,

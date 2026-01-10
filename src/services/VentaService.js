@@ -51,10 +51,11 @@ const VentaService = {
 
     async get_usuario_by_id(usuario_id) {
         const objUsuario = await Usuario.findOne({ where: { id: usuario_id } });
-        if (!objUsuario) {
-            throw { message: `El asesor enviado no existe: ${usuario_id}` };
+        if (objUsuario) {
+            return objUsuario;
+        } else {
+            return null;
         }
-        return objUsuario;
     },
 
     async get_usuario_by_cedula(usuario_cedula) {
