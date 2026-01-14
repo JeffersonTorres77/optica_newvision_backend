@@ -63,6 +63,7 @@ router.get('/roles-get/:id?', authMiddleware, RolController.get);
 
 router.get('/cargos-get/:id?', authMiddleware, CargoController.get);
 
+router.get('/configuracion/get', authMiddleware, CatchGeneric(ConfiguracionController.get));
 router.get('/configuracion/moneda_base-get', authMiddleware, CatchGeneric(ConfiguracionController.consultar_moneda_base));
 router.put('/configuracion/moneda_base-update', authMiddleware, CatchGeneric(ConfiguracionController.modificar_moneda_base));
 
