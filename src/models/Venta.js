@@ -7,6 +7,7 @@ const VentaCasheaCuota = require('./VentaCasheaCuota');
 const Usuario = require('./Usuario');
 const VentaPagoAgrupado = require('./VentaPagoAgrupado');
 const HistorialMedico = require('./HistorialMedico');
+const JsonUtil = require('../utils/JsonUtil');
 
 const Venta = sequelize.define('Venta', {
   id: {
@@ -63,9 +64,15 @@ const Venta = sequelize.define('Venta', {
     type: DataTypes.STRING(70),
     allowNull: false
   },
-  tasa_moneda: {
-    type: DataTypes.FLOAT,
-    allowNull: false
+  tasas_actuales: {
+    type: DataTypes.JSON,
+    allowNull: false,
+    get() {
+      return JsonUtil.get(this, 'tasas_actuales');
+    },
+    set(value) {
+      JsonUtil.set(this, 'tasas_actuales', value);
+    }
   },
   forma_pago: {
     type: DataTypes.STRING(255),

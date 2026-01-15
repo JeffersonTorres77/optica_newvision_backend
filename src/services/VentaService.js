@@ -1,5 +1,6 @@
 const Configuracion = require("../models/Configuracion");
 const { v4: uuidv4 } = require('uuid');
+const { Op } = require('sequelize');
 const Usuario = require("../models/Usuario");
 const Paciente = require("../models/Paciente");
 const Tasa = require("../models/Tasa");
@@ -31,6 +32,10 @@ const VentaService = {
             }
         } while (output === null);
         return output;
+    },
+
+    async get_tasas_actuales() {
+        return await Tasa.findAll({ where: { id: { [Op.ne]: 'bolivar' } }, attributes: ['id', 'valor'] });
     },
 
     async get_tasa(tasa_id) {
@@ -160,7 +165,6 @@ const VentaService = {
                 tipo: metodoDePago.tipo,
                 monto: FormatUtils.float(metodoDePago.monto),
                 moneda_id: objTasaPago.id,
-                tasa_moneda: FormatUtils.float(objTasaPago.valor),
                 monto_moneda_base: FormatUtils.float((metodoDePago.monto * objTasaPago.valor) / objTasaVenta.valor),
                 referencia: metodoDePago.referencia,
                 bancoCodigo: metodoDePago.bancoCodigo,
@@ -194,7 +198,7 @@ const VentaService = {
             cliente_informacion_email: venta_completa.cliente_informacion_email,
             historia_medica_id: venta_completa.historia_medica_id,
             moneda: venta_completa.moneda,
-            tasa_moneda: venta_completa.tasa_moneda,
+            tasas_actuales: venta_completa.tasas_actuales,
             forma_pago: venta_completa.forma_pago,
             iva_porcentaje: venta_completa.iva_porcentaje,
             descuento: venta_completa.descuento,
@@ -237,7 +241,6 @@ const VentaService = {
                 tipo: pago.tipo,
                 monto: pago.monto,
                 moneda_id: pago.moneda_id,
-                tasa_moneda: pago.tasa_moneda,
                 monto_moneda_base: pago.monto_moneda_base,
                 referencia: pago.referencia,
                 bancoCodigo: pago.bancoCodigo,
@@ -251,6 +254,7 @@ const VentaService = {
             numero_pago: 1,
             monto_abonado: monto_abonado,
             observaciones: null,
+            tasas_actuales: venta_completa.tasas_actuales,
             created_by: venta_completa.created_by
         }, { transaction: t });
 
@@ -331,14 +335,6 @@ const VentaService = {
     extrear_numero_de_numero_control(numero_control) {
         const match = numero_control.match(/[VR]\-([0-9]{3,})/);
         return match ? parseInt(match[1], 10) : null;
-    },
-
-    async BuscarTotalVenta(estatus_venta = false) {
-        if (estatus_venta) {
-            return await Venta.count({ where: { estatus_venta: estatus_venta } });
-        } else {
-            return await Venta.count();
-        }
     },
 
     async formatear_venta_output(objVenta) {
@@ -467,7 +463,7 @@ const VentaService = {
                 totalPagado: FormatUtils.float(total_pagado),
             },
             cliente: {
-                historiaMedica: objVenta.historia_medica.numero,
+                historiaMedica: (objVenta.historia_medica) ? objVenta.historia_medica.numero : null,
                 tipo: objVenta.cliente_tipo,
                 informacion: {
                     tipoPersona: objVenta.cliente_informacion_persona,
@@ -477,24 +473,24 @@ const VentaService = {
                     email: objVenta.cliente_informacion_email
                 },
                 especialista: {
-                    id: objVenta.especialista_user.id,
-                    cedula: objVenta.especialista_user.cedula,
-                    nombre: objVenta.especialista_user.nombre,
+                    id: (objVenta.especialista_user) ? objVenta.especialista_user.id : null,
+                    cedula: (objVenta.especialista_user) ? objVenta.especialista_user.cedula : null,
+                    nombre: (objVenta.especialista_user) ? objVenta.especialista_user.nombre : null,
                 }
             },
             asesor: {
-                id: objVenta.asesor_user.id,
-                cedula: objVenta.asesor_user.cedula,
-                nombre: objVenta.asesor_user.nombre
+                id: (objVenta.asesor_user) ? objVenta.asesor_user.id : null,
+                cedula: (objVenta.asesor_user) ? objVenta.asesor_user.cedula : null,
+                nombre: (objVenta.asesor_user) ? objVenta.asesor_user.nombre : null,
             },
             productos: productos,
             metodosPago: metodosPagos,
             formaPago: formaPago,
             auditoria: {
                 usuarioCreacion: {
-                    id: objVenta.asesor_user.id,
-                    cedula: objVenta.asesor_user.cedula,
-                    nombre: objVenta.asesor_user.nombre
+                    id: (objVenta.asesor_user) ? objVenta.asesor_user.id : null,
+                    cedula: (objVenta.asesor_user) ? objVenta.asesor_user.cedula : null,
+                    nombre: (objVenta.asesor_user) ? objVenta.asesor_user.nombre : null,
                 },
                 fechaCreacion: objVenta.created_at,
                 fechaModificacion: objVenta.updated_at

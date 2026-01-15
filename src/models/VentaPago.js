@@ -28,10 +28,6 @@ const VentaPago = sequelize.define('VentaPago', {
     type: DataTypes.STRING(20),
     allowNull: false
   },
-  tasa_moneda: {
-    type: DataTypes.FLOAT,
-    allowNull: false
-  },
   monto_moneda_base: {
     type: DataTypes.FLOAT,
     allowNull: false

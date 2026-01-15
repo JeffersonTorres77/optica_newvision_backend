@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db'); // Ajusta la ruta según tu estructura
+const JsonUtil = require('../utils/JsonUtil');
 
 const VentaPagoAgrupado = sequelize.define('VentaPagoAgrupado', {
   id: {
@@ -23,6 +24,16 @@ const VentaPagoAgrupado = sequelize.define('VentaPagoAgrupado', {
   observaciones: {
     type: DataTypes.TEXT,
     allowNull: true
+  },
+  tasas_actuales: {
+    type: DataTypes.JSON,
+    allowNull: false,
+    get() {
+      return JsonUtil.get(this, 'tasas_actuales');
+    },
+    set(value) {
+      JsonUtil.set(this, 'tasas_actuales', value);
+    }
   },
   created_by: {
     type: DataTypes.STRING(20),

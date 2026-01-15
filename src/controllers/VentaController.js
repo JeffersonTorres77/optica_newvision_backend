@@ -14,6 +14,8 @@ const Cliente = require('../models/Cliente');
 const Paciente = require('../models/Paciente');
 const VentaPagoAgrupado = require('../models/VentaPagoAgrupado');
 const HistorialMedico = require('../models/HistorialMedico');
+const Tasa = require('../models/Tasa');
+const ConfiguracionService = require('../services/ConfiguracionService');
 
 const VentaController = {
     add: async (req, res) => {
@@ -35,6 +37,7 @@ const VentaController = {
         const objAsesor = (asesor && asesor.id) ? await VentaService.get_usuario_by_id(asesor.id) : false;
         const objEspecialista = (cliente && cliente.especialista && cliente.especialista.cedula) ? await VentaService.get_usuario_by_cedula(cliente.especialista.cedula) : false;
         const productos_array_db = await VentaService.add_producto_db(productos);
+        const array_tasas = await VentaService.get_tasas_actuales();
 
         VentaService.validate_forma_pago(venta.formaPago);
         const fecha = VentaService.formatear_fecha(venta.fecha);
@@ -52,7 +55,7 @@ const VentaController = {
             cliente_informacion_email: cliente.informacion.email,
             historia_medica_id: historia_medica_id,
             moneda: objTasa.id,
-            tasa_moneda: objTasa.valor,
+            tasas_actuales: array_tasas,
             forma_pago: venta.formaPago,
             iva_porcentaje: FormatUtils.float(venta.impuesto),
             descuento: FormatUtils.float(totales.descuento),
@@ -263,17 +266,64 @@ const VentaController = {
     },
 
     get_total: async (req, res) => {
-        const ventas = await VentaService.BuscarTotalVenta();
-        const completadas = await VentaService.BuscarTotalVenta('completada');
-        const pendientes = await VentaService.BuscarTotalVenta('pendiente');
-        const canceladas = await VentaService.BuscarTotalVenta('anulada');
+        const moneda_base = await ConfiguracionService.get_moneda_base(req.sede.id);
+
+        const ventas = { count: 0, amount: 0 };
+        const completadas = { count: 0, amount: 0 };
+        const pendientes = { count: 0, amount: 0 };
+        const canceladas = { count: 0, amount: 0 };
+
+        const array_ventas = await Venta.findAll({ where: { sede: req.sede.id } });
+        for (const venta of array_ventas) {
+            const tasas_actuales = venta.tasas_actuales;
+            tasas_actuales.push({ id: 'bolivar', valor: 1 });
+            let moneda_venta_origen = venta.moneda;
+            let moneda_venta_destino = moneda_base.valor;
+            let tasa_venta_origen = null;
+            let tasa_venta_destino = null;
+            for (const tasa of tasas_actuales) {
+                if (tasa.id === moneda_venta_origen) {
+                    tasa_venta_origen = tasa.valor;
+                }
+                if (tasa.id === moneda_venta_destino) {
+                    tasa_venta_destino = tasa.valor;
+                }
+                if (tasa_venta_origen !== null && tasa_venta_destino !== null) {
+                    break;
+                }
+            }
+
+            if (tasa_venta_origen === null || tasa_venta_destino === null) {
+                throw { message: `No se encontro la tasa de la moneda de la venta: ${venta.id}` };
+            }
+
+            const total_venta_tasa_base = ((venta.total * tasa_venta_origen) / tasa_venta_destino);
+
+            if (venta.estatus_venta === 'completada') {
+                completadas.count++;
+                completadas.amount += total_venta_tasa_base;
+            } else if (venta.estatus_venta === 'pendiente') {
+                pendientes.count++;
+                pendientes.amount += total_venta_tasa_base;
+            } else if (venta.estatus_venta === 'anulada') {
+                canceladas.count++;
+                canceladas.amount += total_venta_tasa_base;
+            }
+
+            ventas.count++;
+            ventas.amount += total_venta_tasa_base;
+        }
 
         res.status(200).json({
             message: "ok",
-            ventas,
-            completadas,
-            pendientes,
-            canceladas
+            ventas: ventas.count,
+            completadas: completadas.count,
+            pendientes: pendientes.count,
+            canceladas: canceladas.count,
+            montoTotalGeneral: ventas.amount,
+            montoCompletadas: completadas.amount,
+            montoPendientes: pendientes.amount,
+            montoCanceladas: canceladas.amount,
         });
     },
 
@@ -369,6 +419,7 @@ const VentaController = {
 
         const objTasaVenta = await VentaService.get_tasa(objVenta.moneda);
         const pagos_preparados = await VentaService.prepare_metodos_de_pago_array(metodosPago, objTasaVenta);
+        const array_tasas = await VentaService.get_tasas_actuales();
 
         const t = await sequelize.transaction();
         try {
@@ -380,6 +431,7 @@ const VentaController = {
                 numero_pago: numero_pago,
                 monto_abonado: montoAbonado,
                 observaciones: observaciones,
+                tasas_actuales: array_tasas,
                 created_by: req.user.cedula
             }, { transaction: t });
 
@@ -390,7 +442,6 @@ const VentaController = {
                     tipo: pago.tipo,
                     monto: pago.monto,
                     moneda_id: pago.moneda_id,
-                    tasa_moneda: pago.tasa_moneda,
                     monto_moneda_base: pago.monto_moneda_base,
                     referencia: pago.referencia,
                     bancoCodigo: pago.bancoCodigo,
