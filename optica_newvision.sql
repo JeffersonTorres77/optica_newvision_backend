@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-01-2026 a las 15:00:01
+-- Tiempo de generación: 17-01-2026 a las 00:45:33
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -120,6 +120,32 @@ INSERT INTO `configuraciones` (`id`, `sede`, `clave`, `valor`, `descripcion`) VA
 (6, 'guarenas', 'moneda_base', 'dolar', 'Moneda base del sistema para la sede de ${req.sede.nombre}.'),
 (7, 'guatire', 'dias_archivar_ordenes', '10', 'Dias para archivar las ordenes de trabajo con el estado de  \"entregado\"'),
 (8, 'guarenas', 'dias_archivar_ordenes', '1', 'Dias para archivar las ordenes de trabajo con el estado de  \"entregado\"');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `empresas`
+--
+
+CREATE TABLE `empresas` (
+  `id` int(11) NOT NULL,
+  `sede` varchar(50) NOT NULL,
+  `rif` varchar(20) NOT NULL,
+  `nombre` varchar(255) NOT NULL,
+  `telefono` varchar(20) DEFAULT NULL,
+  `correo` varchar(200) DEFAULT NULL,
+  `direccion` varchar(255) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `empresas`
+--
+
+INSERT INTO `empresas` (`id`, `sede`, `rif`, `nombre`, `telefono`, `correo`, `direccion`, `created_at`, `updated_at`) VALUES
+(1, 'guarenas', '254099046', 'Empresa de Prueba', NULL, NULL, NULL, '2026-01-16 17:58:25', '2026-01-16 19:42:22'),
+(2, 'guarenas', '123123123', 'Empresa de Prueba', NULL, NULL, NULL, '2026-01-16 19:41:14', '2026-01-16 19:41:14');
 
 -- --------------------------------------------------------
 
@@ -279,7 +305,8 @@ INSERT INTO `logins` (`id`, `sede_id`, `usu_cedula`, `token`, `ip`, `created_at`
 (45, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc2ODQwNzY5MiwiZXhwIjoxNzY4NDk0MDkyfQ.tGRbQE6LDVK4iWAYz8j0McaMlvkWEIlbEqPPiTA_IC4', '::1', '2026-01-14 12:21:32', '2026-01-14 12:21:32'),
 (46, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg0MTE1MzUsImV4cCI6MTc2ODQ5NzkzNX0.5857E5htB7ewIsB3sYjbiFknBRU3z7s6PzpsknmwzrQ', '::1', '2026-01-14 13:25:35', '2026-01-14 13:25:35'),
 (47, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg0NDAzMTgsImV4cCI6MTc2ODUyNjcxOH0.Ld8TWyDx55ZtwtYkFCRlc0I8rN_rYNhuQH52te3n6PY', '::1', '2026-01-14 21:25:18', '2026-01-14 21:25:18'),
-(48, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg0ODE4MDIsImV4cCI6MTc2ODU2ODIwMn0.-Gr9C9l-1oXs5RbGyCBcW-qvdubzk8WMGbzt1JDbabA', '::1', '2026-01-15 08:56:42', '2026-01-15 08:56:42');
+(48, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg0ODE4MDIsImV4cCI6MTc2ODU2ODIwMn0.-Gr9C9l-1oXs5RbGyCBcW-qvdubzk8WMGbzt1JDbabA', '::1', '2026-01-15 08:56:42', '2026-01-15 08:56:42'),
+(49, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg2MDA5NzYsImV4cCI6MTc2ODY4NzM3Nn0.YM5t1ekd-EDTCOL7kbmEde4j7f75Ib0-BCxmDmgVUjw', '::1', '2026-01-16 18:02:56', '2026-01-16 18:02:56');
 
 -- --------------------------------------------------------
 
@@ -310,7 +337,7 @@ CREATE TABLE `ordenes_trabajo` (
 --
 
 INSERT INTO `ordenes_trabajo` (`id`, `orden_key`, `sede`, `venta_key`, `estado`, `fecha_inicio_proceso`, `fecha_entrega_estimada`, `progreso`, `observaciones`, `anio`, `consecutivo`, `archivado`, `fecha_entregado`, `created_at`, `updated_at`) VALUES
-(1, 'OT-GUARENAS-2025-001', 'guarenas', '0a6e31c2-4aec-4d4f-af43-9ce2b5f55619', 'entregado', NULL, '2026-01-10 00:00:00', 100, NULL, 2025, 1, 0, '2026-01-09 17:52:04', '2025-12-30 19:24:16', '2026-01-10 18:22:00'),
+(1, 'OT-GUARENAS-2025-001', 'guarenas', '0a6e31c2-4aec-4d4f-af43-9ce2b5f55619', 'entregado', NULL, '2026-01-10 00:00:00', 100, NULL, 2025, 1, 1, '2026-01-09 17:52:04', '2025-12-30 19:24:16', '2026-01-16 18:05:00'),
 (2, 'OT-GUARENAS-2025-002', 'guarenas', '31e9ea4e-7605-45ba-9598-43211ef71b02', 'en_tienda', NULL, NULL, 0, NULL, 2025, 2, 0, NULL, '2025-12-30 19:25:12', '2025-12-30 19:25:12');
 
 -- --------------------------------------------------------
@@ -359,6 +386,7 @@ CREATE TABLE `pacientes` (
   `genero` varchar(1) NOT NULL,
   `direccion` text NOT NULL,
   `redes_sociales` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`redes_sociales`)),
+  `empresa_rif` varchar(20) DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `deleted_at` datetime DEFAULT NULL,
@@ -380,15 +408,16 @@ CREATE TABLE `pacientes` (
 -- Volcado de datos para la tabla `pacientes`
 --
 
-INSERT INTO `pacientes` (`id`, `pkey`, `sede_id`, `cedula`, `sin_cedula`, `nombre`, `fecha_nacimiento`, `telefono`, `email`, `ocupacion`, `genero`, `direccion`, `redes_sociales`, `created_at`, `updated_at`, `deleted_at`, `tiene_lentes`, `fotofobia`, `uso_dispositivo_electronico`, `traumatismo_ocular`, `traumatismo_ocular_descripcion`, `cirugia_ocular`, `cirugia_ocular_descripcion`, `alergias`, `antecedentes_personales`, `antecedentes_familiares`, `patologias`, `patologia_ocular`) VALUES
-(8, 'c9f0f895fb98ab9159f51fd0297e236d', 'guatire', '267758784', 0, 'Jesus Martinez', '1998-10-03', '04142134565', 'jesusmc@gmail.com', 'Ingeniero', 'm', 'Guatire', '[{\"platform\":\"Facebook\",\"username\":\"jesusmc\"},{\"platform\":\"Instagram\",\"username\":\"@jesusmc\"}]', '2025-07-22 00:34:08', '2025-08-30 21:36:51', NULL, 'No', 'No', 'No', 'No', NULL, 'No', NULL, NULL, '', '', '', ''),
-(9, '45c48cce2e2d7fbdea1afc51c7c6ad26', 'guatire', '10092901', 0, 'Ana Castro', '1969-10-03', '04142134565', 'jesusmc@gmail.com', 'Ingeniero', 'm', 'Guatire', '[{\"platform\":\"Facebook\",\"username\":\"anacastro\"},{\"platform\":\"Instagram\",\"username\":\"@anacastro\"}]', '2025-07-22 00:47:47', '2025-07-22 00:47:47', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(10, 'd3d9446802a44259755d38e6d163e820', 'guarenas', '25409904', 1, 'Jefferson Torres', '1996-06-11', '04241738615', 'jefersonugas@gmail.com', 'Ingeniero de Sistemas', 'm', 'Guatire, Castillejo, en una casa.', '[{\"platform\":\"Facebook\",\"username\":\"maria.gonzalez\"},{\"platform\":\"Instagram\",\"username\":\"@maria.g\"}]', '2025-07-23 15:52:19', '2025-12-23 21:30:03', NULL, 'Si', NULL, 'Si, 3 a 6 horas', NULL, NULL, NULL, NULL, NULL, '', '', 'a|b|c', ''),
-(14, 'aab3238922bcc25a6f606eb525ffdc56', 'guatire', '24367965', 0, 'Ruben dario Martinez castro', '1995-11-10', '04123920817', 'rubemm18@gmail.com', 'Ingeniero', 'm', 'Las rosas, conj res, country villas', '[{\"platform\":\"Instagram\",\"username\":\"martinezcr_\"}]', '2025-07-24 21:35:31', '2025-08-31 23:29:27', NULL, 'Sí', 'No', 'Sí, 1 a 3 horas', 'No', NULL, 'Sí', 'Miopia y agtismatismo', NULL, '', '', 'Miopía|Astigmatismo', ''),
-(24, '45d23e843211818dd5ad1bbd9caf4bfd', 'guatire', '23423432', 0, 'test test', '2025-08-04', '04123920817', 'rubemm18@gmail.com', 'qwdasdasd', 'f', 'Las rosas, conj res, country villas', '[]', '2025-08-29 15:59:05', '2025-08-30 21:42:09', NULL, 'No', 'No', 'No', 'No', NULL, 'No', NULL, NULL, '', '', '', ''),
-(25, '28acbaf873ad2772e216895c44281940', 'guatire', '8759927', 1, 'Dario Castro', '2025-08-14', '04123920817', 'rubemm18@gmail.com', 'Programador', 'm', 'Las rosas, conj res, country villas', '[]', '2025-08-30 21:48:38', '2025-08-30 21:48:38', NULL, 'No', 'No', 'No', 'No', '', 'No', '', NULL, '', '', '', ''),
-(26, '4e732ced3463d06de0ca9a15b6153677', 'guatire', '4353453', 0, 'dfsfsdfsf', '2025-09-16', '04123920817', 'rubemm18@gmail.com', 'sfsdfsd', 'f', 'Las rosas, conj res, country villas', '[]', '2025-09-01 13:34:30', '2025-09-01 13:34:30', NULL, 'No', 'No', 'No', 'No', '', 'No', '', NULL, '', '', '', ''),
-(27, '02e74f10e0327ad868d138f2b4fdd6f0', 'guatire', '723423432', 0, 'sdfsdfsdfd', '2025-09-02', '04123920817', 'rubemm18@gmail.com', 'sadasdsad', 'f', 'Las rosas, conj res, country villas', '[]', '2025-09-01 16:43:09', '2025-09-01 16:43:09', NULL, 'No', 'No', 'No', 'No', '', 'No', '', NULL, '', '', '', '');
+INSERT INTO `pacientes` (`id`, `pkey`, `sede_id`, `cedula`, `sin_cedula`, `nombre`, `fecha_nacimiento`, `telefono`, `email`, `ocupacion`, `genero`, `direccion`, `redes_sociales`, `empresa_rif`, `created_at`, `updated_at`, `deleted_at`, `tiene_lentes`, `fotofobia`, `uso_dispositivo_electronico`, `traumatismo_ocular`, `traumatismo_ocular_descripcion`, `cirugia_ocular`, `cirugia_ocular_descripcion`, `alergias`, `antecedentes_personales`, `antecedentes_familiares`, `patologias`, `patologia_ocular`) VALUES
+(8, 'c9f0f895fb98ab9159f51fd0297e236d', 'guarenas', '267758784', 0, 'Jesus Martinez', '1998-10-03', '04142134565', 'jesusmc@gmail.com', 'Ingeniero', 'm', 'Guatire', '[{\"platform\":\"Facebook\",\"username\":\"jesusmc\"},{\"platform\":\"Instagram\",\"username\":\"@jesusmc\"}]', NULL, '2025-07-22 00:34:08', '2025-08-30 21:36:51', NULL, 'No', 'No', 'No', 'No', NULL, 'No', NULL, NULL, '', '', '', ''),
+(9, '45c48cce2e2d7fbdea1afc51c7c6ad26', 'guarenas', '10092901', 0, 'Ana Castro', '1969-10-03', '04142134565', 'jesusmc@gmail.com', 'Ingeniero', 'm', 'Guatire', '[{\"platform\":\"Facebook\",\"username\":\"anacastro\"},{\"platform\":\"Instagram\",\"username\":\"@anacastro\"}]', NULL, '2025-07-22 00:47:47', '2025-07-22 00:47:47', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'd3d9446802a44259755d38e6d163e820', 'guarenas', '25409904', 1, 'Jefferson Torres', '1996-06-11', '04241738615', 'jefersonugas@gmail.com', 'Ingeniero de Sistemas', 'm', 'Guatire, Castillejo, en una casa.', '[{\"platform\":\"Facebook\",\"username\":\"maria.gonzalez\"},{\"platform\":\"Instagram\",\"username\":\"@maria.g\"}]', '254099046', '2025-07-23 15:52:19', '2026-01-16 19:41:31', NULL, 'Si', NULL, 'Si, 3 a 6 horas', NULL, NULL, NULL, NULL, NULL, '', '', 'a|b|c', ''),
+(14, 'aab3238922bcc25a6f606eb525ffdc56', 'guatire', '24367965', 0, 'Ruben dario Martinez castro', '1995-11-10', '04123920817', 'rubemm18@gmail.com', 'Ingeniero', 'm', 'Las rosas, conj res, country villas', '[{\"platform\":\"Instagram\",\"username\":\"martinezcr_\"}]', NULL, '2025-07-24 21:35:31', '2025-08-31 23:29:27', NULL, 'Sí', 'No', 'Sí, 1 a 3 horas', 'No', NULL, 'Sí', 'Miopia y agtismatismo', NULL, '', '', 'Miopía|Astigmatismo', ''),
+(24, '45d23e843211818dd5ad1bbd9caf4bfd', 'guatire', '23423432', 0, 'test test', '2025-08-04', '04123920817', 'rubemm18@gmail.com', 'qwdasdasd', 'f', 'Las rosas, conj res, country villas', '[]', NULL, '2025-08-29 15:59:05', '2025-08-30 21:42:09', NULL, 'No', 'No', 'No', 'No', NULL, 'No', NULL, NULL, '', '', '', ''),
+(25, '28acbaf873ad2772e216895c44281940', 'guatire', '8759927', 1, 'Dario Castro', '2025-08-14', '04123920817', 'rubemm18@gmail.com', 'Programador', 'm', 'Las rosas, conj res, country villas', '[]', NULL, '2025-08-30 21:48:38', '2025-08-30 21:48:38', NULL, 'No', 'No', 'No', 'No', '', 'No', '', NULL, '', '', '', ''),
+(26, '4e732ced3463d06de0ca9a15b6153677', 'guatire', '4353453', 0, 'dfsfsdfsf', '2025-09-16', '04123920817', 'rubemm18@gmail.com', 'sfsdfsd', 'f', 'Las rosas, conj res, country villas', '[]', NULL, '2025-09-01 13:34:30', '2025-09-01 13:34:30', NULL, 'No', 'No', 'No', 'No', '', 'No', '', NULL, '', '', '', ''),
+(27, '02e74f10e0327ad868d138f2b4fdd6f0', 'guatire', '723423432', 0, 'sdfsdfsdfd', '2025-09-02', '04123920817', 'rubemm18@gmail.com', 'sadasdsad', 'f', 'Las rosas, conj res, country villas', '[]', NULL, '2025-09-01 16:43:09', '2025-09-01 16:43:09', NULL, 'No', 'No', 'No', 'No', '', 'No', '', NULL, '', '', '', ''),
+(28, '33e75ff09dd601bbe69f351039152189', 'guarenas', '123123123', 1, 'Ruben Martinez', '2025-07-01', '04123920817', 'rubemm18@gmail.com', 'fgdfgdf', 'm', 'Las rosas, conj res, country villas', '[{\"platform\":\"Instagram\",\"username\":\"asdadasda\"}]', '254099046', '2026-01-16 19:42:22', '2026-01-16 19:42:22', NULL, 'Sí', 'No', 'Si, 3 a 6 horas', 'No', NULL, 'Sí', 'catarata', NULL, '', 'Diabetes', 'Astigmatismo|Miopía', '');
 
 -- --------------------------------------------------------
 
@@ -784,6 +813,12 @@ ALTER TABLE `configuraciones`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `empresas`
+--
+ALTER TABLE `empresas`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indices de la tabla `historiales_medicos`
 --
 ALTER TABLE `historiales_medicos`
@@ -946,6 +981,12 @@ ALTER TABLE `configuraciones`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT de la tabla `empresas`
+--
+ALTER TABLE `empresas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `historiales_medicos`
 --
 ALTER TABLE `historiales_medicos`
@@ -961,7 +1002,7 @@ ALTER TABLE `historial_rastreo_bcv`
 -- AUTO_INCREMENT de la tabla `logins`
 --
 ALTER TABLE `logins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT de la tabla `ordenes_trabajo`
@@ -979,7 +1020,7 @@ ALTER TABLE `otps`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`

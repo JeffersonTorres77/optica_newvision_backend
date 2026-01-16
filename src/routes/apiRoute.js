@@ -19,6 +19,7 @@ const CatchGeneric = require('../utils/CatchGeneric');
 const VentaController = require('../controllers/VentaController');
 const ConfiguracionController = require('../controllers/ConfiguracionController');
 const OrdenTrabajoController = require('../controllers/OrdenTrabajoController');
+const EmpresaController = require('../controllers/EmpresaController');
 
 const router = express.Router();
 
@@ -117,5 +118,7 @@ router.put('/orden-trabajo-update-fecha-entrega-estimada', authMiddleware, Catch
 router.put('/orden-trabajo-archive', authMiddleware, CatchGeneric(OrdenTrabajoController.archive));
 router.put('/orden-trabajo-unarchive', authMiddleware, CatchGeneric(OrdenTrabajoController.unarchive));
 router.put('/orden-trabajo-update-days-to-archive', authMiddleware, CatchGeneric(OrdenTrabajoController.update_days_to_archive));
+
+router.get('/empresas-get', authMiddleware, CatchGeneric(EmpresaController.get));
 
 module.exports = router;

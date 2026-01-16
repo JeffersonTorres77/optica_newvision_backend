@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
 const Sede = require('./Sede');
+const Empresa = require('./Empresa');
 
 const Paciente = sequelize.define('Paciente', {
   id: {
@@ -103,6 +104,11 @@ const Paciente = sequelize.define('Paciente', {
       this.setDataValue('redes_sociales', value);
     }
   },
+  empresa_rif: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
   tiene_lentes: {
     type: DataTypes.STRING(100),
     allowNull: true,
@@ -149,7 +155,7 @@ const Paciente = sequelize.define('Paciente', {
     collate: 'utf8mb4_general_ci',
     get() {
       const raw = this.getDataValue('antecedentes_personales');
-      if(raw == null || raw == "") {
+      if (raw == null || raw == "") {
         return [];
       } else {
         return raw.split('|');
@@ -159,7 +165,7 @@ const Paciente = sequelize.define('Paciente', {
       if (value !== null && !Array.isArray(value)) {
         throw new Error('antecedentes_personales debe ser un arreglo.');
       }
-      if(value == [] || value == null) {
+      if (value == [] || value == null) {
         this.setDataValue('antecedentes_personales', "");
       } else {
         this.setDataValue('antecedentes_personales', value.join('|'));
@@ -172,7 +178,7 @@ const Paciente = sequelize.define('Paciente', {
     collate: 'utf8mb4_general_ci',
     get() {
       const raw = this.getDataValue('antecedentes_familiares');
-      if(raw == null || raw == "") {
+      if (raw == null || raw == "") {
         return [];
       } else {
         return raw.split('|');
@@ -182,7 +188,7 @@ const Paciente = sequelize.define('Paciente', {
       if (value !== null && !Array.isArray(value)) {
         throw new Error('antecedentes_familiares debe ser un arreglo.');
       }
-      if(value == [] || value == null) {
+      if (value == [] || value == null) {
         this.setDataValue('antecedentes_familiares', "");
       } else {
         this.setDataValue('antecedentes_familiares', value.join('|'));
@@ -195,7 +201,7 @@ const Paciente = sequelize.define('Paciente', {
     collate: 'utf8mb4_general_ci',
     get() {
       const raw = this.getDataValue('patologias');
-      if(raw === null || raw === "") {
+      if (raw === null || raw === "") {
         return [];
       } else {
         return raw.split('|');
@@ -205,7 +211,7 @@ const Paciente = sequelize.define('Paciente', {
       if (value !== null && !Array.isArray(value)) {
         throw new Error('patologias debe ser un arreglo.');
       }
-      if(value == [] || value === null) {
+      if (value == [] || value === null) {
         this.setDataValue('patologias', "");
       } else {
         this.setDataValue('patologias', value.join('|'));
@@ -218,7 +224,7 @@ const Paciente = sequelize.define('Paciente', {
     collate: 'utf8mb4_general_ci',
     get() {
       const raw = this.getDataValue('patologia_ocular');
-      if(raw == null || raw == "") {
+      if (raw == null || raw == "") {
         return [];
       } else {
         return raw.split('|');
@@ -228,7 +234,7 @@ const Paciente = sequelize.define('Paciente', {
       if (value !== null && !Array.isArray(value)) {
         throw new Error('patologia_ocular debe ser un arreglo.');
       }
-      if(value == [] || value == null) {
+      if (value == [] || value == null) {
         this.setDataValue('patologia_ocular', "");
       } else {
         this.setDataValue('patologia_ocular', value.join('|'));
@@ -261,6 +267,12 @@ const Paciente = sequelize.define('Paciente', {
 Paciente.belongsTo(Sede, {
   foreignKey: 'sede_id',
   as: 'sede'
+});
+
+Paciente.belongsTo(Empresa, {
+  foreignKey: 'empresa_rif',
+  targetKey: 'rif',
+  as: 'empresa'
 });
 
 module.exports = Paciente;
