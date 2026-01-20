@@ -56,9 +56,9 @@ const OrdenTrabajoService = {
         });
 
         for (let orden of ordenes) {
-            const historia_medica = orden.venta.historia_medica;
-            const especialista_user = orden.venta.especialista_user;
-            const asesor_user = orden.venta.asesor_user;
+            const historia_medica = (orden.venta.historia_medica) ? orden.venta.historia_medica : null;
+            const especialista_user = (orden.venta.especialista_user) ? orden.venta.especialista_user : null;
+            const asesor_user = (orden.venta.asesor_user) ? orden.venta.asesor_user : null;
 
             array_output.push({
                 id: orden.id,
@@ -68,7 +68,7 @@ const OrdenTrabajoService = {
                 numero_recibo: "R-" + String(orden.venta.numero_control).padStart(6, "0"),
                 sede: orden.sede,
                 cliente: {
-                    historia_medica: {
+                    historia_medica: (historia_medica) ? {
                         id: historia_medica.id,
                         numero: historia_medica.numero,
                         fecha: historia_medica.fecha,
@@ -84,7 +84,7 @@ const OrdenTrabajoService = {
                         examen_ocular_refraccion_final: historia_medica.examen_ocular_refraccion_final,
                         examen_ocular_avsc_avae_otros: historia_medica.examen_ocular_avsc_avae_otros,
                         recomendaciones: historia_medica.recomendaciones
-                    },
+                    } : null,
                     tipo: orden.venta.cliente_tipo,
                     informacion: {
                         tipoPersona: orden.venta.cliente_informacion_persona,
