@@ -17,7 +17,7 @@ const PacienteController = {
                 informacionPersonal: informacionPersonal,
                 redesSociales: redes_sociales,
                 historiaClinica: historiaClinica,
-                empresa: empresa,
+                informacionEmpresa: empresa,
             } = req.body;
 
             if (!validar_estructura_informacion_personal(informacionPersonal)) {
@@ -106,30 +106,30 @@ const PacienteController = {
                 const count = await Paciente.count({ where: { sede_id: req.sede.id, cedula: informacionPersonal.cedula, nombre: informacionPersonal.nombreCompleto } });
                 if (count > 0) {
                     console.log(count);
-                    throw { message: `Ya esta registrado un paciente menor de edad con la cedula '${req.sede.id}' en la sede '${informacionPersonal.cedula}' a nombre de '${informacionPersonal.nombreCompleto}'.` };
+                    throw { message: `Ya esta registrado un paciente menor de edad con la cedula '${informacionPersonal.cedula}' en la sede '${req.sede.id}' a nombre de '${informacionPersonal.nombreCompleto}'.` };
                 }
             }
 
             let empresa_rif = null;
             let obj_empresa = null;
-            if (empresa) {
+            if (empresa && empresa.empresaRif) {
                 await EmpresaService.guardar_empresa({
                     sede: req.sede.id,
-                    rif: empresa.rif,
-                    nombre: empresa.nombre,
-                    telefono: empresa.telefono,
-                    direccion: empresa.direccion,
-                    correo: empresa.correo
+                    rif: (empresa.empresaRif) ? empresa.empresaRif : null,
+                    nombre: (empresa.empresaNombre) ? empresa.empresaNombre : null,
+                    telefono: (empresa.empresaTelefono) ? empresa.empresaTelefono : null,
+                    direccion: (empresa.empresaDireccion) ? empresa.empresaDireccion : null,
+                    correo: (empresa.empresaCorreo) ? empresa.empresaCorreo : null
                 });
                 obj_empresa = {
                     sede: req.sede.id,
-                    rif: empresa.rif,
-                    nombre: empresa.nombre,
-                    telefono: empresa.telefono,
-                    direccion: empresa.direccion,
-                    correo: empresa.correo
+                    rif: (empresa.empresaRif) ? empresa.empresaRif : null,
+                    nombre: (empresa.empresaNombre) ? empresa.empresaNombre : null,
+                    telefono: (empresa.empresaTelefono) ? empresa.empresaTelefono : null,
+                    direccion: (empresa.empresaDireccion) ? empresa.empresaDireccion : null,
+                    correo: (empresa.empresaCorreo) ? empresa.empresaCorreo : null
                 };
-                empresa_rif = empresa.rif;
+                empresa_rif = empresa.empresaRif;
             }
 
             const objPaciente = await Paciente.create({
@@ -195,7 +195,13 @@ const PacienteController = {
                     patologias: paciente.patologias,
                     patologiaOcular: paciente.patologia_ocular
                 },
-                empresa: obj_empresa
+                informacionEmpresa: (obj_empresa) ? {
+                    empresaRif: obj_empresa.rif,
+                    empresaNombre: obj_empresa.nombre,
+                    empresaDireccion: obj_empresa.direccion,
+                    empresaCorreo: obj_empresa.correo,
+                    empresaTelefono: obj_empresa.telefono
+                } : null
             };
             res.status(200).json({ message: 'ok', paciente: paciente_output });
         } catch (err) {
@@ -223,7 +229,7 @@ const PacienteController = {
                 informacionPersonal: informacionPersonal,
                 redesSociales: redes_sociales,
                 historiaClinica: historiaClinica,
-                empresa: empresa
+                informacionEmpresa: empresa
             } = req.body;
 
             if (!validar_estructura_informacion_personal(informacionPersonal)) {
@@ -317,24 +323,24 @@ const PacienteController = {
 
             let empresa_rif = null;
             let obj_empresa = null;
-            if (empresa && empresa.rif) {
+            if (empresa && empresa.empresaRif) {
                 await EmpresaService.guardar_empresa({
                     sede: req.sede.id,
-                    rif: empresa.rif,
-                    nombre: empresa.nombre,
-                    telefono: empresa.telefono,
-                    direccion: empresa.direccion,
-                    correo: empresa.correo
+                    rif: (empresa.empresaRif) ? empresa.empresaRif : null,
+                    nombre: (empresa.empresaNombre) ? empresa.empresaNombre : null,
+                    telefono: (empresa.empresaTelefono) ? empresa.empresaTelefono : null,
+                    direccion: (empresa.empresaDireccion) ? empresa.empresaDireccion : null,
+                    correo: (empresa.empresaCorreo) ? empresa.empresaCorreo : null
                 });
                 obj_empresa = {
                     sede: req.sede.id,
-                    rif: empresa.rif,
-                    nombre: empresa.nombre,
-                    telefono: empresa.telefono,
-                    direccion: empresa.direccion,
-                    correo: empresa.correo
+                    rif: (empresa.empresaRif) ? empresa.empresaRif : null,
+                    nombre: (empresa.empresaNombre) ? empresa.empresaNombre : null,
+                    telefono: (empresa.empresaTelefono) ? empresa.empresaTelefono : null,
+                    direccion: (empresa.empresaDireccion) ? empresa.empresaDireccion : null,
+                    correo: (empresa.empresaCorreo) ? empresa.empresaCorreo : null
                 };
-                empresa_rif = empresa.rif;
+                empresa_rif = empresa.empresaRif;
             }
 
             objPaciente.cedula = informacionPersonal.cedula;
@@ -404,7 +410,13 @@ const PacienteController = {
                     patologias: paciente.patologias,
                     patologiaOcular: paciente.patologia_ocular
                 },
-                empresa: obj_empresa
+                informacionEmpresa: (obj_empresa) ? {
+                    empresaRif: obj_empresa.rif,
+                    empresaNombre: obj_empresa.nombre,
+                    empresaDireccion: obj_empresa.direccion,
+                    empresaCorreo: obj_empresa.correo,
+                    empresaTelefono: obj_empresa.telefono
+                } : null
             };
 
             res.status(200).json({ message: 'ok', paciente: paciente_output });
@@ -475,12 +487,12 @@ const PacienteController = {
                         patologias: paciente.patologias,
                         patologiaOcular: paciente.patologia_ocular
                     },
-                    empresa: (paciente.empresa) ? {
-                        rif: paciente.empresa.rif,
-                        nombre: paciente.empresa.nombre,
-                        direccion: paciente.empresa.direccion,
-                        correo: paciente.empresa.correo,
-                        telefono: paciente.empresa.telefono
+                    informacionEmpresa: (paciente.empresa) ? {
+                        empresaRif: paciente.empresa.rif,
+                        empresaNombre: paciente.empresa.nombre,
+                        empresaDireccion: paciente.empresa.direccion,
+                        empresaCorreo: paciente.empresa.correo,
+                        empresaTelefono: paciente.empresa.telefono
                     } : null
                 });
             }
