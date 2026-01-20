@@ -196,12 +196,15 @@ const PacienteController = {
                     patologiaOcular: paciente.patologia_ocular
                 },
                 informacionEmpresa: (obj_empresa) ? {
+                    referidoEmpresa: true,
                     empresaRif: obj_empresa.rif,
                     empresaNombre: obj_empresa.nombre,
                     empresaDireccion: obj_empresa.direccion,
                     empresaCorreo: obj_empresa.correo,
                     empresaTelefono: obj_empresa.telefono
-                } : null
+                } : {
+                    referidoEmpresa: false
+                }
             };
             res.status(200).json({ message: 'ok', paciente: paciente_output });
         } catch (err) {
@@ -411,12 +414,15 @@ const PacienteController = {
                     patologiaOcular: paciente.patologia_ocular
                 },
                 informacionEmpresa: (obj_empresa) ? {
+                    referidoEmpresa: true,
                     empresaRif: obj_empresa.rif,
                     empresaNombre: obj_empresa.nombre,
                     empresaDireccion: obj_empresa.direccion,
                     empresaCorreo: obj_empresa.correo,
                     empresaTelefono: obj_empresa.telefono
-                } : null
+                } : {
+                    referidoEmpresa: false
+                }
             };
 
             res.status(200).json({ message: 'ok', paciente: paciente_output });
@@ -488,12 +494,15 @@ const PacienteController = {
                         patologiaOcular: paciente.patologia_ocular
                     },
                     informacionEmpresa: (paciente.empresa) ? {
+                        referidoEmpresa: true,
                         empresaRif: paciente.empresa.rif,
                         empresaNombre: paciente.empresa.nombre,
                         empresaDireccion: paciente.empresa.direccion,
                         empresaCorreo: paciente.empresa.correo,
                         empresaTelefono: paciente.empresa.telefono
-                    } : null
+                    } : {
+                        referidoEmpresa: false
+                    }
                 });
             }
 
