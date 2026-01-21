@@ -1,4 +1,5 @@
 const Cliente = require('../models/Cliente');
+const Empresa = require('../models/Empresa');
 const Paciente = require('../models/Paciente');
 const VerificationUtils = require('../utils/VerificationUtils');
 const { Op } = require('sequelize');
@@ -46,16 +47,34 @@ const ClienteController = {
             throw { message: 'La cédula es requerida.' };
         }
 
+        // Objeto de salida
         let existen_datos = false;
         const datos = {
             cedula: null,
             nombre: null,
             telefono: null,
-            email: null
+            email: null,
+            es_paciente: false,
+            informacionEmpresa: {
+                referidoEmpresa: false,
+                empresaRif: null,
+                empresaNombre: null,
+                empresaDireccion: null,
+                empresaCorreo: null,
+                empresaTelefono: null
+            }
         };
 
         const cliente = await Cliente.findOne({
-            where: { cedula: cedula }
+            where: { cedula: cedula },
+            include: [
+                {
+                    model: Paciente, as: 'paciente',
+                    include: [
+                        { model: Empresa, as: 'empresa' }
+                    ]
+                }
+            ]
         });
 
         if (cliente) {
@@ -64,24 +83,24 @@ const ClienteController = {
             datos.nombre = cliente.nombre;
             datos.telefono = cliente.telefono;
             datos.email = cliente.email;
-        } else {
-            const paciente = await Paciente.findOne({
-                where: { cedula: cedula }
-            });
-            if (paciente) {
-                existen_datos = true;
-                datos.cedula = paciente.cedula;
-                datos.nombre = paciente.nombre;
-                datos.telefono = paciente.telefono;
-                datos.email = paciente.email;
+
+            if (cliente.paciente) {
+                const paciente = cliente.paciente;
+                datos.es_paciente = true;
+
+                if (paciente.empresa) {
+                    const empresa = paciente.empresa;
+                    datos.informacionEmpresa.referidoEmpresa = true;
+                    datos.informacionEmpresa.empresaRif = paciente.empresa_rif;
+                    datos.informacionEmpresa.empresaNombre = (empresa.nombre) ? empresa.nombre : null;
+                    datos.informacionEmpresa.empresaDireccion = (empresa.direccion) ? empresa.direccion : null;
+                    datos.informacionEmpresa.empresaCorreo = (empresa.correo) ? empresa.correo : null;
+                    datos.informacionEmpresa.empresaTelefono = (empresa.telefono) ? empresa.telefono : null;
+                }
             }
         }
 
-        if (existen_datos) {
-            res.status(200).json({ message: 'ok', cedula: cedula, cliente: datos });
-        } else {
-            res.status(200).json({ message: 'ok', cedula: cedula, cliente: null });
-        }
+        res.status(200).json({ message: 'ok', cedula: cedula, cliente: datos });
     },
 
     update: async (req, res) => {
