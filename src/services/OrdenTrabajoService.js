@@ -56,6 +56,10 @@ const OrdenTrabajoService = {
         });
 
         for (let orden of ordenes) {
+            if (!orden.venta) {
+                throw { message: 'Existen ordenes sin venta asociada, contactar al administrador' };
+            }
+
             const historia_medica = (orden.venta.historia_medica) ? orden.venta.historia_medica : null;
             const especialista_user = (orden.venta.especialista_user) ? orden.venta.especialista_user : null;
             const asesor_user = (orden.venta.asesor_user) ? orden.venta.asesor_user : null;
