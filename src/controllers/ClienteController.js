@@ -65,38 +65,38 @@ const ClienteController = {
             }
         };
 
-        const cliente = await Cliente.findOne({
+        const cliente = await Cliente.findOne({ where: { cedula: cedula } });
+        const paciente = await Paciente.findOne({
             where: { cedula: cedula },
-            include: [
-                {
-                    model: Paciente, as: 'paciente',
-                    include: [
-                        { model: Empresa, as: 'empresa' }
-                    ]
-                }
-            ]
+            include: [{ model: Empresa, as: 'empresa' }]
         });
 
-        if (cliente) {
+        if (cliente || paciente) {
             existen_datos = true;
+        }
+
+        if (cliente) {
             datos.cedula = cliente.cedula;
             datos.nombre = cliente.nombre;
             datos.telefono = cliente.telefono;
             datos.email = cliente.email;
+        } else if (paciente) {
+            datos.cedula = paciente.cedula;
+            datos.nombre = paciente.nombre;
+            datos.telefono = paciente.telefono;
+            datos.email = paciente.email;
+        }
 
-            if (cliente.paciente) {
-                const paciente = cliente.paciente;
-                datos.es_paciente = true;
-
-                if (paciente.empresa) {
-                    const empresa = paciente.empresa;
-                    datos.informacionEmpresa.referidoEmpresa = true;
-                    datos.informacionEmpresa.empresaRif = paciente.empresa_rif;
-                    datos.informacionEmpresa.empresaNombre = (empresa.nombre) ? empresa.nombre : null;
-                    datos.informacionEmpresa.empresaDireccion = (empresa.direccion) ? empresa.direccion : null;
-                    datos.informacionEmpresa.empresaCorreo = (empresa.correo) ? empresa.correo : null;
-                    datos.informacionEmpresa.empresaTelefono = (empresa.telefono) ? empresa.telefono : null;
-                }
+        if (paciente) {
+            datos.es_paciente = true;
+            if (paciente.empresa) {
+                const empresa = paciente.empresa;
+                datos.informacionEmpresa.referidoEmpresa = true;
+                datos.informacionEmpresa.empresaRif = paciente.empresa_rif;
+                datos.informacionEmpresa.empresaNombre = (empresa.nombre) ? empresa.nombre : null;
+                datos.informacionEmpresa.empresaDireccion = (empresa.direccion) ? empresa.direccion : null;
+                datos.informacionEmpresa.empresaCorreo = (empresa.correo) ? empresa.correo : null;
+                datos.informacionEmpresa.empresaTelefono = (empresa.telefono) ? empresa.telefono : null;
             }
         }
 
