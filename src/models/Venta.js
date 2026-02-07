@@ -56,6 +56,26 @@ const Venta = sequelize.define('Venta', {
     type: DataTypes.STRING(255),
     allowNull: true
   },
+  empresa_rif: {
+    type: DataTypes.STRING(20),
+    allowNull: true
+  },
+  empresa_nombre: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  empresa_telefono: {
+    type: DataTypes.STRING(20),
+    allowNull: true
+  },
+  empresa_correo: {
+    type: DataTypes.STRING(200),
+    allowNull: true
+  },
+  empresa_direccion: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
   historia_medica_id: {
     type: DataTypes.INTEGER,
     allowNull: true

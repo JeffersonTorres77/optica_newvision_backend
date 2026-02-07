@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-01-2026 a las 01:29:07
+-- Tiempo de generación: 07-02-2026 a las 16:28:51
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -93,7 +93,8 @@ INSERT INTO `clientes` (`id`, `sede_id`, `cedula`, `nombre`, `telefono`, `email`
 (2, 'guarenas', '9999999', 'Papita', '04142134565', 'papita@gmail.com', '2025-12-08 22:50:40', '2025-12-09 16:02:52'),
 (4, 'guarenas', '267758784', 'Jesus Martinez', '04142134565', 'jesusmc@gmail.com', '2025-12-16 21:21:33', '2025-12-16 21:21:33'),
 (5, 'guarenas', 'Castro', 'Ana', '021235440511', 'rubemm18@gmail.com', '2025-12-19 10:56:05', '2025-12-19 10:56:05'),
-(6, 'guarenas', '24367965', 'Ruben dario Martinez castro', '04123920817', 'rubemm18@gmail.com', '2026-01-15 09:29:06', '2026-01-15 09:29:06');
+(6, 'guarenas', '24367965', 'Ruben dario Martinez castro', '04123920817', 'rubemm18@gmail.com', '2026-01-15 09:29:06', '2026-01-15 09:29:06'),
+(7, 'guarenas', '8759927', 'Dario Castro', '04123920817', 'rubemm18@gmail.com', '2026-02-07 11:19:52', '2026-02-07 11:19:52');
 
 -- --------------------------------------------------------
 
@@ -114,7 +115,7 @@ CREATE TABLE `configuraciones` (
 --
 
 INSERT INTO `configuraciones` (`id`, `sede`, `clave`, `valor`, `descripcion`) VALUES
-(1, 'guarenas', 'numero_control', '67', 'Siguiente numero de control para la sede de Guarenas.'),
+(1, 'guarenas', 'numero_control', '70', 'Siguiente numero de control para la sede de Guarenas.'),
 (2, 'guatire', 'numero_control', '10', 'Siguiente numero de control para la sede de Guatire.'),
 (4, 'guatire', 'moneda_base', 'dolar', 'Moneda base del sistema para la sede de Guatire.'),
 (6, 'guarenas', 'moneda_base', 'dolar', 'Moneda base del sistema para la sede de ${req.sede.nombre}.'),
@@ -145,7 +146,7 @@ CREATE TABLE `empresas` (
 
 INSERT INTO `empresas` (`id`, `sede`, `rif`, `nombre`, `telefono`, `correo`, `direccion`, `created_at`, `updated_at`) VALUES
 (1, 'guarenas', '254099046', 'Empresa de Prueba', NULL, NULL, NULL, '2026-01-16 17:58:25', '2026-01-19 23:17:18'),
-(2, 'guarenas', '123123123', 'Empresa de Prueba', NULL, NULL, NULL, '2026-01-16 19:41:14', '2026-01-16 19:41:14');
+(2, 'guarenas', 'J-12345678', '123', '2', '3', '5', '2026-01-16 19:41:14', '2026-01-16 19:41:14');
 
 -- --------------------------------------------------------
 
@@ -308,7 +309,9 @@ INSERT INTO `logins` (`id`, `sede_id`, `usu_cedula`, `token`, `ip`, `created_at`
 (48, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg0ODE4MDIsImV4cCI6MTc2ODU2ODIwMn0.-Gr9C9l-1oXs5RbGyCBcW-qvdubzk8WMGbzt1JDbabA', '::1', '2026-01-15 08:56:42', '2026-01-15 08:56:42'),
 (49, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg2MDA5NzYsImV4cCI6MTc2ODY4NzM3Nn0.YM5t1ekd-EDTCOL7kbmEde4j7f75Ib0-BCxmDmgVUjw', '::1', '2026-01-16 18:02:56', '2026-01-16 18:02:56'),
 (50, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg4NzY2NjcsImV4cCI6MTc2ODk2MzA2N30.5o6gZ6inIwURDrtZ5ApT6zyNFI21-n_O38hb4aMJBvI', '::1', '2026-01-19 22:37:47', '2026-01-19 22:37:47'),
-(51, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjkwMzI0OTUsImV4cCI6MTc2OTExODg5NX0.TZeWYzQ-qvRH-lOHqmmCl6lI6FW2-Nj_bE21_880XSQ', '::1', '2026-01-21 17:54:55', '2026-01-21 17:54:55');
+(51, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjkwMzI0OTUsImV4cCI6MTc2OTExODg5NX0.TZeWYzQ-qvRH-lOHqmmCl6lI6FW2-Nj_bE21_880XSQ', '::1', '2026-01-21 17:54:55', '2026-01-21 17:54:55'),
+(52, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjkwODM3MDcsImV4cCI6MTc2OTE3MDEwN30.E8Mz0U3gjikNEqd5_K-dYuvoMf3U_BkFB7CCpNowUII', '::1', '2026-01-22 08:08:27', '2026-01-22 08:08:27'),
+(53, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzA0Nzc0NjIsImV4cCI6MTc3MDU2Mzg2Mn0.OVwOSgjf8BfIJkBGbbSe9PB9Cu9EFkrb0jObMGeRdic', '::1', '2026-02-07 11:17:42', '2026-02-07 11:17:42');
 
 -- --------------------------------------------------------
 
@@ -456,7 +459,7 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `sede_id`, `nombre`, `marca`, `color`, `codigo`, `material`, `proveedor`, `categoria`, `modelo`, `stock`, `precio`, `aplica_iva`, `precio_con_iva`, `moneda`, `activo`, `descripcion`, `imagen_url`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(5, 'guarenas', 'Producto Chevere 1', 'Marca Generica 1', 'Azul', 'PR-000005', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -73, 862.07, 0, 1000, 'bolivar', 1, 'Descripcion generica de muestra', '/public/images/product-generic-image.jpg?t=1758311414341', '2025-09-19 19:50:14', '2026-01-15 09:29:06', NULL),
+(5, 'guarenas', 'Producto Chevere 1', 'Marca Generica 1', 'Azul', 'PR-000005', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -76, 862.07, 0, 1000, 'bolivar', 1, 'Descripcion generica de muestra', '/public/images/product-generic-image.jpg?t=1758311414341', '2025-09-19 19:50:14', '2026-02-07 11:23:12', NULL),
 (6, 'guarenas', 'Producto Chevere 2', 'Marca Generica 1', 'Azul', 'PR-000006', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -39, 2000, 1, 2320, 'bolivar', 1, 'Descripcion generica de muestra', '/public/images/product-generic-image.jpg?t=1758311675271', '2025-09-19 19:54:35', '2025-12-30 19:25:56', NULL),
 (7, 'guarenas', 'Producto Chevere 3', 'Marca Generica 2', 'Azul', 'PR-000006', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -1, 2000, 1, 2320, 'bolivar', 1, 'Descripcion generica de muestra', '/public/images/product-generic-image.jpg?t=1758311675271', '2025-09-19 19:54:35', '2025-11-16 19:01:25', NULL),
 (8, 'guarenas', 'Producto 5', 'Marca Generica 1', 'Azul', 'PR-000008', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', 5, 431.03, 0, 500, 'bolivar', 1, 'Descripcion generica de muestra', '/public/images/product-generic-image.jpg?t=1763317141933', '2025-11-16 18:19:01', '2025-11-16 19:01:25', NULL),
@@ -624,6 +627,11 @@ CREATE TABLE `ventas` (
   `cliente_informacion_cedula` varchar(20) DEFAULT NULL,
   `cliente_informacion_telefono` varchar(20) DEFAULT NULL,
   `cliente_informacion_email` varchar(255) DEFAULT NULL,
+  `empresa_rif` varchar(20) DEFAULT NULL,
+  `empresa_nombre` varchar(255) DEFAULT NULL,
+  `empresa_telefono` varchar(20) DEFAULT NULL,
+  `empresa_correo` varchar(200) DEFAULT NULL,
+  `empresa_direccion` varchar(255) DEFAULT NULL,
   `historia_medica_id` int(11) DEFAULT NULL,
   `moneda` varchar(20) NOT NULL,
   `tasa_moneda` float NOT NULL,
@@ -651,11 +659,14 @@ CREATE TABLE `ventas` (
 -- Volcado de datos para la tabla `ventas`
 --
 
-INSERT INTO `ventas` (`id`, `venta_key`, `numero_control`, `sede`, `paciente_key`, `cliente_tipo`, `cliente_informacion_persona`, `cliente_informacion_nombre`, `cliente_informacion_cedula`, `cliente_informacion_telefono`, `cliente_informacion_email`, `historia_medica_id`, `moneda`, `tasa_moneda`, `tasas_actuales`, `forma_pago`, `iva_porcentaje`, `descuento`, `subtotal`, `iva`, `total`, `observaciones`, `fecha`, `pago_completo`, `created_by`, `asesor_id`, `especialista_cedula`, `estatus_venta`, `estatus_pago`, `motivo_cancelacion`, `created_at`, `updated_at`) VALUES
-(1, '0a6e31c2-4aec-4d4f-af43-9ce2b5f55619', 63, 'guarenas', NULL, 'paciente', 'natural', 'Jesus Martinez', '267758784', '04142134565', 'jesusmc@gmail.com', 27, 'dolar', 100, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', 'abono', 16, 132.63, 1326.27, 187.03, 1380.67, NULL, '2025-12-30 21:12:48', 0, '25409904', 4, '25409904', 'pendiente', 'pendiente', NULL, '2025-12-30 19:24:16', '2025-12-30 19:24:16'),
-(2, '31e9ea4e-7605-45ba-9598-43211ef71b02', 64, 'guarenas', NULL, 'paciente', 'natural', 'Jesus Martinez', '267758784', '04142134565', 'jesusmc@gmail.com', 27, 'dolar', 100, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', 'abono', 16, 132.63, 1326.27, 187.03, 1380.67, NULL, '2025-12-30 21:12:48', 0, '25409904', 4, '25409904', 'pendiente', 'pendiente', NULL, '2025-12-30 19:25:12', '2025-12-30 19:25:12'),
-(3, 'dea00fef-1122-4efd-b357-371f67c974eb', 65, 'guarenas', NULL, 'paciente', 'natural', 'Jesus Martinez', '267758784', '04142134565', 'jesusmc@gmail.com', 27, 'dolar', 100, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', 'abono', 16, 132.63, 1326.27, 187.03, 1380.67, NULL, '2025-12-30 21:12:48', 0, '25409904', 4, '25409904', 'pendiente', 'pendiente', NULL, '2025-12-30 19:25:56', '2025-12-30 19:25:56'),
-(5, '9a9d271e-e844-4b7d-8bf8-0e159794591a', 66, 'guarenas', NULL, 'cliente_general', 'natural', 'Ruben dario Martinez castro', '24367965', '04123920817', 'rubemm18@gmail.com', NULL, 'dolar', 0, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', 'abono', 16, 0, 31.86, 0, 31.86, NULL, '2026-01-13 16:41:24', 0, '25409904', 4, NULL, 'pendiente', 'pendiente', NULL, '2026-01-15 09:29:06', '2026-01-15 09:29:06');
+INSERT INTO `ventas` (`id`, `venta_key`, `numero_control`, `sede`, `paciente_key`, `cliente_tipo`, `cliente_informacion_persona`, `cliente_informacion_nombre`, `cliente_informacion_cedula`, `cliente_informacion_telefono`, `cliente_informacion_email`, `empresa_rif`, `empresa_nombre`, `empresa_telefono`, `empresa_correo`, `empresa_direccion`, `historia_medica_id`, `moneda`, `tasa_moneda`, `tasas_actuales`, `forma_pago`, `iva_porcentaje`, `descuento`, `subtotal`, `iva`, `total`, `observaciones`, `fecha`, `pago_completo`, `created_by`, `asesor_id`, `especialista_cedula`, `estatus_venta`, `estatus_pago`, `motivo_cancelacion`, `created_at`, `updated_at`) VALUES
+(1, '0a6e31c2-4aec-4d4f-af43-9ce2b5f55619', 63, 'guarenas', NULL, 'paciente', 'natural', 'Jesus Martinez', '267758784', '04142134565', 'jesusmc@gmail.com', NULL, NULL, NULL, NULL, NULL, 27, 'dolar', 100, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', 'abono', 16, 132.63, 1326.27, 187.03, 1380.67, NULL, '2025-12-30 21:12:48', 0, '25409904', 4, '25409904', 'pendiente', 'pendiente', NULL, '2025-12-30 19:24:16', '2025-12-30 19:24:16'),
+(2, '31e9ea4e-7605-45ba-9598-43211ef71b02', 64, 'guarenas', NULL, 'paciente', 'natural', 'Jesus Martinez', '267758784', '04142134565', 'jesusmc@gmail.com', NULL, NULL, NULL, NULL, NULL, 27, 'dolar', 100, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', 'abono', 16, 132.63, 1326.27, 187.03, 1380.67, NULL, '2025-12-30 21:12:48', 0, '25409904', 4, '25409904', 'pendiente', 'pendiente', NULL, '2025-12-30 19:25:12', '2025-12-30 19:25:12'),
+(3, 'dea00fef-1122-4efd-b357-371f67c974eb', 65, 'guarenas', NULL, 'paciente', 'natural', 'Jesus Martinez', '267758784', '04142134565', 'jesusmc@gmail.com', NULL, NULL, NULL, NULL, NULL, 27, 'dolar', 100, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', 'abono', 16, 132.63, 1326.27, 187.03, 1380.67, NULL, '2025-12-30 21:12:48', 0, '25409904', 4, '25409904', 'pendiente', 'pendiente', NULL, '2025-12-30 19:25:56', '2025-12-30 19:25:56'),
+(5, '9a9d271e-e844-4b7d-8bf8-0e159794591a', 66, 'guarenas', NULL, 'cliente_general', 'natural', 'Ruben dario Martinez castro', '24367965', '04123920817', 'rubemm18@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, 'dolar', 0, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', 'abono', 16, 0, 31.86, 0, 31.86, NULL, '2026-01-13 16:41:24', 0, '25409904', 4, NULL, 'pendiente', 'pendiente', NULL, '2026-01-15 09:29:06', '2026-01-15 09:29:06'),
+(6, 'ed171ec4-b711-4366-9fa0-4d6431fdbdf8', 67, 'guarenas', NULL, 'paciente', 'natural', 'Dario Castro', '8759927', '04123920817', 'rubemm18@gmail.com', NULL, NULL, NULL, NULL, NULL, 34, 'dolar', 0, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', 'de_contado-pendiente', 16, 3.19, 31.86, 0, 28.67, NULL, '2026-01-24 20:13:45', 0, '25409904', 4, NULL, 'completada', 'pendiente', NULL, '2026-02-07 11:19:52', '2026-02-07 11:19:52'),
+(7, 'c32365b9-36ab-4907-855d-67cdb934e225', 68, 'guarenas', NULL, 'paciente', 'natural', 'Dario Castro', '8759927', '04123920817', 'rubemm18@gmail.com', NULL, NULL, NULL, NULL, NULL, 34, 'dolar', 0, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', 'de_contado-pendiente', 16, 3.19, 31.86, 0, 28.67, NULL, '2026-01-24 20:13:45', 0, '25409904', 4, NULL, 'completada', 'pendiente', NULL, '2026-02-07 11:21:23', '2026-02-07 11:21:23'),
+(8, 'f0a3fdef-9d6d-4ccf-a5ff-ba6d64263ed4', 69, 'guarenas', NULL, 'paciente', 'natural', 'Dario Castro', '8759927', '04123920817', 'rubemm18@gmail.com', 'J-12345678', '123', '2', '3', '5', 34, 'dolar', 0, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', 'de_contado-pendiente', 16, 3.19, 31.86, 0, 28.67, NULL, '2026-01-24 20:13:45', 0, '25409904', 4, NULL, 'completada', 'pendiente', NULL, '2026-02-07 11:23:12', '2026-02-07 11:23:12');
 
 -- --------------------------------------------------------
 
@@ -751,7 +762,10 @@ INSERT INTO `ventas_pagos_agrupados` (`id`, `venta_key`, `numero_pago`, `monto_a
 (1, '0a6e31c2-4aec-4d4f-af43-9ce2b5f55619', 1, 940.51, NULL, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', '25409904', '2025-12-30 19:24:16', '2025-12-30 19:24:16'),
 (2, '31e9ea4e-7605-45ba-9598-43211ef71b02', 1, 940.51, NULL, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', '25409904', '2025-12-30 19:25:12', '2025-12-30 19:25:12'),
 (3, 'dea00fef-1122-4efd-b357-371f67c974eb', 1, 940.51, NULL, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', '25409904', '2025-12-30 19:25:56', '2025-12-30 19:25:56'),
-(4, '9a9d271e-e844-4b7d-8bf8-0e159794591a', 1, 7.3, NULL, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', '25409904', '2026-01-15 09:29:06', '2026-01-15 09:29:06');
+(4, '9a9d271e-e844-4b7d-8bf8-0e159794591a', 1, 7.3, NULL, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', '25409904', '2026-01-15 09:29:06', '2026-01-15 09:29:06'),
+(5, 'ed171ec4-b711-4366-9fa0-4d6431fdbdf8', 1, 0, NULL, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', '25409904', '2026-02-07 11:19:52', '2026-02-07 11:19:52'),
+(6, 'c32365b9-36ab-4907-855d-67cdb934e225', 1, 0, NULL, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', '25409904', '2026-02-07 11:21:24', '2026-02-07 11:21:24'),
+(7, 'f0a3fdef-9d6d-4ccf-a5ff-ba6d64263ed4', 1, 0, NULL, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', '25409904', '2026-02-07 11:23:12', '2026-02-07 11:23:12');
 
 -- --------------------------------------------------------
 
@@ -784,7 +798,10 @@ INSERT INTO `ventas_productos` (`id`, `venta_key`, `producto_id`, `cantidad`, `p
 (4, '31e9ea4e-7605-45ba-9598-43211ef71b02', 6, 1, 20, 1, 23.2, 23.2, 'bolivar', 1, 2320),
 (5, 'dea00fef-1122-4efd-b357-371f67c974eb', 5, 2, 10, 0, 10, 20, 'bolivar', 1, 2000),
 (6, 'dea00fef-1122-4efd-b357-371f67c974eb', 6, 1, 20, 1, 23.2, 23.2, 'bolivar', 1, 2320),
-(8, '9a9d271e-e844-4b7d-8bf8-0e159794591a', 5, 1, 10, 0, 10, 10, 'bolivar', 1, 1000);
+(8, '9a9d271e-e844-4b7d-8bf8-0e159794591a', 5, 1, 10, 0, 10, 10, 'bolivar', 1, 1000),
+(9, 'ed171ec4-b711-4366-9fa0-4d6431fdbdf8', 5, 1, 10, 0, 10, 10, 'bolivar', 1, 1000),
+(10, 'c32365b9-36ab-4907-855d-67cdb934e225', 5, 1, 10, 0, 10, 10, 'bolivar', 1, 1000),
+(11, 'f0a3fdef-9d6d-4ccf-a5ff-ba6d64263ed4', 5, 1, 10, 0, 10, 10, 'bolivar', 1, 1000);
 
 --
 -- Índices para tablas volcadas
@@ -920,7 +937,8 @@ ALTER TABLE `ventas`
   ADD KEY `fecha` (`fecha`),
   ADD KEY `cliente_informacion_nombre` (`cliente_informacion_nombre`),
   ADD KEY `numero_control` (`numero_control`),
-  ADD KEY `historia_medica_id` (`historia_medica_id`);
+  ADD KEY `historia_medica_id` (`historia_medica_id`),
+  ADD KEY `empresa_rif` (`empresa_rif`);
 
 --
 -- Indices de la tabla `ventas_cashea`
@@ -974,7 +992,7 @@ ALTER TABLE `categorias`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `configuraciones`
@@ -1004,7 +1022,7 @@ ALTER TABLE `historial_rastreo_bcv`
 -- AUTO_INCREMENT de la tabla `logins`
 --
 ALTER TABLE `logins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT de la tabla `ordenes_trabajo`
@@ -1046,7 +1064,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas_cashea`
@@ -1070,13 +1088,13 @@ ALTER TABLE `ventas_pagos`
 -- AUTO_INCREMENT de la tabla `ventas_pagos_agrupados`
 --
 ALTER TABLE `ventas_pagos_agrupados`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas_productos`
 --
 ALTER TABLE `ventas_productos`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

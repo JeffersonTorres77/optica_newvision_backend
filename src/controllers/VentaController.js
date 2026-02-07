@@ -38,6 +38,7 @@ const VentaController = {
         const objEspecialista = (cliente && cliente.especialista && cliente.especialista.cedula) ? await VentaService.get_usuario_by_cedula(cliente.especialista.cedula) : false;
         const productos_array_db = await VentaService.add_producto_db(productos);
         const array_tasas = await VentaService.get_tasas_actuales();
+        const objEmpresa = await VentaService.get_empresa(cliente);
 
         VentaService.validate_forma_pago(venta.formaPago);
         const fecha = VentaService.formatear_fecha(venta.fecha);
@@ -53,6 +54,11 @@ const VentaController = {
             cliente_informacion_cedula: cliente.informacion.cedula,
             cliente_informacion_telefono: cliente.informacion.telefono,
             cliente_informacion_email: cliente.informacion.email,
+            empresa_rif: (objEmpresa) ? objEmpresa.rif : null,
+            empresa_nombre: (objEmpresa) ? objEmpresa.nombre : null,
+            empresa_telefono: (objEmpresa) ? objEmpresa.telefono : null,
+            empresa_correo: (objEmpresa) ? objEmpresa.correo : null,
+            empresa_direccion: (objEmpresa) ? objEmpresa.direccion : null,
             historia_medica_id: historia_medica_id,
             moneda: objTasa.id,
             tasas_actuales: array_tasas,
@@ -83,6 +89,11 @@ const VentaController = {
             objVenta.pago_completo = true;
             objVenta.estatus_venta = 'completada';
             objVenta.estatus_pago = 'completada';
+        }
+        else if (objVenta.forma_pago === 'de_contado-pendiente') {
+            objVenta.pago_completo = false;
+            objVenta.estatus_venta = 'completada';
+            objVenta.estatus_pago = 'pendiente';
         }
         else if (objVenta.forma_pago === 'cashea') {
             objVenta.pago_completo = true;

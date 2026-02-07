@@ -15,6 +15,7 @@ const VentaCashea = require("../models/VentaCashea");
 const VerificationUtils = require("../utils/VerificationUtils");
 const FormatUtils = require("../utils/FormatUtils");
 const Cliente = require("../models/Cliente");
+const Empresa = require("../models/Empresa");
 
 const VentaService = {
     async get_numero_control(sede_id) {
@@ -72,8 +73,21 @@ const VentaService = {
         }
     },
 
+    async get_empresa(cliente) {
+        if (!cliente.informacionEmpresa || !cliente.informacionEmpresa.referidoEmpresa) {
+            return null;
+        }
+
+        const rif = cliente.informacionEmpresa.empresaRif;
+        const objEmpresa = await Empresa.findOne({ where: { rif: rif } });
+        if (!objEmpresa) {
+            return null;
+        }
+        return objEmpresa;
+    },
+
     validate_forma_pago(forma_pago) {
-        if (['cashea', 'contado', 'abono'].includes(forma_pago) === false) {
+        if (['cashea', 'contado', 'abono', 'de_contado-pendiente'].includes(forma_pago) === false) {
             throw { message: `La forma de pago es invalida: ${forma_pago}` };
         }
     },
@@ -196,6 +210,11 @@ const VentaService = {
             cliente_informacion_cedula: venta_completa.cliente_informacion_cedula,
             cliente_informacion_telefono: venta_completa.cliente_informacion_telefono,
             cliente_informacion_email: venta_completa.cliente_informacion_email,
+            empresa_rif: venta_completa.empresa_rif,
+            empresa_nombre: venta_completa.empresa_nombre,
+            empresa_telefono: venta_completa.empresa_telefono,
+            empresa_correo: venta_completa.empresa_correo,
+            empresa_direccion: venta_completa.empresa_direccion,
             historia_medica_id: venta_completa.historia_medica_id,
             moneda: venta_completa.moneda,
             tasas_actuales: venta_completa.tasas_actuales,
@@ -476,6 +495,14 @@ const VentaService = {
                     id: (objVenta.especialista_user) ? objVenta.especialista_user.id : null,
                     cedula: (objVenta.especialista_user) ? objVenta.especialista_user.cedula : null,
                     nombre: (objVenta.especialista_user) ? objVenta.especialista_user.nombre : null,
+                },
+                informacionEmpresa: {
+                    referidoEmpresa: (objVenta.empresa_rif) ? true : false,
+                    empresaNombre: objVenta.empresa_nombre,
+                    empresaRif: objVenta.empresa_rif,
+                    empresaTelefono: objVenta.empresa_telefono,
+                    empresaDireccion: objVenta.empresa_direccion,
+                    empresaCorreo: objVenta.empresa_correo
                 }
             },
             asesor: {
