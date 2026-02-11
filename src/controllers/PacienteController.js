@@ -20,11 +20,8 @@ const PacienteController = {
                 informacionEmpresa: empresa,
             } = req.body;
 
-            if (typeof historiaClinica.patologias === 'string') {
-                historiaClinica.patologias = [historiaClinica.patologias];
-            }
             if (!historiaClinica.patologiaOcular) {
-                historiaClinica.patologiaOcular = [];
+                historiaClinica.patologiaOcular = '';
             }
 
             if (!validar_estructura_informacion_personal(informacionPersonal)) {
@@ -92,12 +89,6 @@ const PacienteController = {
             }
             if (historiaClinica.antecedentesFamiliares !== null && !Array.isArray(historiaClinica.antecedentesFamiliares)) {
                 throw { message: "El parametro 'historiaClinica.antecedentesFamiliares' debe ser nula o un array." };
-            }
-            if (historiaClinica.patologias !== null && !Array.isArray(historiaClinica.patologias)) {
-                throw { message: "El parametro 'historiaClinica.patologias' debe ser nula o un array." };
-            }
-            if (historiaClinica.patologiaOcular !== null && !Array.isArray(historiaClinica.patologiaOcular)) {
-                throw { message: "El parametro 'historiaClinica.patologiaOcular' debe ser nula o un array." };
             }
 
             const sin_cedula = (informacionPersonal.esMenorSinCedula === true) ? true : false;
@@ -242,6 +233,10 @@ const PacienteController = {
                 informacionEmpresa: empresa
             } = req.body;
 
+            if (!historiaClinica.patologiaOcular) {
+                historiaClinica.patologiaOcular = '';
+            }
+
             if (!validar_estructura_informacion_personal(informacionPersonal)) {
                 throw { message: "La estructura de 'informacionPersonal' es incorrecta." };
             }
@@ -307,12 +302,6 @@ const PacienteController = {
             }
             if (historiaClinica.antecedentesFamiliares !== null && !Array.isArray(historiaClinica.antecedentesFamiliares)) {
                 throw { message: "El parametro 'historiaClinica.antecedentesFamiliares' debe ser nula o un array." };
-            }
-            if (historiaClinica.patologias !== null && !Array.isArray(historiaClinica.patologias)) {
-                throw { message: "El parametro 'historiaClinica.patologias' debe ser nula o un array." };
-            }
-            if (historiaClinica.patologiaOcular !== null && !Array.isArray(historiaClinica.patologiaOcular)) {
-                throw { message: "El parametro 'historiaClinica.patologiaOcular' debe ser nula o un array." };
             }
 
             const sin_cedula = (informacionPersonal.esMenorSinCedula === true) ? true : false;
