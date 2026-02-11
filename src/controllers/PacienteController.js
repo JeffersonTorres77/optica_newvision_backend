@@ -20,6 +20,13 @@ const PacienteController = {
                 informacionEmpresa: empresa,
             } = req.body;
 
+            if (typeof historiaClinica.patologias === 'string') {
+                historiaClinica.patologias = [historiaClinica.patologias];
+            }
+            if (!historiaClinica.patologiaOcular) {
+                historiaClinica.patologiaOcular = [];
+            }
+
             if (!validar_estructura_informacion_personal(informacionPersonal)) {
                 throw { message: "La estructura de 'informacionPersonal' es incorrecta." };
             }
