@@ -47,6 +47,14 @@ const ConfiguracionController = {
 
         res.status(200).json({ moneda_base: moneda_base.valor });
     },
+
+    get_costos_consultas: async (req, res) => {
+        const { costo_total_consulta, costo_medico_consulta } = await ConfiguracionService.get_costos_consultas(req.sede.id);
+        res.status(200).json({
+            costo_total_consulta: costo_total_consulta.valor,
+            costo_medico_consulta: costo_medico_consulta.valor
+        });
+    },
 };
 
 module.exports = ConfiguracionController;

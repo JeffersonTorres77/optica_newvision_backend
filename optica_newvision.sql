@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-02-2026 a las 16:28:51
+-- Tiempo de generación: 20-02-2026 a las 09:06:31
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -120,7 +120,11 @@ INSERT INTO `configuraciones` (`id`, `sede`, `clave`, `valor`, `descripcion`) VA
 (4, 'guatire', 'moneda_base', 'dolar', 'Moneda base del sistema para la sede de Guatire.'),
 (6, 'guarenas', 'moneda_base', 'dolar', 'Moneda base del sistema para la sede de ${req.sede.nombre}.'),
 (7, 'guatire', 'dias_archivar_ordenes', '10', 'Dias para archivar las ordenes de trabajo con el estado de  \"entregado\"'),
-(8, 'guarenas', 'dias_archivar_ordenes', '1', 'Dias para archivar las ordenes de trabajo con el estado de  \"entregado\"');
+(8, 'guarenas', 'dias_archivar_ordenes', '1', 'Dias para archivar las ordenes de trabajo con el estado de  \"entregado\"'),
+(9, 'guatire', 'costo_total_consulta', '40', 'Costo total de las consultas'),
+(10, 'guarenas', 'costo_total_consulta', '30', 'Costo total de las consultas'),
+(11, 'guatire', 'costo_medico_consulta', '20', 'Costo de consulta del medico'),
+(12, 'guarenas', 'costo_medico_consulta', '15', 'Costo de consulta del medico');
 
 -- --------------------------------------------------------
 
@@ -311,7 +315,9 @@ INSERT INTO `logins` (`id`, `sede_id`, `usu_cedula`, `token`, `ip`, `created_at`
 (50, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg4NzY2NjcsImV4cCI6MTc2ODk2MzA2N30.5o6gZ6inIwURDrtZ5ApT6zyNFI21-n_O38hb4aMJBvI', '::1', '2026-01-19 22:37:47', '2026-01-19 22:37:47'),
 (51, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjkwMzI0OTUsImV4cCI6MTc2OTExODg5NX0.TZeWYzQ-qvRH-lOHqmmCl6lI6FW2-Nj_bE21_880XSQ', '::1', '2026-01-21 17:54:55', '2026-01-21 17:54:55'),
 (52, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjkwODM3MDcsImV4cCI6MTc2OTE3MDEwN30.E8Mz0U3gjikNEqd5_K-dYuvoMf3U_BkFB7CCpNowUII', '::1', '2026-01-22 08:08:27', '2026-01-22 08:08:27'),
-(53, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzA0Nzc0NjIsImV4cCI6MTc3MDU2Mzg2Mn0.OVwOSgjf8BfIJkBGbbSe9PB9Cu9EFkrb0jObMGeRdic', '::1', '2026-02-07 11:17:42', '2026-02-07 11:17:42');
+(53, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzA0Nzc0NjIsImV4cCI6MTc3MDU2Mzg2Mn0.OVwOSgjf8BfIJkBGbbSe9PB9Cu9EFkrb0jObMGeRdic', '::1', '2026-02-07 11:17:42', '2026-02-07 11:17:42'),
+(54, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzA4Mjg3NzYsImV4cCI6MTc3MDkxNTE3Nn0.guKPb5xbTKihrFWZikgvy3FVBOqiP4gIVQ89rxfCeUM', '::1', '2026-02-11 12:52:56', '2026-02-11 12:52:56'),
+(55, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzE1NzM0NTEsImV4cCI6MTc3MTY1OTg1MX0.ZOyGDABirghwpdEV56LXAaWbyOH_Cyo6GxOorRJRWf4', '::1', '2026-02-20 03:44:11', '2026-02-20 03:44:11');
 
 -- --------------------------------------------------------
 
@@ -405,8 +411,8 @@ CREATE TABLE `pacientes` (
   `alergias` text DEFAULT NULL,
   `antecedentes_personales` text DEFAULT NULL,
   `antecedentes_familiares` text DEFAULT NULL,
-  `patologias` text DEFAULT NULL,
-  `patologia_ocular` text DEFAULT NULL
+  `patologias` varchar(255) DEFAULT NULL,
+  `patologia_ocular` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -422,7 +428,8 @@ INSERT INTO `pacientes` (`id`, `pkey`, `sede_id`, `cedula`, `sin_cedula`, `nombr
 (25, '28acbaf873ad2772e216895c44281940', 'guatire', '8759927', 1, 'Dario Castro', '2025-08-14', '04123920817', 'rubemm18@gmail.com', 'Programador', 'm', 'Las rosas, conj res, country villas', '[]', NULL, '2025-08-30 21:48:38', '2025-08-30 21:48:38', NULL, 'No', 'No', 'No', 'No', '', 'No', '', NULL, '', '', '', ''),
 (26, '4e732ced3463d06de0ca9a15b6153677', 'guatire', '4353453', 0, 'dfsfsdfsf', '2025-09-16', '04123920817', 'rubemm18@gmail.com', 'sfsdfsd', 'f', 'Las rosas, conj res, country villas', '[]', NULL, '2025-09-01 13:34:30', '2025-09-01 13:34:30', NULL, 'No', 'No', 'No', 'No', '', 'No', '', NULL, '', '', '', ''),
 (27, '02e74f10e0327ad868d138f2b4fdd6f0', 'guatire', '723423432', 0, 'sdfsdfsdfd', '2025-09-02', '04123920817', 'rubemm18@gmail.com', 'sadasdsad', 'f', 'Las rosas, conj res, country villas', '[]', NULL, '2025-09-01 16:43:09', '2025-09-01 16:43:09', NULL, 'No', 'No', 'No', 'No', '', 'No', '', NULL, '', '', '', ''),
-(31, 'c16a5320fa475530d9583c34fd356ef5', 'guarenas', '123123123', 1, 'Ruben Martinez', '2025-07-01', '04123920817', 'rubemm18@gmail.com', 'fgdfgdf', 'm', 'Las rosas, conj res, country villas', '[{\"platform\":\"Instagram\",\"username\":\"asdadasda\"}]', '254099046', '2026-01-19 23:16:35', '2026-01-19 23:16:35', NULL, 'Sí', 'No', 'Si, 3 a 6 horas', 'No', NULL, 'Sí', 'catarata', NULL, '', 'Diabetes', 'Astigmatismo|Miopía', '');
+(31, 'c16a5320fa475530d9583c34fd356ef5', 'guarenas', '123123123', 1, 'Ruben Martinez', '2025-07-01', '04123920817', 'rubemm18@gmail.com', 'fgdfgdf', 'm', 'Las rosas, conj res, country villas', '[{\"platform\":\"Instagram\",\"username\":\"asdadasda\"}]', '254099046', '2026-01-19 23:16:35', '2026-01-19 23:16:35', NULL, 'Sí', 'No', 'Si, 3 a 6 horas', 'No', NULL, 'Sí', 'catarata', NULL, '', 'Diabetes', 'Astigmatismo|Miopía', ''),
+(32, '6364d3f0f495b6ab9dcf8d3b5c6e0b01', 'guarenas', '14569321', 0, 'Blanca Castro', '1928-06-07', '04123920817', 'rubemm18@gmail.com', 'Maestra', 'f', 'Castillejo', '[]', NULL, '2026-02-11 13:21:13', '2026-02-11 13:21:13', NULL, 'Sí', 'No', 'Sí, 3 a 6 horas', 'Sí', 'golpe en ojo izquierdo por caida', 'No', '', 'Polvo, tierra', 'Diabetes|Hipertensión|Traumatismo ocular|Orzuelos', 'Diabetes|Hipertensión', 'Problemas renales', '');
 
 -- --------------------------------------------------------
 
@@ -998,7 +1005,7 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT de la tabla `configuraciones`
 --
 ALTER TABLE `configuraciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `empresas`
@@ -1022,7 +1029,7 @@ ALTER TABLE `historial_rastreo_bcv`
 -- AUTO_INCREMENT de la tabla `logins`
 --
 ALTER TABLE `logins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT de la tabla `ordenes_trabajo`
@@ -1040,7 +1047,7 @@ ALTER TABLE `otps`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`

@@ -323,7 +323,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc2ODQwNzY5MiwiZXhwIjoxNzY4NDk0MDkyfQ.tGRbQE6LDVK4iWAYz8j0McaMlvkWEIlbEqPPiTA_IC4",
+                  "value": "{{token}}",
                   "type": "string"
                 }
               ]
@@ -339,6 +339,35 @@
                 "api",
                 "configuracion",
                 "get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Costo Consultas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/api/configuracion/get-costos-consultas",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "get-costos-consultas"
               ]
             }
           },
@@ -944,7 +973,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg2MDA5NzYsImV4cCI6MTc2ODY4NzM3Nn0.YM5t1ekd-EDTCOL7kbmEde4j7f75Ib0-BCxmDmgVUjw",
+                  "value": "{{token}}",
                   "type": "string"
                 }
               ]
@@ -1008,7 +1037,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg2MDA5NzYsImV4cCI6MTc2ODY4NzM3Nn0.YM5t1ekd-EDTCOL7kbmEde4j7f75Ib0-BCxmDmgVUjw",
+                  "value": "{{token}}",
                   "type": "string"
                 }
               ]
@@ -1017,7 +1046,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"informacionPersonal\": {\r\n        \"esMenorSinCedula\": true, // true - false - null\r\n        \"nombreCompleto\": \"Ruben Martinez\",\r\n        \"cedula\": \"123123123\",\r\n        \"telefono\": \"04123920817\",\r\n        \"email\": \"rubemm18@gmail.com\",\r\n        \"fechaNacimiento\": \"2025-07-01\",\r\n        \"ocupacion\": \"fgdfgdf\",\r\n        \"genero\": \"m\",\r\n        \"direccion\": \"Las rosas, conj res, country villas\"\r\n    },\r\n    \"redesSociales\": [\r\n        {\r\n            \"platform\": \"Instagram\",\r\n            \"username\": \"asdadasda\"\r\n        }\r\n    ],\r\n    \"historiaClinica\": {\r\n        \"usuarioLentes\": \"Sí\",\r\n        \"fotofobia\": \"No\",\r\n        \"usoDispositivo\": \"Si, 3 a 6 horas\",\r\n        \"traumatismoOcular\": \"No\",\r\n        \"traumatismoOcularDescripcion\": null,\r\n        \"cirugiaOcular\": \"Sí\",\r\n        \"cirugiaOcularDescripcion\": \"catarata\",\r\n        \"alergicoA\": null,\r\n        \"antecedentesPersonales\": null,\r\n        \"antecedentesFamiliares\": [\r\n            \"Diabetes\"\r\n        ],\r\n        \"patologias\": [\r\n            \"Astigmatismo\",\r\n            \"Miopía\"\r\n        ],\r\n        \"patologiaOcular\": null\r\n    },\r\n    \"empresa\": {\r\n        \"rif\": \"254099046\",\r\n        \"nombre\": \"Empresa de Prueba\",\r\n        \"telefono\": null,\r\n        \"correo\": null,\r\n        \"direccion\": null\r\n    }\r\n}",
+              "raw": "{\r\n    \"informacionPersonal\": {\r\n        \"esMenorSinCedula\": null,\r\n        \"nombreCompleto\": \"Blanca Castro\",\r\n        \"cedula\": \"14569321\",\r\n        \"telefono\": \"04123920817\",\r\n        \"email\": \"rubemm18@gmail.com\",\r\n        \"fechaNacimiento\": \"1928-06-07\",\r\n        \"ocupacion\": \"Maestra\",\r\n        \"genero\": \"f\",\r\n        \"direccion\": \"Castillejo\"\r\n    },\r\n    \"redesSociales\": [],\r\n    \"informacionEmpresa\": null,\r\n    \"historiaClinica\": {\r\n        \"usuarioLentes\": \"Sí\",\r\n        \"fotofobia\": \"No\",\r\n        \"usoDispositivo\": \"Sí, 3 a 6 horas\",\r\n        \"traumatismoOcular\": \"Sí\",\r\n        \"traumatismoOcularDescripcion\": \"golpe en ojo izquierdo por caida\",\r\n        \"cirugiaOcular\": \"No\",\r\n        \"cirugiaOcularDescripcion\": \"\",\r\n        \"alergicoA\": \"Polvo, tierra\",\r\n        \"antecedentesPersonales\": [\r\n            \"Diabetes\",\r\n            \"Hipertensión\",\r\n            \"Traumatismo ocular\",\r\n            \"Orzuelos\"\r\n        ],\r\n        \"antecedentesFamiliares\": [\r\n            \"Diabetes\",\r\n            \"Hipertensión\"\r\n        ],\r\n        \"patologias\": \"Problemas renales\"\r\n    }\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1045,7 +1074,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg2MDA5NzYsImV4cCI6MTc2ODY4NzM3Nn0.YM5t1ekd-EDTCOL7kbmEde4j7f75Ib0-BCxmDmgVUjw",
+                  "value": "{{token}}",
                   "type": "string"
                 }
               ]
@@ -1054,7 +1083,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"informacionPersonal\": {\r\n        \"esMenorSinCedula\": true, // true - false - null\r\n        \"nombreCompleto\": \"Jefferson Torres\",\r\n        \"cedula\": \"25409904\",\r\n        \"telefono\": \"04241738615\",\r\n        \"email\": \"jefersonugas@gmail.com\",\r\n        \"fechaNacimiento\": \"1996-06-11\",\r\n        \"ocupacion\": \"Ingeniero de Sistemas\",\r\n        \"genero\": \"m\",\r\n        \"direccion\": \"Guatire, Castillejo, en una casa.\"\r\n    },\r\n    \"redesSociales\": [\r\n        {\r\n            \"platform\": \"Facebook\",\r\n            \"username\": \"maria.gonzalez\"\r\n        },\r\n        {\r\n            \"platform\": \"Instagram\",\r\n            \"username\": \"@maria.g\"\r\n        }\r\n    ],\r\n    \"historiaClinica\": {\r\n        \"usuarioLentes\": \"Si\",\r\n        \"fotofobia\": null,\r\n        \"usoDispositivo\": \"Si, 3 a 6 horas\",\r\n        \"traumatismoOcular\": null,\r\n        \"traumatismoOcularDescripcion\": null,\r\n        \"cirugiaOcular\": null,\r\n        \"cirugiaOcularDescripcion\": null,\r\n        \"alergicoA\": null,\r\n        \"antecedentesPersonales\": [],\r\n        \"antecedentesFamiliares\": [],\r\n        \"patologias\": [\"a\", \"b\", \"c\"],\r\n        \"patologiaOcular\": []\r\n    },\r\n    \"empresa\": {\r\n        \"rif\": \"254099046\",\r\n        \"nombre\": \"Empresa de Prueba\",\r\n        \"telefono\": null,\r\n        \"correo\": null,\r\n        \"direccion\": null\r\n    }\r\n}",
+              "raw": "{\r\n    \"informacionPersonal\": {\r\n        \"esMenorSinCedula\": true, // true - false - null\r\n        \"nombreCompleto\": \"Jefferson Torres\",\r\n        \"cedula\": \"25409904\",\r\n        \"telefono\": \"04241738615\",\r\n        \"email\": \"jefersonugas@gmail.com\",\r\n        \"fechaNacimiento\": \"1996-06-11\",\r\n        \"ocupacion\": \"Ingeniero de Sistemas\",\r\n        \"genero\": \"m\",\r\n        \"direccion\": \"Guatire, Castillejo, en una casa.\"\r\n    },\r\n    \"redesSociales\": [\r\n        {\r\n            \"platform\": \"Facebook\",\r\n            \"username\": \"maria.gonzalez\"\r\n        },\r\n        {\r\n            \"platform\": \"Instagram\",\r\n            \"username\": \"@maria.g\"\r\n        }\r\n    ],\r\n    \"historiaClinica\": {\r\n        \"usuarioLentes\": \"Si\",\r\n        \"fotofobia\": null,\r\n        \"usoDispositivo\": \"Si, 3 a 6 horas\",\r\n        \"traumatismoOcular\": null,\r\n        \"traumatismoOcularDescripcion\": null,\r\n        \"cirugiaOcular\": null,\r\n        \"cirugiaOcularDescripcion\": null,\r\n        \"alergicoA\": null,\r\n        \"antecedentesPersonales\": [],\r\n        \"antecedentesFamiliares\": [],\r\n        \"patologias\": [\"a\", \"b\", \"c\"],\r\n        \"patologiaOcular\": []\r\n    },\r\n    \"informacionEmpresa\": {\r\n        \"empresaRif\": \"254099046\",\r\n        \"empresaNombre\": \"Empresa de Prueba\",\r\n        \"empresaTelefono\": null,\r\n        \"empresaCorreo\": null,\r\n        \"empresaDireccion\": null\r\n    }\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1600,7 +1629,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg0ODE4MDIsImV4cCI6MTc2ODU2ODIwMn0.-Gr9C9l-1oXs5RbGyCBcW-qvdubzk8WMGbzt1JDbabA",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzA0Nzc0NjIsImV4cCI6MTc3MDU2Mzg2Mn0.OVwOSgjf8BfIJkBGbbSe9PB9Cu9EFkrb0jObMGeRdic",
                   "type": "string"
                 }
               ]
@@ -1617,7 +1646,7 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/ventas-get",
+              "raw": "{{baseURL}}/api/ventas-get?busquedaGeneral=V-000068",
               "host": [
                 "{{baseURL}}"
               ],
@@ -1626,12 +1655,6 @@
                 "ventas-get"
               ],
               "query": [
-                {
-                  "key": "busquedaGeneral",
-                  "value": "V-000042",
-                  "description": "Busca en cedula, nombre y numero de venta o recibo\n\nR-00015\nRuben\n25409904\n",
-                  "disabled": true
-                },
                 {
                   "key": "fechaDesde",
                   "value": "2025-11-28",
@@ -1667,6 +1690,10 @@
                   "value": "cashea",
                   "description": "Forma de pago",
                   "disabled": true
+                },
+                {
+                  "key": "busquedaGeneral",
+                  "value": "V-000068"
                 }
               ]
             }
@@ -1709,7 +1736,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg0ODE4MDIsImV4cCI6MTc2ODU2ODIwMn0.-Gr9C9l-1oXs5RbGyCBcW-qvdubzk8WMGbzt1JDbabA",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzA0Nzc0NjIsImV4cCI6MTc3MDU2Mzg2Mn0.OVwOSgjf8BfIJkBGbbSe9PB9Cu9EFkrb0jObMGeRdic",
                   "type": "string"
                 }
               ]
@@ -1718,7 +1745,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"venta\": {\r\n        \"fecha\": \"2026-01-13T16:41:24.821Z\",\r\n        \"estado\": \"completada\",\r\n        \"estatus_pago\": \"pendiente\",\r\n        \"formaPago\": \"abono\",\r\n        \"moneda\": \"dolar\",\r\n        \"observaciones\": null,\r\n        \"impuesto\": 16,\r\n        \"tasa_cambio\": 330.3751\r\n    },\r\n    \"totales\": {\r\n        \"subtotal\": 31.86,\r\n        \"descuento\": 0,\r\n        \"iva\": 0,\r\n        \"total\": 31.86,\r\n        \"totalPagado\": 5\r\n    },\r\n    \"cliente\": {\r\n        \"tipo\": \"cliente_general\",\r\n        \"informacion\": {\r\n            \"tipoPersona\": \"natural\",\r\n            \"nombreCompleto\": \"Ruben dario Martinez castro\",\r\n            \"cedula\": \"24367965\",\r\n            \"telefono\": \"04123920817\",\r\n            \"email\": \"rubemm18@gmail.com\"\r\n        },\r\n        \"historiaMedica\": null,\r\n        \"especialista\": null\r\n    },\r\n    \"asesor\": {\r\n        \"id\": 4\r\n    },\r\n    \"productos\": [\r\n        {\r\n            \"productoId\": \"5\",\r\n            \"cantidad\": 1,\r\n            \"moneda\": \"dolar\"\r\n        }\r\n    ],\r\n    \"metodosPago\": [\r\n        {\r\n            \"tipo\": \"efectivo\",\r\n            \"monto\": 4,\r\n            \"moneda\": \"dolar\",\r\n            \"referencia\": null,\r\n            \"bancoCodigo\": null,\r\n            \"bancoNombre\": null\r\n        },\r\n        {\r\n            \"tipo\": \"pagomovil\",\r\n            \"monto\": 330.38,\r\n            \"moneda\": \"bolivar\",\r\n            \"referencia\": \"212121\",\r\n            \"bancoCodigo\": \"0102\",\r\n            \"bancoNombre\": \"Banco de Venezuela\"\r\n        }\r\n    ],\r\n    \"generarOrdenTrabajo\": false,\r\n    \"auditoria\": {\r\n        \"usuarioCreacion\": 4,\r\n        \"fechaCreacion\": \"2026-01-13T16:41:24.821Z\"\r\n    },\r\n    \"formaPagoDetalle\": {\r\n        \"tipo\": \"abono\",\r\n        \"montoAbonado\": 5,\r\n        \"deudaPendiente\": 26.86,\r\n        \"porcentajePagado\": 15.69\r\n    }\r\n}",
+              "raw": "{\r\n    \"venta\": {\r\n        \"fecha\": \"2026-01-24T20:13:45.364Z\",\r\n        \"estado\": \"pendiente\",\r\n        \"estatus_pago\": \"pendiente\",\r\n        \"formaPago\": \"de_contado-pendiente\",\r\n        \"moneda\": \"dolar\",\r\n        \"observaciones\": null,\r\n        \"impuesto\": 16,\r\n        \"tasa_cambio\": 355.5528\r\n    },\r\n    \"totales\": {\r\n        \"subtotal\": 31.86,\r\n        \"descuento\": 3.19,\r\n        \"iva\": 0,\r\n        \"total\": 28.67,\r\n        \"totalPagado\": 0\r\n    },\r\n    \"cliente\": {\r\n        \"tipo\": \"paciente\",\r\n        \"informacion\": {\r\n            \"tipoPersona\": \"natural\",\r\n            \"nombreCompleto\": \"Dario Castro\",\r\n            \"cedula\": \"8759927\",\r\n            \"telefono\": \"04123920817\",\r\n            \"email\": \"rubemm18@gmail.com\"\r\n        },\r\n        \"historiaMedica\": {\r\n            \"id\": 34,\r\n            \"key\": 34,\r\n            \"nHistoria\": \"H-20250901-002\",\r\n            \"fechaCreacion\": \"2025-09-01T18:13:51.000Z\"\r\n        },\r\n        \"especialista\": {\r\n            \"cedula\": \"8759927\"\r\n        },\r\n        \"informacionEmpresa\": {\r\n            \"referidoEmpresa\": true,\r\n            \"empresaNombre\": \"Hebe  Shop CA\",\r\n            \"empresaRif\": \"J-12345678\",\r\n            \"empresaTelefono\": \"02123440533\",\r\n            \"empresaDireccion\": \"Caracas, los ruices\",\r\n            \"empresaCorreo\": \"\"\r\n        }\r\n    },\r\n    \"asesor\": {\r\n        \"id\": 4\r\n    },\r\n    \"productos\": [\r\n        {\r\n            \"productoId\": \"5\",\r\n            \"cantidad\": 1,\r\n            \"moneda\": \"dolar\"\r\n        }\r\n    ],\r\n    \"metodosPago\": [],\r\n    \"generarOrdenTrabajo\": false,\r\n    \"auditoria\": {\r\n        \"usuarioCreacion\": 4,\r\n        \"fechaCreacion\": \"2026-01-24T20:13:45.364Z\"\r\n    }\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1867,7 +1894,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjUyMzI4NTQsImV4cCI6MTc2NTMxOTI1NH0.U3tkcPnbGK--SeINNfdtRMKaAB9ME-o91AQRQ_zuq0o",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjkwODM3MDcsImV4cCI6MTc2OTE3MDEwN30.E8Mz0U3gjikNEqd5_K-dYuvoMf3U_BkFB7CCpNowUII",
                   "type": "string"
                 }
               ]
@@ -1884,7 +1911,7 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/clientes-get?cedula=123123123",
+              "raw": "{{baseURL}}/api/clientes-get?cedula=25409904",
               "host": [
                 "{{baseURL}}"
               ],
@@ -1895,7 +1922,7 @@
               "query": [
                 {
                   "key": "cedula",
-                  "value": "123123123"
+                  "value": "25409904"
                 }
               ]
             }
@@ -1982,7 +2009,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjgwNzgxNDQsImV4cCI6MTc2ODE2NDU0NH0.-HCSx8asTPPIiXb2fnxun9UenwvA6jZF3di9K6Sn_E4",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjkwMzI0OTUsImV4cCI6MTc2OTExODg5NX0.TZeWYzQ-qvRH-lOHqmmCl6lI6FW2-Nj_bE21_880XSQ",
                   "type": "string"
                 }
               ]
@@ -2395,6 +2422,10 @@
     },
     {
       "key": "baseURL3",
+      "value": ""
+    },
+    {
+      "key": "token",
       "value": ""
     }
   ]
