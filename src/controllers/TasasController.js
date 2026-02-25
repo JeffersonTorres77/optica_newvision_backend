@@ -8,266 +8,236 @@ const Usuario = require("../models/Usuario");
 
 const TasasController = {
     get: async (req, res) => {
-        try {
-            if (!req.user) {
-                throw { message: "Sesion invalida." };
-            }
-
-            await asegurar_existencia_tasas();
-            
-            const id = req.params.id;
-            let tasas = [];
-            
-            // Consultamos las tasas
-            if (id) {
-                tasas = await Tasa.findAll({
-                    where: { id: id },
-                    attributes: ['id','nombre','simbolo','valor','rastreo_bcv','ultimo_tipo_cambio','updated_at']
-                });
-            } else {
-                tasas = await Tasa.findAll({
-                    attributes: ['id','nombre','simbolo','valor','rastreo_bcv','ultimo_tipo_cambio','updated_at']
-                });
-            }
-
-            /**
-             * Fin
-             */
-            res.status(200).json({ message: 'ok', tasas: tasas });
-        } catch (err) {
-            console.error(err);
-            res.status(400).json(err);
+        if (!req.user) {
+            throw { message: "Sesion invalida." };
         }
+
+        await asegurar_existencia_tasas();
+        
+        const id = req.params.id;
+        let tasas = [];
+        
+        // Consultamos las tasas
+        if (id) {
+            tasas = await Tasa.findAll({
+                where: { id: id },
+                attributes: ['id','nombre','simbolo','valor','rastreo_bcv','ultimo_tipo_cambio','updated_at']
+            });
+        } else {
+            tasas = await Tasa.findAll({
+                attributes: ['id','nombre','simbolo','valor','rastreo_bcv','ultimo_tipo_cambio','updated_at']
+            });
+        }
+
+        /**
+         * Fin
+         */
+        res.status(200).json({ message: 'ok', tasas: tasas });
     },
     
     update: async (req, res) => {
-        try {
-            if (!req.user) {
-                throw { message: "Sesion invalida." };
-            }
+        if (!req.user) {
+            throw { message: "Sesion invalida." };
+        }
 
-            await asegurar_existencia_tasas();
+        await asegurar_existencia_tasas();
 
-            const id = req.params.id;
-            const {
-                valor: valor,
-            } = req.body;
+        const id = req.params.id;
+        const {
+            valor: valor,
+        } = req.body;
 
-            const objTasa = await Tasa.findOne({ where: { id: id } });
-            if(!objTasa) {
+        const objTasa = await Tasa.findOne({ where: { id: id } });
+        if(!objTasa) {
+            throw { message: `La tasa enviada no existe: '${id}'` };
+        }
+        if(!VerificationUtils.verify_numero(valor)) {
+            throw { message: `El valor enviado no es numerico: '${valor}'` };
+        }
+
+        let valor_numerico = Number(valor);
+        valor_numerico = Number(valor_numerico.toFixed(4));
+
+        const valor_anterior = objTasa.valor;
+
+        objTasa.valor = valor_numerico;
+        objTasa.rastreo_bcv = false;
+        objTasa.ultimo_tipo_cambio = "Manual";
+        await objTasa.save();
+
+        await TasaHistorial.create({
+            tasa_id: id,
+            valor_nuevo: valor,
+            usu_cedula: req.user.cedula,
+            tipo_cambio: 'manual',
+        });
+        
+        res.status(200).json({ message: 'ok', tasa: objTasa });
+    },
+    
+    update_with_bcv: async (req, res) => {
+        if (!req.user) {
+            throw { message: "Sesion invalida." };
+        }
+
+        const id = req.params.id;
+
+        await asegurar_existencia_tasas();
+        const tasas_bcv = await obtenerDolarBCV();
+        if(typeof tasas_bcv === 'string') {
+            throw { message: tasas_bcv };
+        }
+
+        let tasas_cambio = ['dolar', 'euro'];
+
+        if(id) {
+            const objTasaCambio = await Tasa.findOne({ where: { id: id } });
+            if(!objTasaCambio) {
                 throw { message: `La tasa enviada no existe: '${id}'` };
             }
-            if(!VerificationUtils.verify_numero(valor)) {
-                throw { message: `El valor enviado no es numerico: '${valor}'` };
-            }
+            tasas_cambio = [objTasaCambio.id];
+        }
+        
+        for(const tasa_id of tasas_cambio) {
+            const objTasa = await Tasa.findOne({ where: { id: tasa_id } });
 
-            let valor_numerico = Number(valor);
+            let valor_numerico = Number(tasas_bcv[tasa_id]);
             valor_numerico = Number(valor_numerico.toFixed(4));
 
             const valor_anterior = objTasa.valor;
 
             objTasa.valor = valor_numerico;
-            objTasa.rastreo_bcv = false;
-            objTasa.ultimo_tipo_cambio = "Manual";
+            objTasa.ultimo_tipo_cambio = 'Manual con BCV';
             await objTasa.save();
 
             await TasaHistorial.create({
-                tasa_id: id,
-                valor_nuevo: valor,
+                tasa_id: objTasa.id,
+                valor_nuevo: objTasa.valor,
                 usu_cedula: req.user.cedula,
-                tipo_cambio: 'manual',
+                tipo_cambio: 'manual con BCV',
             });
-            
-            res.status(200).json({ message: 'ok', tasa: objTasa });
-        } catch (err) {
-            console.error(err);
-            res.status(400).json(err);
         }
-    },
-    
-    update_with_bcv: async (req, res) => {
-        try {
-            if (!req.user) {
-                throw { message: "Sesion invalida." };
-            }
+        
+        const tasas = await Tasa.findAll({
+            where: { id: { [Op.in]: tasas_cambio } },
+            attributes: ['id', 'nombre', 'simbolo', 'valor', 'rastreo_bcv', 'updated_at']
+        });
 
-            const id = req.params.id;
-
-            await asegurar_existencia_tasas();
-            const tasas_bcv = await obtenerDolarBCV();
-            if(typeof tasas_bcv === 'string') {
-                throw { message: tasas_bcv };
-            }
-
-            let tasas_cambio = ['dolar', 'euro'];
-
-            if(id) {
-                const objTasaCambio = await Tasa.findOne({ where: { id: id } });
-                if(!objTasaCambio) {
-                    throw { message: `La tasa enviada no existe: '${id}'` };
-                }
-                tasas_cambio = [objTasaCambio.id];
-            }
-            
-            for(const tasa_id of tasas_cambio) {
-                const objTasa = await Tasa.findOne({ where: { id: tasa_id } });
-
-                let valor_numerico = Number(tasas_bcv[tasa_id]);
-                valor_numerico = Number(valor_numerico.toFixed(4));
-
-                const valor_anterior = objTasa.valor;
-
-                objTasa.valor = valor_numerico;
-                objTasa.ultimo_tipo_cambio = 'Manual con BCV';
-                await objTasa.save();
-
-                await TasaHistorial.create({
-                    tasa_id: objTasa.id,
-                    valor_nuevo: objTasa.valor,
-                    usu_cedula: req.user.cedula,
-                    tipo_cambio: 'manual con BCV',
-                });
-            }
-            
-            const tasas = await Tasa.findAll({
-                where: { id: { [Op.in]: tasas_cambio } },
-                attributes: ['id', 'nombre', 'simbolo', 'valor', 'rastreo_bcv', 'updated_at']
-            });
-
-            res.status(200).json({ message: 'ok', tasa: tasas });
-        } catch (err) {
-            console.error(err);
-            res.status(400).json(err);
-        }
+        res.status(200).json({ message: 'ok', tasa: tasas });
     },
 
     get_tasa_bcv: async (req, res) => {
-        try {
-            const tasas_bcv = await obtenerDolarBCV();
-            if(typeof tasas_bcv === 'string') {
-                throw { message: tasas_bcv };
-            }
-
-            let tasas = {
-                dolar: 0,
-                euro: 0
-            };
-            for(const tasa_id of ['dolar', 'euro']) {
-                let valor_numerico = Number(tasas_bcv[tasa_id]);
-                valor_numerico = Number(valor_numerico.toFixed(4));
-
-                tasas[tasa_id] = valor_numerico;
-            }
-
-            res.status(200).json({ message: 'ok', tasa: tasas });
-        } catch (err) {
-            console.error(err);
-            res.status(400).json(err);
+        const tasas_bcv = await obtenerDolarBCV();
+        if(typeof tasas_bcv === 'string') {
+            throw { message: tasas_bcv };
         }
+
+        let tasas = {
+            dolar: 0,
+            euro: 0
+        };
+        for(const tasa_id of ['dolar', 'euro']) {
+            let valor_numerico = Number(tasas_bcv[tasa_id]);
+            valor_numerico = Number(valor_numerico.toFixed(4));
+
+            tasas[tasa_id] = valor_numerico;
+        }
+
+        res.status(200).json({ message: 'ok', tasa: tasas });
     },
 
     get_history: async(req, res) => {
-        try {
-            if (!req.user) {
-                throw { message: "Sesion invalida." };
-            }
-
-            const id = req.params.id;
-            let fecha_inicio = req.params.fecha_inicio;
-            let fecha_final = req.params.fecha_final;
-
-            const objTasa = await Tasa.findOne({ where: { id: id } });
-            if(!objTasa) {
-                throw { message: `La tasa enviada no existe: '${id}'` };
-            }
-
-            let historial = [];
-
-            if(fecha_inicio && fecha_final) {
-                if (!VerificationUtils.verify_fecha(fecha_inicio)) {
-                    throw { message: "La fecha de inicio no tiene el formato correcto." };
-                }
-                if (!VerificationUtils.verify_fecha(fecha_final)) {
-                    throw { message: "La fecha final no tiene el formato correcto." };
-                }
-                if(fecha_inicio > fecha_final) {
-                    throw { message: "La fecha de inicio tiene que ser menor o igual que la fecha final." };
-                }
-
-                fecha_inicio = `${fecha_inicio} 00:00:00`;
-
-                fecha_final = `${fecha_final} 23:59:59`;
-
-                historial = await TasaHistorial.findAll({
-                    where: { tasa_id : objTasa.id, created_at: { [Op.between]: [fecha_inicio, fecha_final] } },
-                    attributes: ['id','valor_nuevo','tipo_cambio','updated_at'],
-                    include: {
-                        model: Usuario,
-                        as: 'usuario',
-                        attributes: ['cedula', 'nombre']
-                    }
-                });
-            } else {
-                historial = await TasaHistorial.findAll({
-                    where: { tasa_id : objTasa.id },
-                    attributes: ['id','valor_nuevo','tipo_cambio','updated_at'],
-                    include: {
-                        model: Usuario,
-                        as: 'usuario',
-                        attributes: ['cedula', 'nombre']
-                    }
-                });
-            }
-            
-            res.status(200).json({ message: 'ok', historial: historial});
-        } catch (err) {
-            console.error(err);
-            res.status(400).json(err);
+        if (!req.user) {
+            throw { message: "Sesion invalida." };
         }
+
+        const id = req.params.id;
+        let fecha_inicio = req.params.fecha_inicio;
+        let fecha_final = req.params.fecha_final;
+
+        const objTasa = await Tasa.findOne({ where: { id: id } });
+        if(!objTasa) {
+            throw { message: `La tasa enviada no existe: '${id}'` };
+        }
+
+        let historial = [];
+
+        if(fecha_inicio && fecha_final) {
+            if (!VerificationUtils.verify_fecha(fecha_inicio)) {
+                throw { message: "La fecha de inicio no tiene el formato correcto." };
+            }
+            if (!VerificationUtils.verify_fecha(fecha_final)) {
+                throw { message: "La fecha final no tiene el formato correcto." };
+            }
+            if(fecha_inicio > fecha_final) {
+                throw { message: "La fecha de inicio tiene que ser menor o igual que la fecha final." };
+            }
+
+            fecha_inicio = `${fecha_inicio} 00:00:00`;
+
+            fecha_final = `${fecha_final} 23:59:59`;
+
+            historial = await TasaHistorial.findAll({
+                where: { tasa_id : objTasa.id, created_at: { [Op.between]: [fecha_inicio, fecha_final] } },
+                attributes: ['id','valor_nuevo','tipo_cambio','updated_at'],
+                include: {
+                    model: Usuario,
+                    as: 'usuario',
+                    attributes: ['cedula', 'nombre']
+                }
+            });
+        } else {
+            historial = await TasaHistorial.findAll({
+                where: { tasa_id : objTasa.id },
+                attributes: ['id','valor_nuevo','tipo_cambio','updated_at'],
+                include: {
+                    model: Usuario,
+                    as: 'usuario',
+                    attributes: ['cedula', 'nombre']
+                }
+            });
+        }
+        
+        res.status(200).json({ message: 'ok', historial: historial});
     },
 
     rastreo_automatico: async(req, res) => {
-        try {
-            if (!req.user) {
-                throw { message: "Sesion invalida." };
-            }
-
-            const id = req.params.id;
-            const {
-                rastrear_auto: activar,
-            } = req.body;
-
-            const objTasa = await Tasa.findOne({ where: { id: id } });
-            if(!objTasa) {
-                throw { message: `La tasa enviada no existe: '${id}'` };
-            }
-            if (typeof activar !== 'boolean') {
-                throw { message: "El valor del rastreo debe ser booleano. " };
-            }
-
-            objTasa.rastreo_bcv = activar;
-            await objTasa.save();
-
-            if(activar && ['dolar','euro'].includes(objTasa.id)) {
-                const tasas_bcv = await obtenerDolarBCV();
-                if(typeof tasas_bcv === 'string') {
-                    // throw { message: tasas_bcv };
-                    res.status(201).json({ message: 'El rastreo automatico se activo pero no se pudo actualizar ahora mismo con el BCV.', tasa: objTasa });
-                    return;
-                }
-
-                let valor_numerico = Number(tasas_bcv[objTasa.id]);
-                valor_numerico = Number(valor_numerico.toFixed(4));
-                objTasa.valor = valor_numerico;
-                objTasa.ultimo_tipo_cambio = "Automatico";
-                await objTasa.save();
-            }
-            
-            res.status(200).json({ message: 'ok', tasa: objTasa });
-        } catch (err) {
-            console.error(err);
-            res.status(400).json(err);
+        if (!req.user) {
+            throw { message: "Sesion invalida." };
         }
+
+        const id = req.params.id;
+        const {
+            rastrear_auto: activar,
+        } = req.body;
+
+        const objTasa = await Tasa.findOne({ where: { id: id } });
+        if(!objTasa) {
+            throw { message: `La tasa enviada no existe: '${id}'` };
+        }
+        if (typeof activar !== 'boolean') {
+            throw { message: "El valor del rastreo debe ser booleano. " };
+        }
+
+        objTasa.rastreo_bcv = activar;
+        await objTasa.save();
+
+        if(activar && ['dolar','euro'].includes(objTasa.id)) {
+            const tasas_bcv = await obtenerDolarBCV();
+            if(typeof tasas_bcv === 'string') {
+                // throw { message: tasas_bcv };
+                res.status(201).json({ message: 'El rastreo automatico se activo pero no se pudo actualizar ahora mismo con el BCV.', tasa: objTasa });
+                return;
+            }
+
+            let valor_numerico = Number(tasas_bcv[objTasa.id]);
+            valor_numerico = Number(valor_numerico.toFixed(4));
+            objTasa.valor = valor_numerico;
+            objTasa.ultimo_tipo_cambio = "Automatico";
+            await objTasa.save();
+        }
+        
+        res.status(200).json({ message: 'ok', tasa: objTasa });
     },
 };
 

@@ -49,56 +49,56 @@ router.get('/send-email-test', async (req, res) => {
  */
 router.get('/sedes-get', SedesController.get);
 
-router.post('/auth/login', noAuthMiddleware, authController.login);
+router.post('/auth/login', noAuthMiddleware, CatchGeneric(authController.login));
 router.get('/auth/get_data', authMiddleware, authController.get_data);
-router.post('/auth/forgot-password', noAuthMiddleware, authController.forgot_password);
+router.post('/auth/forgot-password', noAuthMiddleware, CatchGeneric(authController.forgot_password));
 
-router.post('/account/upload-profile-image', authMiddleware, accountController.upload_profile_image);
-router.put('/account/remove-profile-image', authMiddleware, accountController.remove_profile_image);
-router.post('/account/edit-profile', authMiddleware, accountController.edit_profile);
-router.post('/account/change-password--send-otp', authMiddleware, accountController.change_password__send_otp);
-router.post('/account/change-password--verify-otp', authMiddleware, accountController.change_password__verify_otp);
-router.post('/account/change-password--change-password', authMiddleware, accountController.change_password__change_password);
+router.post('/account/upload-profile-image', authMiddleware, CatchGeneric(accountController.upload_profile_image));
+router.put('/account/remove-profile-image', authMiddleware, CatchGeneric(accountController.remove_profile_image));
+router.post('/account/edit-profile', authMiddleware, CatchGeneric(accountController.edit_profile));
+router.post('/account/change-password--send-otp', authMiddleware, CatchGeneric(accountController.change_password__send_otp));
+router.post('/account/change-password--verify-otp', authMiddleware, CatchGeneric(accountController.change_password__verify_otp));
+router.post('/account/change-password--change-password', authMiddleware, CatchGeneric(accountController.change_password__change_password));
 
-router.get('/roles-get/:id?', authMiddleware, RolController.get);
+router.get('/roles-get/:id?', authMiddleware, CatchGeneric(RolController.get));
 
-router.get('/cargos-get/:id?', authMiddleware, CargoController.get);
+router.get('/cargos-get/:id?', authMiddleware, CatchGeneric(CargoController.get));
 
 router.get('/configuracion/get', authMiddleware, CatchGeneric(ConfiguracionController.get));
 router.get('/configuracion/get-costos-consultas', authMiddleware, CatchGeneric(ConfiguracionController.get_costos_consultas));
 router.get('/configuracion/moneda_base-get', authMiddleware, CatchGeneric(ConfiguracionController.consultar_moneda_base));
 router.put('/configuracion/moneda_base-update', authMiddleware, CatchGeneric(ConfiguracionController.modificar_moneda_base));
 
-router.get('/get-usuarios/:cedula?', authMiddleware, UsuarioController.get);
-router.post('/add-usuarios/', authMiddleware, UsuarioController.add);
-router.put('/update-usuarios/:cedula', authMiddleware, UsuarioController.update);
-router.delete('/delete-usuarios/:cedula', authMiddleware, UsuarioController.delete);
-router.put('/activar-usuarios/:cedula', authMiddleware, UsuarioController.activar);
+router.get('/get-usuarios/:cedula?', authMiddleware, CatchGeneric(UsuarioController.get));
+router.post('/add-usuarios/', authMiddleware, CatchGeneric(UsuarioController.add));
+router.put('/update-usuarios/:cedula', authMiddleware, CatchGeneric(UsuarioController.update));
+router.delete('/delete-usuarios/:cedula', authMiddleware, CatchGeneric(UsuarioController.delete));
+router.put('/activar-usuarios/:cedula', authMiddleware, CatchGeneric(UsuarioController.activar));
 
-router.get('/tasas/:id?', authMiddleware, TasasController.get);
-router.put('/tasas-update/:id', authMiddleware, TasasController.update);
-router.put('/tasas-update-with-bcv/:id?', authMiddleware, TasasController.update_with_bcv);
-router.get('/get-tasa-bcv', TasasController.get_tasa_bcv);
-router.get('/tasas-history/:id/:fecha_inicio?/:fecha_final?', authMiddleware, TasasController.get_history);
-router.put('/tasas-rastreo-automatico/:id', authMiddleware, TasasController.rastreo_automatico);
+router.get('/tasas/:id?', authMiddleware, CatchGeneric(TasasController.get));
+router.put('/tasas-update/:id', authMiddleware, CatchGeneric(TasasController.update));
+router.put('/tasas-update-with-bcv/:id?', authMiddleware, CatchGeneric(TasasController.update_with_bcv));
+router.get('/get-tasa-bcv', CatchGeneric(TasasController.get_tasa_bcv));
+router.get('/tasas-history/:id/:fecha_inicio?/:fecha_final?', authMiddleware, CatchGeneric(TasasController.get_history));
+router.put('/tasas-rastreo-automatico/:id', authMiddleware, CatchGeneric(TasasController.rastreo_automatico));
 
-router.get('/paciente-get/:id?', authMiddleware, PacienteController.get);
-router.post('/paciente-add/', authMiddleware, PacienteController.add);
-router.put('/paciente-update/:id?', authMiddleware, PacienteController.update);
-router.delete('/paciente-delete/:id?', authMiddleware, PacienteController.delete);
+router.get('/paciente-get/:id?', authMiddleware, CatchGeneric(PacienteController.get));
+router.post('/paciente-add/', authMiddleware, CatchGeneric(PacienteController.add));
+router.put('/paciente-update/:id?', authMiddleware, CatchGeneric(PacienteController.update));
+router.delete('/paciente-delete/:id?', authMiddleware, CatchGeneric(PacienteController.delete));
 
-router.get('/historial-medico-all/:id?', authMiddleware, HistorialMedicoController.get_all);
-router.get('/historial-medico-paciente/:paciente_id', authMiddleware, HistorialMedicoController.get_paciente);
-router.post('/historial-medico-add/', authMiddleware, HistorialMedicoController.add);
-router.put('/historial-medico-update/:id?', authMiddleware, HistorialMedicoController.update);
-router.delete('/historial-medico-delete/:id?', authMiddleware, HistorialMedicoController.delete);
+router.get('/historial-medico-all/:id?', authMiddleware, CatchGeneric(HistorialMedicoController.get_all));
+router.get('/historial-medico-paciente/:paciente_id', authMiddleware, CatchGeneric(HistorialMedicoController.get_paciente));
+router.post('/historial-medico-add/', authMiddleware, CatchGeneric(HistorialMedicoController.add));
+router.put('/historial-medico-update/:id?', authMiddleware, CatchGeneric(HistorialMedicoController.update));
+router.delete('/historial-medico-delete/:id?', authMiddleware, CatchGeneric(HistorialMedicoController.delete));
 
-router.get('/producto-get/:id?', authMiddleware, ProductoController.get);
-router.get('/categorias-get', authMiddleware, ProductoController.get_categorias);
-router.post('/producto-add', authMiddleware, ProductoController.add);
-router.put('/producto-update/:id', authMiddleware, ProductoController.update);
-router.delete('/producto-delete/:id', authMiddleware, ProductoController.delete);
-router.put('/producto-remove-image/:id', authMiddleware, ProductoController.remove_image);
+router.get('/producto-get/:id?', authMiddleware, CatchGeneric(ProductoController.get));
+router.get('/categorias-get', authMiddleware, CatchGeneric(ProductoController.get_categorias));
+router.post('/producto-add', authMiddleware, CatchGeneric(ProductoController.add));
+router.put('/producto-update/:id', authMiddleware, CatchGeneric(ProductoController.update));
+router.delete('/producto-delete/:id', authMiddleware, CatchGeneric(ProductoController.delete));
+router.put('/producto-remove-image/:id', authMiddleware, CatchGeneric(ProductoController.remove_image));
 
 router.post('/ventas-add', authMiddleware, CatchGeneric(VentaController.add));
 router.get('/ventas-get', authMiddleware, CatchGeneric(VentaController.get));
