@@ -53,7 +53,7 @@ const ConfiguracionController = {
         res.status(200).json({
             totalConsulta: costo_total_consulta.valor,
             costoMedico: costo_medico_consulta.valor,
-            costoOptica: costo_total_consulta.valor - costo_medico_consulta.valor
+            costoOptica: ''+(costo_total_consulta.valor - costo_medico_consulta.valor)+''
         });
     },
 };
