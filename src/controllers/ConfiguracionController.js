@@ -51,8 +51,9 @@ const ConfiguracionController = {
     get_costos_consultas: async (req, res) => {
         const { costo_total_consulta, costo_medico_consulta } = await ConfiguracionService.get_costos_consultas(req.sede.id);
         res.status(200).json({
-            costo_total_consulta: costo_total_consulta.valor,
-            costo_medico_consulta: costo_medico_consulta.valor
+            totalConsulta: costo_total_consulta.valor,
+            costoMedico: costo_medico_consulta.valor,
+            costoOptica: costo_total_consulta.valor - costo_medico_consulta.valor
         });
     },
 };
