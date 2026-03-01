@@ -42,6 +42,8 @@ const HistorialMedicoController = {
             tipo_cristal_actual: datosConsulta.tipoCristalActual,
             ultima_graduacion: datosConsulta.fechaUltimaGraduacion,
             medico: datosConsulta.medico,
+            formula_externa: datosConsulta.formulaExterna,
+            pago_pendiente: datosConsulta.pagoPendiente,
             // ========================================
             examen_ocular_lensometria: examenOcular.lensometria,
             examen_ocular_refraccion: examenOcular.refraccion,
@@ -104,6 +106,8 @@ const HistorialMedicoController = {
                 tipoCristalActual: historial.tipo_cristal_actual,
                 fechaUltimaGraduacion: historial.ultima_graduacion,
                 medico: user_medico_plain,
+                formulaExterna: historial.formula_externa,
+                pagoPendiente: historial.pago_pendiente,
             },
 
             examenOcular: {
@@ -230,6 +234,8 @@ const HistorialMedicoController = {
                 tipoCristalActual: historial.tipo_cristal_actual,
                 fechaUltimaGraduacion: historial.ultima_graduacion,
                 medico: user_medico_plain,
+                formulaExterna: historial.formula_externa,
+                pagoPendiente: historial.pago_pendiente,
             },
 
             examenOcular: {
@@ -325,6 +331,8 @@ const HistorialMedicoController = {
                     tipoCristalActual: historial.tipo_cristal_actual,
                     fechaUltimaGraduacion: historial.ultima_graduacion,
                     medico: user_medico_plain,
+                    formulaExterna: historial.formula_externa,
+                    pagoPendiente: historial.pago_pendiente,
                 },
 
                 examenOcular: {
@@ -414,6 +422,8 @@ const HistorialMedicoController = {
                         tipoCristalActual: historial.tipo_cristal_actual,
                         fechaUltimaGraduacion: historial.ultima_graduacion,
                         medico: user_medico_plain,
+                        formulaExterna: historial.formula_externa,
+                        pagoPendiente: historial.pago_pendiente,
                     },
 
                     examenOcular: {
