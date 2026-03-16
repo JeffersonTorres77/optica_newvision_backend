@@ -200,11 +200,6 @@ const Paciente = sequelize.define('Paciente', {
     allowNull: true,
     collate: 'utf8mb4_general_ci'
   },
-  patologia_ocular: {
-    type: DataTypes.STRING(255),
-    allowNull: true,
-    collate: 'utf8mb4_general_ci'
-  },
   created_at: {
     type: DataTypes.DATE,
     allowNull: false,

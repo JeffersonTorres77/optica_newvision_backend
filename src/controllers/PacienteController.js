@@ -19,9 +19,6 @@ const PacienteController = {
             informacionEmpresa: empresa,
         } = req.body;
 
-        if (!historiaClinica.patologiaOcular) {
-            historiaClinica.patologiaOcular = '';
-        }
 
         if (!validar_estructura_informacion_personal(informacionPersonal)) {
             throw { message: "La estructura de 'informacionPersonal' es incorrecta." };
@@ -153,7 +150,6 @@ const PacienteController = {
             antecedentes_personales: historiaClinica.antecedentesPersonales,
             antecedentes_familiares: historiaClinica.antecedentesFamiliares,
             patologias: historiaClinica.patologias,
-            patologia_ocular: historiaClinica.patologiaOcular,
         });
 
         objPaciente.pkey = HashUtils.generate(objPaciente.id);
@@ -190,7 +186,6 @@ const PacienteController = {
                 antecedentesPersonales: paciente.antecedentes_personales,
                 antecedentesFamiliares: paciente.antecedentes_familiares,
                 patologias: paciente.patologias,
-                patologiaOcular: paciente.patologia_ocular
             },
             informacionEmpresa: (obj_empresa) ? {
                 referidoEmpresa: true,
@@ -358,7 +353,6 @@ const PacienteController = {
         objPaciente.antecedentes_personales = historiaClinica.antecedentesPersonales;
         objPaciente.antecedentes_familiares = historiaClinica.antecedentesFamiliares;
         objPaciente.patologias = historiaClinica.patologias;
-        objPaciente.patologia_ocular = historiaClinica.patologiaOcular;
         objPaciente.save();
 
         // Ajustamos el cliente si existe
@@ -401,7 +395,6 @@ const PacienteController = {
                 antecedentesPersonales: paciente.antecedentes_personales,
                 antecedentesFamiliares: paciente.antecedentes_familiares,
                 patologias: paciente.patologias,
-                patologiaOcular: paciente.patologia_ocular
             },
             informacionEmpresa: (obj_empresa) ? {
                 referidoEmpresa: true,
@@ -428,7 +421,7 @@ const PacienteController = {
         const attributes = [
             'id', 'pkey', 'sede_id', 'cedula', 'sin_cedula', 'nombre', 'fecha_nacimiento', 'telefono', 'email', 'ocupacion', 'genero', 'direccion', 'redes_sociales', 'created_at', 'updated_at',
             'tiene_lentes', 'fotofobia', 'uso_dispositivo_electronico', 'traumatismo_ocular', 'traumatismo_ocular_descripcion', 'cirugia_ocular', 'cirugia_ocular_descripcion', 'alergias',
-            'antecedentes_personales', 'antecedentes_familiares', 'patologias', 'patologia_ocular'
+            'antecedentes_personales', 'antecedentes_familiares', 'patologias'
         ];
 
         if (paciente_id) {
@@ -476,7 +469,6 @@ const PacienteController = {
                     antecedentesPersonales: paciente.antecedentes_personales,
                     antecedentesFamiliares: paciente.antecedentes_familiares,
                     patologias: paciente.patologias,
-                    patologiaOcular: paciente.patologia_ocular
                 },
                 informacionEmpresa: (paciente.empresa) ? {
                     referidoEmpresa: true,
@@ -542,8 +534,7 @@ function validar_estructura_historia_clinica(objeto) {
         'alergicoA' in objeto &&
         'antecedentesPersonales' in objeto &&
         'antecedentesFamiliares' in objeto &&
-        'patologias' in objeto &&
-        'patologiaOcular' in objeto
+        'patologias' in objeto
     );
 }
 
