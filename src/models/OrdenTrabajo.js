@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
-const Venta = require('./Venta');
 
 const OrdenTrabajo = sequelize.define('OrdenTrabajo', {
   id: {
@@ -72,10 +71,12 @@ const OrdenTrabajo = sequelize.define('OrdenTrabajo', {
   updatedAt: 'updated_at',
 });
 
+module.exports = OrdenTrabajo;
+
+// Declarar relaciones circulares al final para evitar errores de inicialización
+const Venta = require('./Venta');
 OrdenTrabajo.belongsTo(Venta, {
   foreignKey: 'venta_key',
   targetKey: 'venta_key',
   as: 'venta'
 });
-
-module.exports = OrdenTrabajo;

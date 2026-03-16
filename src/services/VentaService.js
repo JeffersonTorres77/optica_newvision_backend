@@ -16,6 +16,7 @@ const VerificationUtils = require("../utils/VerificationUtils");
 const FormatUtils = require("../utils/FormatUtils");
 const Cliente = require("../models/Cliente");
 const Empresa = require("../models/Empresa");
+const VentaConsulta = require("../models/VentaConsulta");
 
 const VentaService = {
     async get_numero_control(sede_id) {
@@ -92,52 +93,52 @@ const VentaService = {
         }
     },
 
-    formatear_fecha(fecha_par) {
-        const fecha = new Date(fecha_par);
-
-        const opciones = {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: false,
-            timeZone: "UTC" // importante para mantener la hora original
-        };
-
-        const formato = new Intl.DateTimeFormat("sv-SE", opciones).format(fecha).replace(" ", " ");
-        return formato;
-    },
-
-    async get_historia_medica_id(historia_medica_id) {
-        if (!historia_medica_id) {
-            return null;
+    async validar_historia_medica(historia_id, t = null, venta_key = null) {
+        if (!historia_id) {
+            throw { message: "El ID de la historia médica es obligatorio para este tipo de venta." };
         }
-        const objHistorial = await HistorialMedico.findOne({ where: { id: historia_medica_id } });
+        const objHistorial = await HistorialMedico.findOne({ where: { id: historia_id }, transaction: t });
         if (!objHistorial) {
-            throw { message: `El ID de la historia medica es invalida: ${historia_medica_id}` };
+            throw { message: `La historia médica ID: ${historia_id} no existe.` };
         }
-        return objHistorial.id;
-    },
 
-    async get_historia_medica(historia_medica_id) {
-        if (!historia_medica_id) {
-            return null;
-        }
-        const objHistorial = await HistorialMedico.findOne({ where: { id: historia_medica_id } });
-        if (!objHistorial) {
-            throw { message: `El ID de la historia medica es invalida: ${historia_medica_id}` };
+        if (venta_key) {
+            objHistorial.venta_key = venta_key;
+            await objHistorial.save({ transaction: t });
         }
         return objHistorial;
+    },
+
+    async sincronizar_costos_consulta(t, pagoMedico, pagoOptica, sede_id) {
+        const costoTotal = pagoMedico + pagoOptica;
+
+        const syncField = async (clave, valor) => {
+            const config = await Configuracion.findOne({ where: { sede: sede_id, clave: clave } });
+            if (config) {
+                if (parseFloat(config.valor) !== valor) {
+                    config.valor = valor.toString();
+                    await config.save({ transaction: t });
+                }
+            } else {
+                await Configuracion.create({
+                    sede: sede_id,
+                    clave: clave,
+                    valor: valor.toString()
+                }, { transaction: t });
+            }
+        };
+
+        await syncField("costo_total_consulta", costoTotal);
+        await syncField("costo_medico_consulta", pagoMedico);
     },
 
     async add_producto_db(productos_array) {
         const output = [];
         for (let producto of productos_array) {
-            const objProducto = await Producto.findOne({ where: { id: producto.productoId } });
+            const id = producto.id || producto.productoId;
+            const objProducto = await Producto.findOne({ where: { id: id } });
             if (!objProducto) {
-                throw { message: `El ID del producto es invalido: ${producto.productoId}` };
+                throw { message: `El ID del producto es invalido: ${id}` };
             }
             output.push({ ...producto, objeto: objProducto });
         }
@@ -155,8 +156,10 @@ const VentaService = {
             const precio_unitario_sin_iva = (producto.objeto.aplica_iva) ? ((100 / 116) * precio_unitario) : (precio_unitario);
 
             output.push({
-                producto_id: producto.productoId,
+                producto_id: producto.id || producto.productoId,
                 cantidad: producto.cantidad,
+                tipo: producto.tipo || null,
+                descripcion: producto.descripcion || null,
                 moneda_producto: objTasaProducto.id,
                 tasa_moneda_producto: FormatUtils.float(objTasaProducto.valor),
                 total_moneda_producto: FormatUtils.float(total_moneda_producto),
@@ -215,7 +218,6 @@ const VentaService = {
             empresa_telefono: venta_completa.empresa_telefono,
             empresa_correo: venta_completa.empresa_correo,
             empresa_direccion: venta_completa.empresa_direccion,
-            historia_medica_id: venta_completa.historia_medica_id,
             moneda: venta_completa.moneda,
             tasas_actuales: venta_completa.tasas_actuales,
             forma_pago: venta_completa.forma_pago,
@@ -232,6 +234,7 @@ const VentaService = {
             especialista_cedula: venta_completa.especialista_cedula,
             estatus_venta: venta_completa.estatus_venta,
             estatus_pago: venta_completa.estatus_pago,
+            tipo_venta: venta_completa.tipo_venta,
             motivo_cancelacion: null
         }, { transaction: t });
 
@@ -240,6 +243,8 @@ const VentaService = {
                 venta_key: venta_completa.venta_key,
                 producto_id: producto.producto_id,
                 cantidad: producto.cantidad,
+                tipo: producto.tipo,
+                descripcion: producto.descripcion,
                 precio_unitario_sin_iva: producto.precio_unitario_sin_iva,
                 tiene_iva: producto.tiene_iva,
                 precio_unitario: producto.precio_unitario,
@@ -248,6 +253,20 @@ const VentaService = {
                 tasa_moneda_producto: producto.tasa_moneda_producto,
                 total_moneda_producto: producto.total_moneda_producto
             }, { transaction: t });
+        }
+
+        if (venta_completa.tipo_venta === 'solo_consulta' || venta_completa.tipo_venta === 'consulta_productos') {
+            if (venta_completa.consulta) {
+                await VentaConsulta.create({
+                    venta_key: venta_completa.venta_key,
+                    historia_id: venta_completa.consulta.historiaId,
+                    pago_medico: FormatUtils.float(venta_completa.consulta.pagoMedico),
+                    pago_optica: FormatUtils.float(venta_completa.consulta.pagoOptica),
+                    es_formula_externa: venta_completa.consulta.esFormulaExterna ? 1 : 0,
+                    tipo_especialista: venta_completa.consulta.tipoEspecialista,
+                    monto_original: FormatUtils.float(venta_completa.consulta.montoOriginal)
+                }, { transaction: t });
+            }
         }
 
         let monto_abonado = 0;
@@ -302,22 +321,22 @@ const VentaService = {
 
     async guardar_cliente(t, objCliente, sede_id) {
         let cliente = await Cliente.findOne({
-            where: { cedula: objCliente.informacion.cedula }
+            where: { cedula: objCliente.cedula }
         });
 
         if (cliente) {
-            cliente.cedula = objCliente.informacion.cedula;
-            cliente.nombre = objCliente.informacion.nombreCompleto;
-            cliente.telefono = objCliente.informacion.telefono;
-            cliente.email = objCliente.informacion.email;
+            cliente.cedula = objCliente.cedula;
+            cliente.nombre = objCliente.nombre;
+            cliente.telefono = objCliente.telefono;
+            cliente.email = objCliente.email;
             await cliente.save({ transaction: t });
         } else {
             await Cliente.create({
                 sede_id: sede_id,
-                cedula: objCliente.informacion.cedula,
-                nombre: objCliente.informacion.nombreCompleto,
-                telefono: objCliente.informacion.telefono,
-                email: objCliente.informacion.email
+                cedula: objCliente.cedula,
+                nombre: objCliente.nombre,
+                telefono: objCliente.telefono,
+                email: objCliente.email
             }, { transaction: t });
         }
     },
@@ -357,145 +376,59 @@ const VentaService = {
     },
 
     async formatear_venta_output(objVenta) {
-        const metodosPagos = [];
+        const metodosDePago = [];
         let total_pagado = 0;
-        for (let pagoAgrupado of objVenta.array_pagos_agrupados) {
-            const pagos = [];
-            for (let pago of objVenta.array_pagos) {
-                if (pago.numero_pago !== pagoAgrupado.numero_pago) {
-                    continue;
-                }
 
-                pagos.push({
-                    tipo: pago.tipo,
-                    monto: pago.monto,
-                    moneda_id: pago.moneda_id,
-                    tasa_moneda: pago.tasa_moneda,
-                    monto_moneda_base: pago.monto_moneda_base,
-                    referencia: pago.referencia,
-                    bancoCodigo: pago.bancoCodigo,
-                    bancoNombre: pago.bancoNombre,
-                    fechaRegistro: pago.created_at
-                });
-            }
-
-            total_pagado += pagoAgrupado.monto_abonado;
-            metodosPagos.push({
-                numero_pago: pagoAgrupado.numero_pago,
-                montoAbonado: pagoAgrupado.monto_abonado,
-                metodosPago: pagos,
-                observaciones: pagoAgrupado.observaciones
+        for (let pago of objVenta.array_pagos) {
+            metodosDePago.push({
+                tipo: pago.tipo,
+                monto: pago.monto,
+                moneda: pago.moneda_id,
+                bancoCodigo: pago.bancoCodigo,
+                bancoNombre: pago.bancoNombre,
+                referencia: pago.referencia,
+                // bancoPunto: ... (asumimos que viene en el objeto si existiera el campo en BD)
             });
+            total_pagado += pago.monto_moneda_base; // Esto sumará todos los pagos realizados hasta ahora
         }
 
         const productos = [];
         for (let producto of objVenta.array_productos) {
             productos.push({
+                id: producto.datos_producto.id.toString(),
+                nombre: producto.datos_producto.nombre,
+                codigo: producto.datos_producto.codigo,
+                precio: producto.precio_unitario,
+                precioConIva: producto.precio_unitario, // Asumimos que precio_unitario ya es con IVA
+                moneda: producto.moneda_producto,
                 cantidad: producto.cantidad,
-                precio_unitario_sin_iva: producto.precio_unitario_sin_iva,
-                tiene_iva: producto.tiene_iva,
-                precio_unitario: producto.precio_unitario,
-                total: producto.total,
-                datos: {
-                    id: producto.datos_producto.id,
-                    nombre: producto.datos_producto.nombre,
-                    marca: producto.datos_producto.marca,
-                    color: producto.datos_producto.color,
-                    codigo: producto.datos_producto.codigo,
-                    material: producto.datos_producto.material,
-                    categoria: producto.datos_producto.categoria,
-                    modelo: producto.datos_producto.modelo
-                }
+                aplicaIva: producto.tiene_iva === 1,
+                stock: producto.datos_producto.stock,
+                tipo: producto.tipo,
+                descripcion: producto.descripcion
             });
         }
 
-        const formaPago = {
-            tipo: objVenta.forma_pago,
-            montoTotal: objVenta.total,
-            cuotasAdelantadas: 0,
-            montoAdelantado: 0,
-            deudaPendiente: 0,
-            nivel: null,
-            montoInicial: 0,
-            cantidadCuotas: 0,
-            montoPorCuota: 0,
-            totalPagadoAhora: 0,
-            cuotas: []
-        };
-
-        if (objVenta.forma_pago == "cashea") {
-            let cuotasAdelantadas = 0;
-            let montoAdelantado = 0;
-            for (let cuota of objVenta.cuotas_cashea) {
-                if (cuota.seleccionada) {
-                    cuotasAdelantadas += 1;
-                    montoAdelantado += cuota.monto;
-                }
-            }
-
-            formaPago.cuotasAdelantadas = cuotasAdelantadas;
-            formaPago.montoAdelantado = FormatUtils.float(montoAdelantado);
-            formaPago.deudaPendiente = FormatUtils.float(objVenta.total - montoAdelantado - objVenta.datos_cashea.monto_inicial);
-
-            formaPago.nivel = objVenta.datos_cashea.nivel_cashea;
-            formaPago.montoInicial = objVenta.datos_cashea.monto_inicial;
-            formaPago.cantidadCuotas = objVenta.datos_cashea.cantidad_cuotas;
-            formaPago.montoPorCuota = objVenta.datos_cashea.monto_por_cuota;
-            formaPago.totalPagadoAhora = objVenta.datos_cashea.total_adelantado;
-
-            formaPago.cuotas = objVenta.cuotas_cashea;
-        }
-        else if (objVenta.forma_pago == "abono") {
-            let monto_inicial = 0;
-            let monto_pagado = 0;
-            for (const pago of objVenta.array_pagos) {
-                if (pago.created_at.toISOString() == objVenta.created_at.toISOString()) {
-                    monto_inicial += pago.monto_moneda_base;
-                }
-                monto_pagado += pago.monto_moneda_base;
-            }
-
-            formaPago.montoInicial = FormatUtils.float(monto_inicial);
-            formaPago.totalPagadoAhora = FormatUtils.float(monto_pagado);
-            formaPago.deudaPendiente = FormatUtils.float(formaPago.montoTotal - formaPago.totalPagadoAhora);
-        }
-
         return {
-            venta: {
-                key: objVenta.venta_key,
-                numero_venta: "V-" + String(objVenta.numero_control).padStart(6, "0"),
-                numero_recibo: "R-" + String(objVenta.numero_control).padStart(6, "0"),
-                fecha: objVenta.fecha,
-                estatus_venta: objVenta.estatus_venta,
-                estatus_pago: objVenta.estatus_pago,
-                formaPago: objVenta.forma_pago,
-                moneda: objVenta.moneda,
-                observaciones: objVenta.observaciones,
-                impuesto: objVenta.iva_porcentaje,
-                motivo_cancelacion: objVenta.motivo_cancelacion
-            },
-            totales: {
-                descuento: objVenta.descuento,
-                subtotal: objVenta.subtotal,
-                iva: objVenta.iva,
-                total: objVenta.total,
-                totalPagado: FormatUtils.float(total_pagado),
-            },
+            key: objVenta.venta_key,
+            numero_venta: "V-" + String(objVenta.numero_control).padStart(6, "0"),
+            numero_recibo: "R-" + String(objVenta.numero_control).padStart(6, "0"),
+            tipoVenta: objVenta.tipo_venta,
+            moneda: objVenta.moneda,
+            sede: objVenta.sede,
+            estatus_venta: objVenta.estatus_venta,
+            estatus_pago: objVenta.estatus_pago,
+            total: objVenta.total,
+            descuento: objVenta.descuento,
+            impuesto: objVenta.iva_porcentaje,
+            metodosDePago: metodosDePago,
             cliente: {
-                historiaMedica: (objVenta.historia_medica) ? objVenta.historia_medica.numero : null,
-                tipo: objVenta.cliente_tipo,
-                informacion: {
-                    tipoPersona: objVenta.cliente_informacion_persona,
-                    nombreCompleto: objVenta.cliente_informacion_nombre,
-                    cedula: objVenta.cliente_informacion_cedula,
-                    telefono: objVenta.cliente_informacion_telefono,
-                    email: objVenta.cliente_informacion_email
-                },
-                especialista: {
-                    id: (objVenta.especialista_user) ? objVenta.especialista_user.id : null,
-                    cedula: (objVenta.especialista_user) ? objVenta.especialista_user.cedula : null,
-                    nombre: (objVenta.especialista_user) ? objVenta.especialista_user.nombre : null,
-                },
+                tipoCliente: objVenta.cliente_tipo,
+                tipoPersona: objVenta.cliente_informacion_persona,
+                nombre: objVenta.cliente_informacion_nombre,
+                cedula: objVenta.cliente_informacion_cedula,
+                telefono: objVenta.cliente_informacion_telefono,
+                email: objVenta.cliente_informacion_email,
                 informacionEmpresa: {
                     referidoEmpresa: (objVenta.empresa_rif) ? true : false,
                     empresaNombre: objVenta.empresa_nombre,
@@ -505,23 +438,48 @@ const VentaService = {
                     empresaCorreo: objVenta.empresa_correo
                 }
             },
+            especialista: {
+                cedula: objVenta.especialista_cedula
+            },
+            ordenTrabajo: !!objVenta.datos_orden_trabajo,
             asesor: {
-                id: (objVenta.asesor_user) ? objVenta.asesor_user.id : null,
-                cedula: (objVenta.asesor_user) ? objVenta.asesor_user.cedula : null,
-                nombre: (objVenta.asesor_user) ? objVenta.asesor_user.nombre : null,
+                id: objVenta.asesor_id
+            },
+            auditoria: {
+                usuarioCreacion: objVenta.asesor_id, // Usamos el asesor como creador según el ejemplo
+                fechaCreacion: objVenta.created_at
+            },
+            formaPagoDetalle: {
+                tipo: objVenta.forma_pago,
+                montoTotal: objVenta.total,
+                totalPagado: FormatUtils.float(total_pagado),
+                deuda: FormatUtils.float(objVenta.total - total_pagado),
+                ...(objVenta.forma_pago === 'cashea' && objVenta.datos_cashea ? {
+                    nivel: objVenta.datos_cashea.nivel,
+                    montoInicial: objVenta.datos_cashea.monto_inicial,
+                    cantidadCuotas: objVenta.datos_cashea.cantidad_cuotas,
+                    montoPorCuota: objVenta.datos_cashea.monto_por_cuota,
+                    totalPagadoAhora: objVenta.datos_cashea.total_pagado_ahora,
+                    cuotas: (objVenta.cuotas_cashea || []).map(c => ({
+                        numero: c.numero,
+                        fecha: c.fecha,
+                        monto: c.monto,
+                        pagada: c.pagada === 1,
+                        seleccionada: c.seleccionada === 1
+                    }))
+                } : {})
             },
             productos: productos,
-            metodosPago: metodosPagos,
-            formaPago: formaPago,
-            auditoria: {
-                usuarioCreacion: {
-                    id: (objVenta.asesor_user) ? objVenta.asesor_user.id : null,
-                    cedula: (objVenta.asesor_user) ? objVenta.asesor_user.cedula : null,
-                    nombre: (objVenta.asesor_user) ? objVenta.asesor_user.nombre : null,
-                },
-                fechaCreacion: objVenta.created_at,
-                fechaModificacion: objVenta.updated_at
-            }
+            consulta: (objVenta.venta_consulta) ? {
+                historiaId: objVenta.venta_consulta.historia_id,
+                montoTotal: objVenta.venta_consulta.pago_medico + objVenta.venta_consulta.pago_optica,
+                pagoMedico: objVenta.venta_consulta.pago_medico,
+                pagoOptica: objVenta.venta_consulta.pago_optica,
+                esFormulaExterna: objVenta.venta_consulta.es_formula_externa === 1,
+                tipoEspecialista: objVenta.venta_consulta.tipo_especialista,
+                tipoVentaConsulta: objVenta.tipo_venta,
+                montoOriginal: objVenta.venta_consulta.monto_original
+            } : null
         };
     },
 };

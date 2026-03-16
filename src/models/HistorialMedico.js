@@ -14,6 +14,11 @@ const HistorialMedico = sequelize.define('HistorialMedico', {
     allowNull: false,
     collate: 'utf8mb4_general_ci'
   },
+  venta_key: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
   fecha: {
     type: DataTypes.DATEONLY,
     allowNull: false,

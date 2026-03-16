@@ -6,8 +6,8 @@ const VentaCashea = require('./VentaCashea');
 const VentaCasheaCuota = require('./VentaCasheaCuota');
 const Usuario = require('./Usuario');
 const VentaPagoAgrupado = require('./VentaPagoAgrupado');
-const HistorialMedico = require('./HistorialMedico');
 const JsonUtil = require('../utils/JsonUtil');
+const VentaConsulta = require('./VentaConsulta');
 
 const Venta = sequelize.define('Venta', {
   id: {
@@ -26,6 +26,10 @@ const Venta = sequelize.define('Venta', {
   },
   sede: {
     type: DataTypes.STRING(50),
+    allowNull: false
+  },
+  tipo_venta: {
+    type: DataTypes.STRING(30),
     allowNull: false
   },
   paciente_key: {
@@ -74,10 +78,6 @@ const Venta = sequelize.define('Venta', {
   },
   empresa_direccion: {
     type: DataTypes.STRING(255),
-    allowNull: true
-  },
-  historia_medica_id: {
-    type: DataTypes.INTEGER,
     allowNull: true
   },
   moneda: {
@@ -175,6 +175,12 @@ Venta.hasOne(VentaCashea, {
   as: 'datos_cashea'
 });
 
+Venta.hasOne(VentaConsulta, {
+  foreignKey: 'venta_key',
+  sourceKey: 'venta_key',
+  as: 'venta_consulta'
+});
+
 Venta.hasMany(VentaCasheaCuota, {
   foreignKey: 'venta_key',
   sourceKey: 'venta_key',
@@ -217,10 +223,12 @@ Venta.belongsTo(Usuario, {
   as: 'especialista_user'
 });
 
-Venta.belongsTo(HistorialMedico, {
-  foreignKey: 'historia_medica_id',
-  targetKey: 'id',
-  as: 'historia_medica'
-});
-
 module.exports = Venta;
+
+// Declarar relaciones circulares al final para evitar errores de inicialización
+const OrdenTrabajo = require('./OrdenTrabajo');
+Venta.hasOne(OrdenTrabajo, {
+  foreignKey: 'venta_key',
+  sourceKey: 'venta_key',
+  as: 'datos_orden_trabajo'
+});

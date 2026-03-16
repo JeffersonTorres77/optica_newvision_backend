@@ -99,6 +99,7 @@ const HistorialMedicoController = {
             id: historial.id,
             nHistoria: historial.numero,
             pacienteId: historial.paciente_id,
+            ventaKey: historial.venta_key,
 
             datosConsulta: {
                 motivo: historial.motivo_consulta,
@@ -227,6 +228,7 @@ const HistorialMedicoController = {
             id: historial.id,
             nHistoria: historial.numero,
             pacienteId: historial.paciente_id,
+            ventaKey: historial.venta_key,
 
             datosConsulta: {
                 motivo: historial.motivo_consulta,
@@ -323,7 +325,8 @@ const HistorialMedicoController = {
                 id: historial.id,
                 nHistoria: historial.numero,
                 pacienteId: historial.paciente_id,
-                sedeId: historial.paciente.sede_id,
+                ventaKey: historial.venta_key,
+                sedeId: historial.paciente ? historial.paciente.sede_id : null,
 
                 datosConsulta: {
                     motivo: historial.motivo_consulta,
@@ -415,6 +418,7 @@ const HistorialMedicoController = {
                     id: historial.id,
                     nHistoria: historial.numero,
                     pacienteId: historial.paciente_id,
+                    ventaKey: historial.venta_key,
 
                     datosConsulta: {
                         motivo: historial.motivo_consulta,

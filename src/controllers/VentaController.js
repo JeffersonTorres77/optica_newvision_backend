@@ -15,60 +15,92 @@ const Paciente = require('../models/Paciente');
 const VentaPagoAgrupado = require('../models/VentaPagoAgrupado');
 const HistorialMedico = require('../models/HistorialMedico');
 const Tasa = require('../models/Tasa');
+const VentaConsulta = require('../models/VentaConsulta');
 const ConfiguracionService = require('../services/ConfiguracionService');
 
 const VentaController = {
     add: async (req, res) => {
         const {
-            venta,
-            totales,
+            moneda,
+            impuesto,
+            descuento,
+            total,
             cliente,
             asesor,
             productos,
-            metodosPago,
-            formaPago,
-            generarOrdenTrabajo,
-            auditoria,
+            metodosDePago,
+            formaPagoDetalle,
+            ordenTrabajo,
+            tipoVenta,
+            consulta,
+            especialista
         } = req.body;
 
-        const objTasa = await VentaService.get_tasa(venta.moneda);
-        const objPaciente = await VentaService.get_paciente(req.sede.id, cliente.informacion.cedula);
-        const historia_medica_id = await VentaService.get_historia_medica_id((cliente && cliente.historiaMedica) ? cliente.historiaMedica.id : null);
+        const formaPago = (formaPagoDetalle) ? formaPagoDetalle.tipo : null;
+
+        const tiposValidos = ['solo_productos', 'solo_consulta', 'consulta_productos'];
+        if (!tiposValidos.includes(tipoVenta)) {
+            throw { message: `El tipo de venta '${tipoVenta}' es invalido. Los valores permitidos son: ${tiposValidos.join(', ')}` };
+        }
+
+        const tiposClienteValidos = ['cliente_general', 'cliente_paciente'];
+        if (cliente) {
+            if (cliente.tipoCliente) cliente.tipoCliente = cliente.tipoCliente.toLowerCase();
+            if (cliente.tipoPersona) cliente.tipoPersona = cliente.tipoPersona.toLowerCase();
+
+            if (!tiposClienteValidos.includes(cliente.tipoCliente)) {
+                throw { message: `El tipo de cliente '${cliente.tipoCliente}' es invalido. Los valores permitidos son: ${tiposClienteValidos.join(', ')}` };
+            }
+        }
+
+        const objTasa = await VentaService.get_tasa(moneda);
+        const objPaciente = await VentaService.get_paciente(req.sede.id, cliente.cedula);
         const objAsesor = (asesor && asesor.id) ? await VentaService.get_usuario_by_id(asesor.id) : false;
-        const objEspecialista = (cliente && cliente.especialista && cliente.especialista.cedula) ? await VentaService.get_usuario_by_cedula(cliente.especialista.cedula) : false;
-        const productos_array_db = await VentaService.add_producto_db(productos);
+        const especialistaCedula = (especialista && especialista.cedula) ? especialista.cedula : false;
+        const objEspecialista = (especialistaCedula) ? await VentaService.get_usuario_by_cedula(especialistaCedula) : false;
+        let productos_array_db = [];
+        if (tipoVenta === 'solo_productos' || tipoVenta === 'consulta_productos') {
+            productos_array_db = await VentaService.add_producto_db(productos || []);
+        }
+
+        if (tipoVenta === 'solo_consulta' || tipoVenta === 'consulta_productos') {
+            const historiaId = (consulta) ? consulta.historiaId : null;
+            if (!historiaId) {
+                throw { message: "El ID de la historia médica es obligatorio para este tipo de venta." };
+            }
+        }
         const array_tasas = await VentaService.get_tasas_actuales();
         const objEmpresa = await VentaService.get_empresa(cliente);
 
-        VentaService.validate_forma_pago(venta.formaPago);
-        const fecha = VentaService.formatear_fecha(venta.fecha);
+        VentaService.validate_forma_pago(formaPago);
+        const fecha = new Date();
 
         const objVenta = {
             venta_key: await VentaService.generate_venta_key(),
             numero_control: await VentaService.get_numero_control(req.sede.id),
             sede: req.sede.id,
+            tipo_venta: tipoVenta,
             paciente_key: (objPaciente) ? objPaciente.pkey : null,
-            cliente_tipo: cliente.tipo,
-            cliente_informacion_persona: cliente.informacion.tipoPersona,
-            cliente_informacion_nombre: cliente.informacion.nombreCompleto,
-            cliente_informacion_cedula: cliente.informacion.cedula,
-            cliente_informacion_telefono: cliente.informacion.telefono,
-            cliente_informacion_email: cliente.informacion.email,
+            cliente_tipo: (cliente) ? cliente.tipoCliente : null,
+            cliente_informacion_persona: (cliente) ? cliente.tipoPersona : null,
+            cliente_informacion_nombre: (cliente) ? cliente.nombre : null,
+            cliente_informacion_cedula: (cliente) ? cliente.cedula : null,
+            cliente_informacion_telefono: (cliente) ? cliente.telefono : null,
+            cliente_informacion_email: (cliente) ? cliente.email : null,
             empresa_rif: (objEmpresa) ? objEmpresa.rif : null,
             empresa_nombre: (objEmpresa) ? objEmpresa.nombre : null,
             empresa_telefono: (objEmpresa) ? objEmpresa.telefono : null,
             empresa_correo: (objEmpresa) ? objEmpresa.correo : null,
             empresa_direccion: (objEmpresa) ? objEmpresa.direccion : null,
-            historia_medica_id: historia_medica_id,
             moneda: objTasa.id,
             tasas_actuales: array_tasas,
-            forma_pago: venta.formaPago,
-            iva_porcentaje: FormatUtils.float(venta.impuesto),
-            descuento: FormatUtils.float(totales.descuento),
-            subtotal: FormatUtils.float(totales.subtotal),
-            iva: FormatUtils.float(totales.iva),
-            total: FormatUtils.float(totales.total),
-            observaciones: venta.observaciones,
+            forma_pago: formaPago,
+            iva_porcentaje: FormatUtils.float(impuesto),
+            descuento: FormatUtils.float(descuento),
+            subtotal: 0,  // Removed from input, set to 0
+            iva: 0,  // Removed from input, set to 0
+            total: FormatUtils.float(total),
+            observaciones: null,
             fecha: fecha,
             pago_completo: null,
             created_by: req.user.cedula,
@@ -79,11 +111,12 @@ const VentaController = {
             productos: [],
             pagos: [],
             cashea: null,
-            cashea_cuotas: null
+            cashea_cuotas: null,
+            consulta: consulta || null
         };
 
         objVenta.productos = await VentaService.prepare_productos_array(productos_array_db, objTasa);
-        objVenta.pagos = await VentaService.prepare_metodos_de_pago_array(metodosPago, objTasa);
+        objVenta.pagos = await VentaService.prepare_metodos_de_pago_array(metodosDePago, objTasa);
 
         if (objVenta.forma_pago === 'contado') {
             objVenta.pago_completo = true;
@@ -100,14 +133,14 @@ const VentaController = {
             objVenta.estatus_venta = 'completada';
             objVenta.estatus_pago = 'pagado_por_cashea';
             objVenta.cashea = {
-                nivel_cashea: formaPago.nivel,
-                monto_inicial: formaPago.montoInicial,
-                cantidad_cuotas: formaPago.cantidadCuotas,
-                monto_por_cuota: formaPago.montoPorCuota,
-                total_adelantado: formaPago.totalPagadoAhora
+                nivel_cashea: formaPagoDetalle.nivel,
+                monto_inicial: formaPagoDetalle.montoInicial,
+                cantidad_cuotas: formaPagoDetalle.cantidadCuotas,
+                monto_por_cuota: formaPagoDetalle.montoPorCuota,
+                total_adelantado: formaPagoDetalle.totalPagadoAhora
             };
             objVenta.cashea_cuotas = [];
-            for (let cuota of formaPago.cuotas) {
+            for (let cuota of (formaPagoDetalle.cuotas || [])) {
                 objVenta.cashea_cuotas.push({
                     numero: cuota.numero,
                     monto: cuota.monto,
@@ -123,7 +156,7 @@ const VentaController = {
             objVenta.estatus_pago = (objVenta.pago_completo) ? 'completada' : 'pendiente';
         }
         else {
-            throw { message: `La forma de pago es invalida: ${venta.formaPago}` };
+            throw { message: `La forma de pago es invalida: ${formaPago}` };
         }
 
         const t = await sequelize.transaction();
@@ -134,7 +167,13 @@ const VentaController = {
             await VentaService.descontar_inventario(t, objVenta.productos);
             await VentaService.actualizar_numero_control(t, objVenta.numero_control + 1, req.sede.id);
 
-            if (generarOrdenTrabajo) {
+            if (tipoVenta === 'solo_consulta' || tipoVenta === 'consulta_productos') {
+                const historiaId = (consulta) ? consulta.historiaId : null;
+                await VentaService.validar_historia_medica(historiaId, t, objVenta.venta_key);
+                await VentaService.sincronizar_costos_consulta(t, FormatUtils.float(consulta.pagoMedico), FormatUtils.float(consulta.pagoOptica), req.sede.id);
+            }
+
+            if (ordenTrabajo) {
                 await OrdenTrabajoService.agregar_orden_trabajo(t, objVenta);
             }
 
@@ -157,7 +196,7 @@ const VentaController = {
                         {
                             model: Producto,
                             as: 'datos_producto',
-                            attributes: ['id', 'nombre', 'precio'], attributes: ['id', 'nombre', 'marca', 'color', 'codigo', 'material', 'categoria', 'modelo']
+                            attributes: ['id', 'nombre', 'marca', 'color', 'codigo', 'material', 'categoria', 'modelo', 'precio']
                         }
                     ]
                 },
@@ -166,7 +205,7 @@ const VentaController = {
                 { model: Usuario, as: 'creater_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'asesor_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'especialista_user', attributes: ['id', 'cedula', 'nombre'] },
-                { model: HistorialMedico, as: 'historia_medica' },
+                { model: VentaConsulta, as: 'venta_consulta' }
             ]
         });
 
@@ -180,7 +219,6 @@ const VentaController = {
         const fecha_final = req.query.fechaHasta;
         const busqueda_general = req.query.busquedaGeneral
         const asesor_id = req.query.asesor
-        const especialista_id = req.query.especialista
         const estatus_venta = req.query.estado
         const forma_pago = req.query.formaPago
 
@@ -231,6 +269,7 @@ const VentaController = {
             include: [
                 { model: VentaPago, as: 'array_pagos' },
                 { model: VentaPagoAgrupado, as: 'array_pagos_agrupados' },
+                { model: VentaConsulta, as: 'venta_consulta' },
                 {
                     model: VentaProducto,
                     as: 'array_productos',
@@ -238,7 +277,7 @@ const VentaController = {
                         {
                             model: Producto,
                             as: 'datos_producto',
-                            attributes: ['id', 'nombre', 'precio'], attributes: ['id', 'nombre', 'marca', 'color', 'codigo', 'material', 'categoria', 'modelo']
+                            attributes: ['id', 'nombre', 'marca', 'color', 'codigo', 'material', 'categoria', 'modelo', 'precio']
                         }
                     ]
                 },
@@ -247,7 +286,6 @@ const VentaController = {
                 { model: Usuario, as: 'creater_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'asesor_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'especialista_user', attributes: ['id', 'cedula', 'nombre'] },
-                { model: HistorialMedico, as: 'historia_medica' },
             ],
             order: [['fecha', 'DESC']],
             limit,
@@ -488,8 +526,7 @@ const VentaController = {
                     include: [
                         {
                             model: Producto,
-                            as: 'datos_producto',
-                            attributes: ['id', 'nombre', 'precio'], attributes: ['id', 'nombre', 'marca', 'color', 'codigo', 'material', 'categoria', 'modelo']
+                            as: 'datos_producto'
                         }
                     ]
                 },
@@ -498,7 +535,8 @@ const VentaController = {
                 { model: Usuario, as: 'creater_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'asesor_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'especialista_user', attributes: ['id', 'cedula', 'nombre'] },
-                { model: HistorialMedico, as: 'historia_medica' },
+                { model: VentaConsulta, as: 'venta_consulta' },
+                { model: OrdenTrabajo, as: 'datos_orden_trabajo' }
             ]
         });
 
