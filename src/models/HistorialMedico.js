@@ -46,6 +46,11 @@ const HistorialMedico = sequelize.define('HistorialMedico', {
     allowNull: true,
     collate: 'utf8mb4_general_ci'
   },
+  tipo_lentes_contacto: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
   ultima_graduacion: {
     type: DataTypes.DATE,
     allowNull: true,

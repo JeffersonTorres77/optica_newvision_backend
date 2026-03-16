@@ -40,6 +40,7 @@ const HistorialMedicoController = {
             motivo_consulta: datosConsulta.motivo,
             otro_motivo_consulta: datosConsulta.otroMotivo,
             tipo_cristal_actual: datosConsulta.tipoCristalActual,
+            tipo_lentes_contacto: datosConsulta.tipoLentesContacto,
             ultima_graduacion: datosConsulta.fechaUltimaGraduacion,
             medico: datosConsulta.medico,
             formula_externa: datosConsulta.formulaExterna,
@@ -105,6 +106,7 @@ const HistorialMedicoController = {
                 motivo: historial.motivo_consulta,
                 otroMotivo: historial.otro_motivo_consulta,
                 tipoCristalActual: historial.tipo_cristal_actual,
+                tipoLentesContacto: historial.tipo_lentes_contacto,
                 fechaUltimaGraduacion: historial.ultima_graduacion,
                 medico: user_medico_plain,
                 formulaExterna: historial.formula_externa,
@@ -172,6 +174,7 @@ const HistorialMedicoController = {
         objHistorial.motivo_consulta = datosConsulta.motivo;
         objHistorial.otro_motivo_consulta = datosConsulta.otroMotivo;
         objHistorial.tipo_cristal_actual = datosConsulta.tipoCristalActual;
+        objHistorial.tipo_lentes_contacto = datosConsulta.tipoLentesContacto;
         objHistorial.ultima_graduacion = datosConsulta.fechaUltimaGraduacion;
         objHistorial.medico = datosConsulta.medico;
         // ========================================
@@ -234,6 +237,7 @@ const HistorialMedicoController = {
                 motivo: historial.motivo_consulta,
                 otroMotivo: historial.otro_motivo_consulta,
                 tipoCristalActual: historial.tipo_cristal_actual,
+                tipoLentesContacto: historial.tipo_lentes_contacto,
                 fechaUltimaGraduacion: historial.ultima_graduacion,
                 medico: user_medico_plain,
                 formulaExterna: historial.formula_externa,
@@ -332,6 +336,7 @@ const HistorialMedicoController = {
                     motivo: historial.motivo_consulta,
                     otroMotivo: historial.otro_motivo_consulta,
                     tipoCristalActual: historial.tipo_cristal_actual,
+                    tipoLentesContacto: historial.tipo_lentes_contacto,
                     fechaUltimaGraduacion: historial.ultima_graduacion,
                     medico: user_medico_plain,
                     formulaExterna: historial.formula_externa,
@@ -424,6 +429,7 @@ const HistorialMedicoController = {
                         motivo: historial.motivo_consulta,
                         otroMotivo: historial.otro_motivo_consulta,
                         tipoCristalActual: historial.tipo_cristal_actual,
+                        tipoLentesContacto: historial.tipo_lentes_contacto,
                         fechaUltimaGraduacion: historial.ultima_graduacion,
                         medico: user_medico_plain,
                         formulaExterna: historial.formula_externa,
