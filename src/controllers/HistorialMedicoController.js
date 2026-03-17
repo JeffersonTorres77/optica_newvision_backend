@@ -423,9 +423,9 @@ const HistorialMedicoController = {
                 nHistoria: historial.numero,
                 pacienteId: historial.paciente_id,
                 ventaKey: historial.venta_key,
-                pagoPendiente: historial.pago_pendiente,
 
                 datosConsulta: {
+                    pagoPendiente: historial.pago_pendiente,
                     motivo: historial.motivo_consulta,
                     otroMotivo: historial.otro_motivo_consulta,
                     tipoCristalActual: historial.tipo_cristal_actual,
