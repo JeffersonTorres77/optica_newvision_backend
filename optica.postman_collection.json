@@ -19,7 +19,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"sede\": \"guarenas\",\r\n    \"cedula\": \"25409904\",\r\n    \"password\": \"11554570\"\r\n}",
+              "raw": "{\r\n    \"sede\": \"guarenas\",\r\n    \"cedula\": \"999999999\",\r\n    \"password\": \"999999999\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1137,12 +1137,23 @@
         {
           "name": "Historial Medico - Get",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [
               {
                 "key": "Authorization",
                 "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTY3NDM5NzcsImV4cCI6MTc1NjgzMDM3N30.c1WSYN7oi86Qe0tgyVriuqAK97v-LUBZzJOeVusATtQ",
-                "type": "text"
+                "type": "text",
+                "disabled": true
               }
             ],
             "url": {
@@ -1222,7 +1233,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"pacienteId\": \"guarenas-25409904\",\r\n\r\n  \"datosConsulta\": {\r\n    \"motivo\": [\"Fatiga visual\", \"Dificultad visual cerca\"],\r\n    \"otroMotivo\": \"\",\r\n    \"tipoCristalActual\": \"Alguno\",\r\n    \"fechaUltimaGraduacion\": \"2025-08-10\",\r\n    \"medico\": \"Dr. José Martínez\",\r\n    \"formula_externa\": false,\r\n    \"pago_pendiente\": true\r\n  },\r\n\r\n  \"examenOcular\": {\r\n    \"lensometria\": {\r\n      \"esf_od\": \"+1.00\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"av_lejos_od\": \"20/30\",\r\n      \"av_cerca_od\": \"J3\",\r\n      \"av_lejos_bi\": \"20/25\",\r\n      \"av_bi\": \"J2\",\r\n      \"esf_oi\": \"+1.25\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"av_lejos_oi\": \"20/30\",\r\n      \"av_cerca_oi\": \"J3\",\r\n      \"av_cerca_bi\": \"J2\"\r\n    },\r\n    \"refraccion\": {\r\n      \"esf_od\": \"+1.25\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"avccl_od\": \"20/25\",\r\n      \"avccc_od\": \"J2\",\r\n      \"avccl_bi\": \"20/20\",\r\n      \"avccc_bi\": \"J1\",\r\n      \"esf_oi\": \"+1.50\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"avccl_oi\": \"20/25\",\r\n      \"avccc_oi\": \"J2\"\r\n    },\r\n    \"refraccionFinal\": {\r\n      \"esf_od\": \"+1.25\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"alt_od\": \"3\",\r\n      \"dp_od\": \"64\",\r\n      \"esf_oi\": \"+1.50\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"alt_oi\": \"3\",\r\n      \"dp_oi\": \"64\"\r\n    },\r\n    \"avsc_avae_otros\": {\r\n      \"avsc_od\": \"20/25\",\r\n      \"avae_od\": \"J2\",\r\n      \"otros_od\": \"\",\r\n      \"avsc_oi\": \"20/25\",\r\n      \"avae_oi\": \"J2\",\r\n      \"otros_oi\": \"\",\r\n      \"avsc_bi\": \"20/20\"\r\n    }\r\n  },\r\n\r\n  \"diagnosticoTratamiento\": {\r\n    \"diagnostico\": \"Presbicia con astigmatismo leve\",\r\n    \"tratamiento\": \"Uso de lentes progresivos digitales\"\r\n  },\r\n\r\n  \"recomendaciones\": [\r\n    {\r\n      \"cristal\": [\"Progresivo digital intermedio\"],\r\n      \"material\": [\"POLICARBONATO\", \"FOTOCROMATICO_BLUE_BLOCK\", \"Trivex\"],\r\n      \"montura\": \"Acetato\",\r\n      \"cristalSugerido\": \"Progresivo digital amplio\",\r\n      \"observaciones\": \"Se recomienda uso en ambientes con luz artificial prolongada\"\r\n    }\r\n  ],\r\n\r\n  \"conformidad\": {\r\n    \"notaConformidad\": \"PACIENTE CONFORME CON LA EXPLICACION REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.\"\r\n  }\r\n}",
+              "raw": "{\r\n    \"pacienteId\": \"c16a5320fa475530d9583c34fd356ef5\",\r\n    \"datosConsulta\": {\r\n        \"motivo\": [\r\n            \"Otro\"\r\n        ],\r\n        \"otroMotivo\": \"test\",\r\n        \"tipoCristalActual\": \"LENTES_CONTACTO\",\r\n        \"tipoLentesContacto\": \"TORICOS\",\r\n        \"fechaUltimaGraduacion\": \"2023-02-14\",\r\n        \"medico\": \"8759927\"\r\n    },\r\n    \"examenOcular\": {\r\n        \"lensometria\": {\r\n            \"esf_od\": {\r\n                \"value\": \"+0.50\",\r\n                \"label\": \"+0.50\"\r\n            },\r\n            \"cil_od\": \"-0.50\",\r\n            \"eje_od\": 3,\r\n            \"add_od\": \"+1.25\",\r\n            \"av_lejos_od\": \"20/30\",\r\n            \"av_cerca_od\": \"J3\",\r\n            \"av_lejos_bi\": \"20/30\",\r\n            \"esf_oi\": \"+0.50\",\r\n            \"cil_oi\": \"-0.50\",\r\n            \"eje_oi\": 3,\r\n            \"add_oi\": \"+1.25\",\r\n            \"av_lejos_oi\": \"20/30\",\r\n            \"av_cerca_oi\": \"J3\",\r\n            \"av_cerca_bi\": \"J3\"\r\n        },\r\n        \"refraccion\": {\r\n            \"esf_od\": \"+0.50\",\r\n            \"cil_od\": \"-0.50\",\r\n            \"eje_od\": 3,\r\n            \"add_od\": \"+1.25\",\r\n            \"avccl_od\": \"20/30\",\r\n            \"avccc_od\": \"J3\",\r\n            \"avccl_bi\": \"20/30\",\r\n            \"avccc_bi\": \"J3\",\r\n            \"esf_oi\": \"+0.50\",\r\n            \"cil_oi\": \"-0.50\",\r\n            \"eje_oi\": 3,\r\n            \"add_oi\": \"+1.25\",\r\n            \"avccl_oi\": \"20/30\",\r\n            \"avccc_oi\": \"J3\"\r\n        },\r\n        \"refraccionFinal\": {\r\n            \"esf_od\": \"+0.50\",\r\n            \"cil_od\": \"-0.50\",\r\n            \"eje_od\": 3,\r\n            \"add_od\": \"+1.25\",\r\n            \"alt_od\": \"2\",\r\n            \"dp_od\": \"12\",\r\n            \"esf_oi\": \"+0.50\",\r\n            \"cil_oi\": \"-0.50\",\r\n            \"eje_oi\": 3,\r\n            \"add_oi\": \"+1.25\",\r\n            \"alt_oi\": \"2\",\r\n            \"dp_oi\": \"12\"\r\n        },\r\n        \"avsc_avae_otros\": {\r\n            \"avsc_lejos_od\": \"20/30\",\r\n            \"avsc_cerca_od\": \"J3\",\r\n            \"avae_od\": \"20/30\",\r\n            \"otros_od\": \"test\",\r\n            \"avsc_lejos_oi\": \"20/30\",\r\n            \"avsc_cerca_oi\": \"J3\",\r\n            \"avae_oi\": \"J3\",\r\n            \"otros_oi\": \"test\"\r\n        }\r\n    },\r\n    \"diagnosticoTratamiento\": {\r\n        \"diagnostico\": \"rar\",\r\n        \"tratamiento\": \"test\"\r\n    },\r\n    \"recomendaciones\": [\r\n        {\r\n            \"cristal\": \"Progresivo convencional\",\r\n            \"material\": [\r\n                \"POLICARBONATO\"\r\n            ],\r\n            \"montura\": \"test\",\r\n            \"observaciones\": \"test\",\r\n            \"tipoLentesContacto\": \"\",\r\n            \"medidaHorizontal\": 2,\r\n            \"medidaVertical\": 4,\r\n            \"medidaDiagonal\": 7,\r\n            \"medidaPuente\": 5\r\n        },\r\n        {\r\n            \"cristal\": \"Monofocal visión sencilla\",\r\n            \"material\": [\r\n                \"CR39\"\r\n            ],\r\n            \"montura\": \"test\",\r\n            \"observaciones\": \"test\",\r\n            \"tipoLentesContacto\": \"\",\r\n            \"medidaHorizontal\": \"\",\r\n            \"medidaVertical\": \"\",\r\n            \"medidaDiagonal\": \"\",\r\n            \"medidaPuente\": \"\"\r\n        }\r\n    ],\r\n    \"conformidad\": {\r\n        \"notaConformidad\": \"PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.\"\r\n    }\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1629,7 +1640,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzA0Nzc0NjIsImV4cCI6MTc3MDU2Mzg2Mn0.OVwOSgjf8BfIJkBGbbSe9PB9Cu9EFkrb0jObMGeRdic",
+                  "value": "{{token}}",
                   "type": "string"
                 }
               ]
@@ -1646,7 +1657,7 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/ventas-get?busquedaGeneral=V-000068",
+              "raw": "{{baseURL}}/api/ventas-get?busquedaGeneral=V-000200",
               "host": [
                 "{{baseURL}}"
               ],
@@ -1674,12 +1685,6 @@
                   "disabled": true
                 },
                 {
-                  "key": "especialista",
-                  "value": "47",
-                  "description": "No se",
-                  "disabled": true
-                },
-                {
                   "key": "estado",
                   "value": "completada",
                   "description": "Estado de la venta",
@@ -1693,7 +1698,7 @@
                 },
                 {
                   "key": "busquedaGeneral",
-                  "value": "V-000068"
+                  "value": "V-000200"
                 }
               ]
             }

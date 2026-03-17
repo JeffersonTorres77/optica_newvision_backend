@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3307
--- Tiempo de generación: 16-03-2026 a las 23:25:33
+-- Tiempo de generación: 17-03-2026 a las 12:53:13
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -89,14 +89,7 @@ CREATE TABLE `clientes` (
 --
 
 INSERT INTO `clientes` (`id`, `sede_id`, `cedula`, `nombre`, `telefono`, `email`, `created_at`, `updated_at`) VALUES
-(1, 'guarenas', '25409904', 'Francia Vela', '04123920817', 'rubemm18@gmail.com', '2025-12-08 23:28:31', '2026-03-16 15:08:20'),
-(2, 'guarenas', '9999999', 'Papita', '04142134565', 'papita@gmail.com', '2025-12-08 22:50:40', '2025-12-09 16:02:52'),
-(4, 'guarenas', '267758784', 'Jesus Martinez', '04142134565', 'jesusmc@gmail.com', '2025-12-16 21:21:33', '2025-12-16 21:21:33'),
-(5, 'guarenas', 'Castro', 'Ana', '021235440511', 'rubemm18@gmail.com', '2025-12-19 10:56:05', '2025-12-19 10:56:05'),
-(6, 'guarenas', '24367965', 'Ruben dario Martinez castro', '04123920817', 'rubemm@gmail.com', '2026-01-15 09:29:06', '2026-03-16 15:20:44'),
-(7, 'guarenas', '8759927', 'Dario Castro', '04123920817', 'rubemm18@gmail.com', '2026-02-07 11:19:52', '2026-02-07 11:19:52'),
-(8, 'guarenas', '21212365', 'Francia Vela', '04123920817', 'rubemm18@gmail.com', '2026-03-16 15:07:53', '2026-03-16 15:07:53'),
-(9, 'guatire', '999999999', 'Test User', '04123920817', 'rubemm18@gmail.com', '2026-03-16 15:20:44', '2026-03-16 17:58:59');
+(1, 'guarenas', '24367965', 'Ruben dario', NULL, NULL, '2026-03-17 07:44:51', '2026-03-17 07:44:51');
 
 -- --------------------------------------------------------
 
@@ -117,16 +110,16 @@ CREATE TABLE `configuraciones` (
 --
 
 INSERT INTO `configuraciones` (`id`, `sede`, `clave`, `valor`, `descripcion`) VALUES
-(1, 'guarenas', 'numero_control', '201', 'Siguiente numero de control para la sede de Guarenas.'),
+(1, 'guarenas', 'numero_control', '233', 'Siguiente numero de control para la sede de Guarenas.'),
 (2, 'guatire', 'numero_control', '37', 'Siguiente numero de control para la sede de Guatire.'),
 (4, 'guatire', 'moneda_base', 'dolar', 'Moneda base del sistema para la sede de Guatire.'),
 (6, 'guarenas', 'moneda_base', 'dolar', 'Moneda base del sistema para la sede de ${req.sede.nombre}.'),
 (7, 'guatire', 'dias_archivar_ordenes', '10', 'Dias para archivar las ordenes de trabajo con el estado de  \"entregado\"'),
 (8, 'guarenas', 'dias_archivar_ordenes', '1', 'Dias para archivar las ordenes de trabajo con el estado de  \"entregado\"'),
 (9, 'guatire', 'costo_total_consulta', '60', 'Costo total de las consultas'),
-(10, 'guarenas', 'costo_total_consulta', '50', 'Costo total de las consultas'),
+(10, 'guarenas', 'costo_total_consulta', '20', 'Costo total de las consultas'),
 (11, 'guatire', 'costo_medico_consulta', '40', 'Costo de consulta del medico'),
-(12, 'guarenas', 'costo_medico_consulta', '40', 'Costo de consulta del medico');
+(12, 'guarenas', 'costo_medico_consulta', '10', 'Costo de consulta del medico');
 
 -- --------------------------------------------------------
 
@@ -164,15 +157,16 @@ CREATE TABLE `historiales_medicos` (
   `id` int(11) NOT NULL,
   `numero` varchar(14) NOT NULL,
   `venta_key` varchar(100) DEFAULT NULL,
+  `pago_pendiente` tinyint(4) NOT NULL DEFAULT 1,
   `fecha` date NOT NULL,
   `paciente_id` varchar(70) NOT NULL,
   `motivo_consulta` text DEFAULT NULL,
   `otro_motivo_consulta` text DEFAULT NULL,
   `tipo_cristal_actual` text DEFAULT NULL,
+  `tipo_lentes_contacto` text DEFAULT NULL,
   `ultima_graduacion` date DEFAULT NULL,
   `medico` varchar(255) DEFAULT NULL,
   `formula_externa` tinyint(4) NOT NULL DEFAULT 0,
-  `pago_pendiente` tinyint(4) NOT NULL DEFAULT 0,
   `examen_ocular_lensometria` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`examen_ocular_lensometria`)),
   `examen_ocular_refraccion` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`examen_ocular_refraccion`)),
   `examen_ocular_refraccion_final` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`examen_ocular_refraccion_final`)),
@@ -194,28 +188,9 @@ CREATE TABLE `historiales_medicos` (
 -- Volcado de datos para la tabla `historiales_medicos`
 --
 
-INSERT INTO `historiales_medicos` (`id`, `numero`, `venta_key`, `fecha`, `paciente_id`, `motivo_consulta`, `otro_motivo_consulta`, `tipo_cristal_actual`, `ultima_graduacion`, `medico`, `formula_externa`, `pago_pendiente`, `examen_ocular_lensometria`, `examen_ocular_refraccion`, `examen_ocular_refraccion_final`, `examen_ocular_avsc_avae_otros`, `diagnostico`, `tratamiento`, `recomendaciones`, `conformidad_nota`, `conformidad_firma_paciente`, `conformidad_firma_medico`, `created_by`, `updated_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(26, 'H-20250812-001', NULL, '2025-08-12', 'aab3238922bcc25a6f606eb525ffdc56', 'Molestia ocular', '', 'Progresivo digital amplio', '2025-06-26', '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\"}', '', '', '[{\"cristal\":{\"label\":\"Visión sencilla digital\",\"value\":\"Visión sencilla digital\"},\"material\":[\"AR_VERDE\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-08-12 02:15:11', '2025-08-12 13:47:02', NULL),
-(27, 'H-20250812-002', NULL, '2025-08-12', 'aab3238922bcc25a6f606eb525ffdc56', 'Consulta rutinaria|Fatiga visual', '', 'Visión sencilla digital', '2025-08-07', '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\"}', '', '', '[{\"cristal\":{\"label\":\"Visión sencilla digital\",\"value\":\"Visión sencilla digital\"},\"material\":[\"AR_BLUE_BLOCK\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-08-12 02:24:40', '2025-08-12 15:00:04', NULL),
-(28, 'H-20250812-003', NULL, '2025-08-12', 'c9f0f895fb98ab9159f51fd0297e236d', 'Fatiga visual|Consulta rutinaria|Molestia ocular', '', 'Bifocal', '2025-05-29', '25409904', 0, 0, '{\"esf_od\":{\"value\":\"+0.25\",\"label\":\"+0.25\"},\"cil_od\":\"+0.50\",\"eje_od\":90,\"add_od\":\"+0.75\",\"av_lejos_od\":\"20/30\",\"av_cerca_od\":\"J2\",\"av_lejos_bi\":\"20/30\",\"av_bi\":\"20/30\",\"esf_oi\":\"+0.50\",\"cil_oi\":\"+0.50\",\"eje_oi\":90,\"add_oi\":\"+1.00\",\"av_lejos_oi\":\"20/30\",\"av_cerca_oi\":\"J3\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"+0.25\",\"cil_od\":\"+0.50\",\"eje_od\":90,\"add_od\":\"+1.00\",\"avccl_od\":\"20/30\",\"avccc_od\":\"J2\",\"avccl_bi\":\"20/25\",\"avccc_bi\":\"20/25\",\"esf_oi\":\"+0.25\",\"cil_oi\":\"+0.25\",\"eje_oi\":90,\"add_oi\":\"+0.75\",\"avccl_oi\":\"20/25\",\"avccc_oi\":\"J2\"}', '{\"esf_od\":\"+0.50\",\"cil_od\":\"+0.25\",\"eje_od\":2,\"add_od\":\"+0.75\",\"alt_od\":\"10\",\"dp_od\":\"22\",\"esf_oi\":\"+0.25\",\"cil_oi\":\"+0.50\",\"eje_oi\":90,\"add_oi\":\"+0.75\",\"alt_oi\":\"10\",\"dp_oi\":\"22\"}', '{\"avsc_od\":\"20/20\",\"avae_od\":\"J2\",\"otros_od\":\"12\",\"avsc_oi\":\"20/20\",\"avae_oi\":\"J2\",\"otros_oi\":\"21\"}', 'Diagnostico de prueba', 'Tratamiento de prueba', '[{\"cristal\":{\"label\":\"Visión sencilla digital\",\"value\":\"Visión sencilla digital\"},\"material\":[\"AR_BLUE_BLOCK\"],\"montura\":\"Plastico\",\"cristalSugerido\":\"\",\"observaciones\":\"Observaciones de prueba\"},{\"cristal\":{\"label\":\"Bifocal\",\"value\":\"Bifocal\"},\"material\":[\"CR39\"],\"montura\":\"Metalica\",\"cristalSugerido\":\"\",\"observaciones\":\"Observaciones de prueba\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-08-12 17:58:55', '2025-08-13 14:20:01', NULL),
-(29, 'H-20250812-004', NULL, '2025-08-12', 'd3d9446802a44259755d38e6d163e820', 'Fatiga visual', '', 'Visión sencilla digital', '2025-08-05', '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\",\"avsc_bi\":\"\"}', '', '', '[{\"cristal\":{\"label\":\"Monofocal visión sencilla\",\"value\":\"Monofocal visión sencilla\"},\"material\":[\"AR_VERDE\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-08-12 18:02:40', '2025-08-12 18:02:40', NULL),
-(30, 'H-20250822-001', NULL, '2025-08-22', 'aab3238922bcc25a6f606eb525ffdc56', 'Molestia ocular', '', 'Monofocal visión sencilla', '2025-08-14', '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\",\"avsc_bi\":\"\"}', 'ghghjg', 'gjgjgjh', '[{\"cristal\":{\"label\":\"Monofocal visión sencilla\",\"value\":\"Monofocal visión sencilla\"},\"material\":[\"CR39\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-08-22 00:38:19', '2025-08-22 00:38:19', NULL),
-(31, 'H-20250822-002', NULL, '2025-08-22', 'aab3238922bcc25a6f606eb525ffdc56', 'Consulta rutinaria', '', 'Visión sencilla digital', NULL, '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\",\"avsc_bi\":\"\"}', '', '', '[{\"cristal\":{\"label\":\"Monofocal visión sencilla\",\"value\":\"Monofocal visión sencilla\"},\"material\":[\"AR_BLUE_BLOCK\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"},{\"cristal\":{\"label\":\"Lentes de contacto\",\"value\":\"Lentes de contacto\"},\"material\":[\"CR39\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-08-22 00:58:31', '2025-08-22 00:58:31', NULL),
-(32, 'H-20250831-001', NULL, '2025-08-31', '4e732ced3463d06de0ca9a15b6153677', 'Fatiga visual', '', 'Bifocal', '2025-08-06', '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\",\"avsc_bi\":\"\"}', 'sadasdasdasdad', 'asdasdasdasdada', '[{\"cristal\":{\"label\":\"Visión sencilla digital\",\"value\":\"Visión sencilla digital\"},\"material\":[\"AR_VERDE\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-08-31 23:55:36', '2025-08-31 23:55:36', NULL),
-(33, 'H-20250901-001', NULL, '2025-09-01', '28acbaf873ad2772e216895c44281940', 'Consulta rutinaria', '', 'Bifocal', '2025-06-04', '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\",\"avsc_bi\":\"\"}', 'dfhdfgdfg', 'ddfgdgdfgd', '[{\"cristal\":{\"label\":\"Progresivo digital intermedio\",\"value\":\"Progresivo digital intermedio\"},\"material\":[\"AR_VERDE\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-09-01 13:40:10', '2025-09-01 13:40:10', NULL),
-(34, 'H-20250901-002', NULL, '2025-09-01', '28acbaf873ad2772e216895c44281940', 'Fatiga visual', '', 'Bifocal', NULL, '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\",\"avsc_bi\":\"\"}', 'fgsdfsdfs', 'fsdfsdfsdf', '[{\"cristal\":{\"label\":\"Visión sencilla digital\",\"value\":\"Visión sencilla digital\"},\"material\":[\"AR_VERDE\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-09-01 14:13:51', '2025-09-01 14:13:51', NULL),
-(35, 'H-20250901-003', NULL, '2025-09-01', '02e74f10e0327ad868d138f2b4fdd6f0', 'Consulta rutinaria', '', 'Bifocal', NULL, '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\",\"avsc_bi\":\"\"}', 'werwrwerewr', 'wrewer', '[{\"cristal\":{\"label\":\"Monofocal visión sencilla\",\"value\":\"Monofocal visión sencilla\"},\"material\":[\"AR_VERDE\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-09-01 14:14:44', '2025-09-01 14:14:44', NULL),
-(36, 'H-20250901-004', NULL, '2025-09-01', '02e74f10e0327ad868d138f2b4fdd6f0', 'Consulta rutinaria', '', 'Bifocal', NULL, '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\",\"avsc_bi\":\"\"}', 'retert', 'erteteete', '[{\"cristal\":{\"label\":\"Visión sencilla digital\",\"value\":\"Visión sencilla digital\"},\"material\":[\"AR_VERDE\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-09-01 14:15:10', '2025-09-01 14:15:10', NULL),
-(37, 'H-20250901-005', NULL, '2025-09-01', '45c48cce2e2d7fbdea1afc51c7c6ad26', 'Fatiga visual', '', 'Bifocal', '2025-08-31', '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\",\"avsc_bi\":\"\"}', '', '', '[{\"cristal\":{\"label\":\"Monofocal visión sencilla\",\"value\":\"Monofocal visión sencilla\"},\"material\":[\"CR39\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-09-01 14:15:36', '2025-09-01 14:15:36', NULL),
-(38, 'H-20250901-006', NULL, '2025-09-01', '45c48cce2e2d7fbdea1afc51c7c6ad26', 'Consulta rutinaria', '', NULL, '2025-08-31', '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\",\"avsc_bi\":\"\"}', 'erewrew', 'werewrew', '[{\"cristal\":{\"label\":\"Visión sencilla digital\",\"value\":\"Visión sencilla digital\"},\"material\":[\"AR_VERDE\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-09-01 14:27:26', '2025-09-01 14:27:26', NULL),
-(39, 'H-20250901-007', NULL, '2025-09-01', '02e74f10e0327ad868d138f2b4fdd6f0', 'Consulta rutinaria', '', 'Bifocal', '2025-08-31', '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\",\"avsc_bi\":\"\"}', 'asdsada', 'asdasda', '[{\"cristal\":{\"label\":\"Visión sencilla digital\",\"value\":\"Visión sencilla digital\"},\"material\":[\"AR_VERDE\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-09-01 14:36:39', '2025-09-01 14:36:39', NULL),
-(40, 'H-20250901-008', NULL, '2025-09-01', '45c48cce2e2d7fbdea1afc51c7c6ad26', 'Consulta rutinaria', '', 'Bifocal', '2025-08-31', '25409904', 0, 0, '{\"esf_od\":{\"value\":\"+0.25\",\"label\":\"+0.25\"},\"cil_od\":\"-0.25\",\"eje_od\":2,\"add_od\":\"+0.75\",\"av_lejos_od\":\"20/25\",\"av_cerca_od\":\"J2\",\"av_lejos_bi\":\"20/25\",\"av_bi\":\"20/25\",\"esf_oi\":\"+0.25\",\"cil_oi\":\"-0.25\",\"eje_oi\":2,\"add_oi\":\"+0.75\",\"av_lejos_oi\":\"20/25\",\"av_cerca_oi\":\"J2\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"+0.50\",\"cil_od\":\"-0.50\",\"eje_od\":2,\"add_od\":\"0.00\",\"avccl_od\":\"20/25\",\"avccc_od\":\"J2\",\"avccl_bi\":\"20/20\",\"avccc_bi\":\"20/20\",\"esf_oi\":\"+0.25\",\"cil_oi\":\"-0.25\",\"eje_oi\":2,\"add_oi\":\"+0.75\",\"avccl_oi\":\"20/20\",\"avccc_oi\":\"J2\"}', '{\"esf_od\":\"+0.25\",\"cil_od\":\"0.00\",\"eje_od\":1,\"add_od\":\"0.00\",\"alt_od\":\"897\",\"dp_od\":\"7897\",\"esf_oi\":\"0.00\",\"cil_oi\":\"-0.25\",\"eje_oi\":2,\"add_oi\":\"+0.75\",\"alt_oi\":\"7897\",\"dp_oi\":\"79879\"}', '{\"avsc_od\":\"20/25\",\"avae_od\":\"J2\",\"otros_od\":\"hfghfgh\",\"avsc_oi\":\"20/20\",\"avae_oi\":\"J1\",\"otros_oi\":\"fhgfhf\",\"avsc_bi\":\"\"}', 'fghfhg', 'fhfhfh', '[{\"cristal\":{\"label\":\"Visión sencilla digital\",\"value\":\"Visión sencilla digital\"},\"material\":[\"AR_VERDE\"],\"montura\":\"fghfhfhf\",\"cristalSugerido\":\"\",\"observaciones\":\"fghfghfhfhfh\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-09-01 14:41:47', '2025-09-01 14:41:47', NULL),
-(41, 'H-20250901-009', NULL, '2025-09-01', '45d23e843211818dd5ad1bbd9caf4bfd', 'Fatiga visual', '', 'Visión sencilla digital', '2025-08-31', '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\",\"avsc_bi\":\"\"}', 'sdfsdf', 'sdfsdfsd', '[{\"cristal\":{\"label\":\"Visión sencilla digital\",\"value\":\"Visión sencilla digital\"},\"material\":[\"AR_VERDE\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-09-01 14:42:18', '2025-09-01 14:42:18', NULL),
-(42, 'H-20250901-010', NULL, '2025-09-01', '02e74f10e0327ad868d138f2b4fdd6f0', 'Fatiga visual', '', 'Bifocal', NULL, '25409904', 0, 0, '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"av_lejos_od\":\"\",\"av_cerca_od\":\"\",\"av_lejos_bi\":\"\",\"av_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"av_lejos_oi\":\"\",\"av_cerca_oi\":\"\",\"av_cerca_bi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"avccl_od\":\"\",\"avccc_od\":\"\",\"avccl_bi\":\"\",\"avccc_bi\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"avccl_oi\":\"\",\"avccc_oi\":\"\"}', '{\"esf_od\":\"\",\"cil_od\":\"\",\"eje_od\":\"\",\"add_od\":\"\",\"alt_od\":\"\",\"dp_od\":\"\",\"esf_oi\":\"\",\"cil_oi\":\"\",\"eje_oi\":\"\",\"add_oi\":\"\",\"alt_oi\":\"\",\"dp_oi\":\"\"}', '{\"avsc_od\":\"\",\"avae_od\":\"\",\"otros_od\":\"\",\"avsc_oi\":\"\",\"avae_oi\":\"\",\"otros_oi\":\"\",\"avsc_bi\":\"\"}', 'dfgdgd', 'gdgdgd', '[{\"cristal\":{\"label\":\"Visión sencilla digital\",\"value\":\"Visión sencilla digital\"},\"material\":[\"CR39\"],\"montura\":\"\",\"cristalSugerido\":\"\",\"observaciones\":\"\"}]', 'PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.', NULL, NULL, '24367965', '24367965', '2025-09-01 15:45:36', '2025-09-01 15:45:36', NULL),
-(270002, 'H-GT-001', NULL, '2026-03-16', '55baf34e-17c0-49b9-8512-64133d8ac69e', 'Prueba de API', NULL, NULL, NULL, NULL, 0, 0, '[]', '[]', '[]', '[]', 'Sano', NULL, '[]', NULL, NULL, NULL, '999999999', '999999999', '2026-03-16 15:20:02', '2026-03-16 15:20:02', NULL),
-(999001, 'HIST-999-001', '2595f841-b8b3-4078-b3a8-aec766693087', '2026-03-16', 'PAG-999', '', NULL, NULL, NULL, NULL, 0, 0, '{}', '{}', '{}', '{}', NULL, NULL, '{}', NULL, NULL, NULL, '999999999', '999999999', '2026-03-16 17:13:51', '2026-03-16 17:58:59', NULL),
-(999002, 'HIST-999-002', '7c849cd5-49d8-410f-90b6-729e0e31b3cf', '2026-03-16', 'PAG-999', '', NULL, NULL, NULL, NULL, 0, 0, '{}', '{}', '{}', '{}', NULL, NULL, '{}', NULL, NULL, NULL, '999999999', '999999999', '2026-03-16 17:58:43', '2026-03-16 17:58:59', NULL),
-(999003, 'HIST-999-003', 'fda98758-44a9-4f8b-b1a4-f006a5cb79d0', '2026-03-16', 'PAG-999', '', NULL, NULL, NULL, NULL, 0, 0, '{}', '{}', '{}', '{}', NULL, NULL, '{}', NULL, NULL, NULL, '999999999', '999999999', '2026-03-16 17:58:43', '2026-03-16 17:58:59', NULL);
+INSERT INTO `historiales_medicos` (`id`, `numero`, `venta_key`, `pago_pendiente`, `fecha`, `paciente_id`, `motivo_consulta`, `otro_motivo_consulta`, `tipo_cristal_actual`, `tipo_lentes_contacto`, `ultima_graduacion`, `medico`, `formula_externa`, `examen_ocular_lensometria`, `examen_ocular_refraccion`, `examen_ocular_refraccion_final`, `examen_ocular_avsc_avae_otros`, `diagnostico`, `tratamiento`, `recomendaciones`, `conformidad_nota`, `conformidad_firma_paciente`, `conformidad_firma_medico`, `created_by`, `updated_by`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'H-20260317-001', 'b6547031-0d9a-47dd-8d4c-8c6955504024', 0, '2026-03-17', 'c4ca4238a0b923820dcc509a6f75849b', 'Chequeo visual', '', 'Ninguno', 'No usa', '2022-12-31', '25409904', 0, '{\"oIDistancia\":\"\",\"oDDistancia\":\"\"}', '{\"oIDistancia\":\"\",\"oDDistancia\":\"\"}', '{\"oIDistancia\":\"\",\"oDDistancia\":\"\"}', '{\"nota\":\"\"}', 'Miopía leve', 'Lentes de descanso', '[\"Usar lentes al leer\"]', 'Conforme', NULL, NULL, '999999999', '999999999', '2026-03-17 07:44:51', '2026-03-17 07:44:51', NULL),
+(2, 'H-20260317-002', '63780710-9d43-45c7-9e41-85b8f4e41ae3', 0, '2026-03-17', 'c4ca4238a0b923820dcc509a6f75849b', 'Chequeo visual', '', 'Ninguno', 'No usa', '2022-12-31', '25409904', 0, '{\"oIDistancia\":\"\",\"oDDistancia\":\"\"}', '{\"oIDistancia\":\"\",\"oDDistancia\":\"\"}', '{\"oIDistancia\":\"\",\"oDDistancia\":\"\"}', '{\"nota\":\"\"}', 'Miopía leve', 'Lentes de descanso', '[\"Usar lentes al leer\"]', 'Conforme', NULL, NULL, '999999999', '999999999', '2026-03-17 07:44:51', '2026-03-17 07:44:51', NULL);
 
 -- --------------------------------------------------------
 
@@ -343,7 +318,44 @@ INSERT INTO `logins` (`id`, `sede_id`, `usu_cedula`, `token`, `ip`, `created_at`
 (69, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNjk4OTM0LCJleHAiOjE3NzM3ODUzMzR9.WFt-bg_QvmfTQbLKvOlI43R-8vriiqMCZgKr7WhchqI', '::1', '2026-03-16 18:08:54', '2026-03-16 18:08:54'),
 (70, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNjk4OTU1LCJleHAiOjE3NzM3ODUzNTV9.UZoUEgw_Hdc8i-lMv05paz8R6-fx8UfzOLJGL0HvNzs', '::1', '2026-03-16 18:09:15', '2026-03-16 18:09:15'),
 (71, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNjk4OTY0LCJleHAiOjE3NzM3ODUzNjR9.B9F4WZEly35PHJGMuv7STnJdNkq13w2UagxO1DMIKvA', '::1', '2026-03-16 18:09:24', '2026-03-16 18:09:24'),
-(72, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNjk5MDA4LCJleHAiOjE3NzM3ODU0MDh9.vZxhIZ-7yr-yJFFhpi1pPU1Igu90EBdrxHnNAFBQ4Ck', '::1', '2026-03-16 18:10:08', '2026-03-16 18:10:08');
+(72, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNjk5MDA4LCJleHAiOjE3NzM3ODU0MDh9.vZxhIZ-7yr-yJFFhpi1pPU1Igu90EBdrxHnNAFBQ4Ck', '::1', '2026-03-16 18:10:08', '2026-03-16 18:10:08'),
+(73, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzAyMzUyLCJleHAiOjE3NzM3ODg3NTJ9.X-Ij_jYD0sIm4Ks0EcC2wCIa1htDe2Z1Xwnw7M8Pa6Q', '::1', '2026-03-16 19:05:52', '2026-03-16 19:05:52'),
+(74, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzAyMzcwLCJleHAiOjE3NzM3ODg3NzB9.-w_j5YTTs5VXh1jtTfH2tUrK_7pYBHW9F5Kv50mR5NU', '::1', '2026-03-16 19:06:10', '2026-03-16 19:06:10'),
+(75, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQwNjY1LCJleHAiOjE3NzM4MjcwNjV9.HV8v5HWySKbVF_pM2owFf3mkyHKCQoN3EsbMRbCMoOs', '::1', '2026-03-17 05:44:25', '2026-03-17 05:44:25'),
+(76, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQzMTcyLCJleHAiOjE3NzM4Mjk1NzJ9.eXrFFDaCkEjvCSSvz_P8IymMAWFLOT2JL5rcycerruw', '::1', '2026-03-17 06:26:12', '2026-03-17 06:26:12'),
+(77, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQzMjE1LCJleHAiOjE3NzM4Mjk2MTV9.PFGhQoPHFIeIAm3AIsG5hV4WrbIKeBiVafVTjByryQ8', '::1', '2026-03-17 06:26:55', '2026-03-17 06:26:55'),
+(78, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQzMjM5LCJleHAiOjE3NzM4Mjk2Mzl9.fQSO7E6UBPLDTtTloD7H9yb71PAvmWxZB3OkrGDYpP4', '::1', '2026-03-17 06:27:19', '2026-03-17 06:27:19'),
+(79, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQzMjcwLCJleHAiOjE3NzM4Mjk2NzB9.4HewR_ggXOmhrYe37ZpzrITcNoklySdybjbIzaqHL_g', '::1', '2026-03-17 06:27:50', '2026-03-17 06:27:50'),
+(80, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQzMzAyLCJleHAiOjE3NzM4Mjk3MDJ9.ZojIuvp-LpagyggihCr_R9JNQqF_nH6a1L_vA7ULWsw', '::1', '2026-03-17 06:28:22', '2026-03-17 06:28:22'),
+(81, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQzNTUyLCJleHAiOjE3NzM4Mjk5NTJ9.ZZaXaC0jC8d1Ln7hfKehbwvRWIw2eBfxM15Z8HhvWck', '::1', '2026-03-17 06:32:32', '2026-03-17 06:32:32'),
+(82, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQzNjI4LCJleHAiOjE3NzM4MzAwMjh9.dqWt4hR967JIvOuNLKA40uhuRtFPb3THcv7Hz5Y_KXc', '::1', '2026-03-17 06:33:48', '2026-03-17 06:33:48'),
+(83, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQzNzcyLCJleHAiOjE3NzM4MzAxNzJ9.oZD7nkLWVNA_A73eSKLYmm9hc_dFaP_ga8KR6LshPaw', '::1', '2026-03-17 06:36:12', '2026-03-17 06:36:12'),
+(84, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQzODMyLCJleHAiOjE3NzM4MzAyMzJ9.iDORZKPLNX_9OkchiULgIwrhwdeOdzBbC1jLVkPuwlk', '::1', '2026-03-17 06:37:12', '2026-03-17 06:37:12'),
+(85, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQzOTEzLCJleHAiOjE3NzM4MzAzMTN9.TVFfupBW8PSH_-l74e90ZaHK7dzD7uUXi9zWLCXkea8', '::1', '2026-03-17 06:38:33', '2026-03-17 06:38:33'),
+(86, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ0MTgzLCJleHAiOjE3NzM4MzA1ODN9.E-FfsWwJw8-5xz5L7mI8_DfqikoHj_tq0DNDgmNhmQ0', '::1', '2026-03-17 06:43:03', '2026-03-17 06:43:03'),
+(87, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ0MjYzLCJleHAiOjE3NzM4MzA2NjN9.8z0694MNmtwECIS3qjXERFtOz5a-CrsgBjctxUKXudU', '::1', '2026-03-17 06:44:23', '2026-03-17 06:44:23'),
+(88, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ0Mzc3LCJleHAiOjE3NzM4MzA3Nzd9.uwCnTrN9pZKdlRuG9WBEBhQbbAc1t3yHrfYjLIQJHsI', '::1', '2026-03-17 06:46:17', '2026-03-17 06:46:17'),
+(89, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1MjY1LCJleHAiOjE3NzM4MzE2NjV9.w-EJrkCKYjXUn7RxOSAK8g-2uPDh8u9uJxLjZRIjH04', '::1', '2026-03-17 07:01:05', '2026-03-17 07:01:05'),
+(90, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1MjgyLCJleHAiOjE3NzM4MzE2ODJ9.6PYpkEt0cBd2HDpTLw4lxcqf5kWHyK3kppP8CY-k7L8', '::1', '2026-03-17 07:01:22', '2026-03-17 07:01:22'),
+(91, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1MzU2LCJleHAiOjE3NzM4MzE3NTZ9.yhRdcASbexN_YhzaWKZApeddLr1wbPk1HWUFl7pbsXQ', '::1', '2026-03-17 07:02:36', '2026-03-17 07:02:36'),
+(92, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1MzY5LCJleHAiOjE3NzM4MzE3Njl9.eFkE3P4ohm4zdFZPxVChuGsX09URDv9kMyweuylBEnM', '::1', '2026-03-17 07:02:49', '2026-03-17 07:02:49'),
+(93, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1MzgyLCJleHAiOjE3NzM4MzE3ODJ9.RmAgCp2nJcXvKCmbqLDotTF64K8-0FiWQ34kW5bAtO8', '::1', '2026-03-17 07:03:02', '2026-03-17 07:03:02'),
+(94, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1NDI3LCJleHAiOjE3NzM4MzE4Mjd9.xDov6URRTRX5EwHFVn4aQyogFnJ5RvU7ofrmD-ozlN4', '::1', '2026-03-17 07:03:47', '2026-03-17 07:03:47'),
+(95, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1NTI5LCJleHAiOjE3NzM4MzE5Mjl9.22Jms3TyqeVoHwBIxts2cHra1SJF_rMBS4uCW9tGlRU', '::1', '2026-03-17 07:05:29', '2026-03-17 07:05:29'),
+(96, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1NTQwLCJleHAiOjE3NzM4MzE5NDB9.vvYoeHBYllOgOKyD_46tFqJht2U0JynVdx_X4Llm-4A', '::1', '2026-03-17 07:05:40', '2026-03-17 07:05:40'),
+(97, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1NTkwLCJleHAiOjE3NzM4MzE5OTB9.aGmf-QESjJyQudsvL1bsctkiHVkMU6EgKvZkGU6G4g0', '::1', '2026-03-17 07:06:30', '2026-03-17 07:06:30'),
+(98, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1NTk4LCJleHAiOjE3NzM4MzE5OTh9.uCfqjTXhjzLJiRuUP7dfrR7V9phBRKVmzJtsFGRfZ8U', '::1', '2026-03-17 07:06:38', '2026-03-17 07:06:38'),
+(99, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1NjUwLCJleHAiOjE3NzM4MzIwNTB9.LdyCRblnEtkut-6ZR-iPc9aHgp5nXqsAjQ_SC5dcCTI', '::1', '2026-03-17 07:07:30', '2026-03-17 07:07:30'),
+(100, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1NjYyLCJleHAiOjE3NzM4MzIwNjJ9.f2c0pfPaDTvBAwncLsOtvTRsjriak5olx0MPgDgdTis', '::1', '2026-03-17 07:07:42', '2026-03-17 07:07:42'),
+(101, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1NzkwLCJleHAiOjE3NzM4MzIxOTB9.YmwD2looUV_fYJ06BkvGruhA5daj_LKd9SAIvVxWNRA', '::1', '2026-03-17 07:09:50', '2026-03-17 07:09:50'),
+(102, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ1OTM4LCJleHAiOjE3NzM4MzIzMzh9.7APs0On5IxGfbGHG4xQsVyUjjsnxM5Gw_9YLG-2j91A', '::1', '2026-03-17 07:12:18', '2026-03-17 07:12:18'),
+(103, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ2MDU1LCJleHAiOjE3NzM4MzI0NTV9.Z76YhyQ381okSXb41IKavNX5kvAjkIpVeo1bWl1rG9c', '::1', '2026-03-17 07:14:15', '2026-03-17 07:14:15'),
+(104, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ2MTk5LCJleHAiOjE3NzM4MzI1OTl9.qsyQW6SAL5QC-kzgkwhJoUVF3oZ0xGPSY3K3B34pngc', '::1', '2026-03-17 07:16:39', '2026-03-17 07:16:39'),
+(105, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ2MjM3LCJleHAiOjE3NzM4MzI2Mzd9.lwKI-shnUYiM3xjVJopnDLQAqj_6chjc5gv3SmUdyFU', '::1', '2026-03-17 07:17:17', '2026-03-17 07:17:17'),
+(106, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ3NTk4LCJleHAiOjE3NzM4MzM5OTh9.Qe8gaIqi9T06fwpL7nV_IJN_XS_2lW2pUFrJ7JXNqRo', '::1', '2026-03-17 07:39:58', '2026-03-17 07:39:58'),
+(107, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ3NzI1LCJleHAiOjE3NzM4MzQxMjV9.Q-7XkKlPT_7310vFd9Po8Kp-e-H0MED2pgRFsgniEHk', '::1', '2026-03-17 07:42:05', '2026-03-17 07:42:05'),
+(108, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ3ODA0LCJleHAiOjE3NzM4MzQyMDR9.U_I8BnPM7xtEpgGZVdJ1dRoBmGlaqfr5u-UTRM3RiEo', '::1', '2026-03-17 07:43:24', '2026-03-17 07:43:24'),
+(109, 'guarenas', '999999999', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiOTk5OTk5OTk5IiwiaWF0IjoxNzczNzQ3ODkxLCJleHAiOjE3NzM4MzQyOTF9.4AditE2ZTIr2cO9QwI0ncDP2tDQhLpn31iEswAvfFAo', '::1', '2026-03-17 07:44:51', '2026-03-17 07:44:51');
 
 -- --------------------------------------------------------
 
@@ -429,26 +441,15 @@ CREATE TABLE `pacientes` (
   `alergias` text DEFAULT NULL,
   `antecedentes_personales` text DEFAULT NULL,
   `antecedentes_familiares` text DEFAULT NULL,
-  `patologias` varchar(255) DEFAULT NULL,
-  `patologia_ocular` varchar(255) DEFAULT NULL
+  `patologias` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pacientes`
 --
 
-INSERT INTO `pacientes` (`id`, `pkey`, `sede_id`, `cedula`, `sin_cedula`, `nombre`, `fecha_nacimiento`, `telefono`, `email`, `ocupacion`, `genero`, `direccion`, `redes_sociales`, `empresa_rif`, `created_at`, `updated_at`, `deleted_at`, `tiene_lentes`, `fotofobia`, `uso_dispositivo_electronico`, `traumatismo_ocular`, `traumatismo_ocular_descripcion`, `cirugia_ocular`, `cirugia_ocular_descripcion`, `alergias`, `antecedentes_personales`, `antecedentes_familiares`, `patologias`, `patologia_ocular`) VALUES
-(8, 'c9f0f895fb98ab9159f51fd0297e236d', 'guarenas', '267758784', 0, 'Jesus Martinez', '1998-10-03', '04142134565', 'jesusmc@gmail.com', 'Ingeniero', 'm', 'Guatire', '[{\"platform\":\"Facebook\",\"username\":\"jesusmc\"},{\"platform\":\"Instagram\",\"username\":\"@jesusmc\"}]', NULL, '2025-07-22 00:34:08', '2025-08-30 21:36:51', NULL, 'No', 'No', 'No', 'No', NULL, 'No', NULL, NULL, '', '', '', ''),
-(9, '45c48cce2e2d7fbdea1afc51c7c6ad26', 'guarenas', '10092901', 0, 'Ana Castro', '1969-10-03', '04142134565', 'jesusmc@gmail.com', 'Ingeniero', 'm', 'Guatire', '[{\"platform\":\"Facebook\",\"username\":\"anacastro\"},{\"platform\":\"Instagram\",\"username\":\"@anacastro\"}]', NULL, '2025-07-22 00:47:47', '2025-07-22 00:47:47', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(10, 'd3d9446802a44259755d38e6d163e820', 'guarenas', '25409904', 1, 'Jefferson Torres', '1996-06-11', '04241738615', 'jefersonugas@gmail.com', 'Ingeniero de Sistemas', 'm', 'Guatire, Castillejo, en una casa.', '[{\"platform\":\"Facebook\",\"username\":\"maria.gonzalez\"},{\"platform\":\"Instagram\",\"username\":\"@maria.g\"}]', '254099046', '2025-07-23 15:52:19', '2026-01-19 23:17:18', NULL, 'Si', NULL, 'Si, 3 a 6 horas', NULL, NULL, NULL, NULL, NULL, '', '', 'a|b|c', ''),
-(14, 'aab3238922bcc25a6f606eb525ffdc56', 'guatire', '24367965', 0, 'Ruben dario Martinez castro', '1995-11-10', '04123920817', 'rubemm18@gmail.com', 'Ingeniero', 'm', 'Las rosas, conj res, country villas', '[{\"platform\":\"Instagram\",\"username\":\"martinezcr_\"}]', NULL, '2025-07-24 21:35:31', '2025-08-31 23:29:27', NULL, 'Sí', 'No', 'Sí, 1 a 3 horas', 'No', NULL, 'Sí', 'Miopia y agtismatismo', NULL, '', '', 'Miopía|Astigmatismo', ''),
-(24, '45d23e843211818dd5ad1bbd9caf4bfd', 'guatire', '23423432', 0, 'test test', '2025-08-04', '04123920817', 'rubemm18@gmail.com', 'qwdasdasd', 'f', 'Las rosas, conj res, country villas', '[]', NULL, '2025-08-29 15:59:05', '2025-08-30 21:42:09', NULL, 'No', 'No', 'No', 'No', NULL, 'No', NULL, NULL, '', '', '', ''),
-(25, '28acbaf873ad2772e216895c44281940', 'guatire', '8759927', 1, 'Dario Castro', '2025-08-14', '04123920817', 'rubemm18@gmail.com', 'Programador', 'm', 'Las rosas, conj res, country villas', '[]', NULL, '2025-08-30 21:48:38', '2025-08-30 21:48:38', NULL, 'No', 'No', 'No', 'No', '', 'No', '', NULL, '', '', '', ''),
-(26, '4e732ced3463d06de0ca9a15b6153677', 'guatire', '4353453', 0, 'dfsfsdfsf', '2025-09-16', '04123920817', 'rubemm18@gmail.com', 'sfsdfsd', 'f', 'Las rosas, conj res, country villas', '[]', NULL, '2025-09-01 13:34:30', '2025-09-01 13:34:30', NULL, 'No', 'No', 'No', 'No', '', 'No', '', NULL, '', '', '', ''),
-(27, '02e74f10e0327ad868d138f2b4fdd6f0', 'guatire', '723423432', 0, 'sdfsdfsdfd', '2025-09-02', '04123920817', 'rubemm18@gmail.com', 'sadasdsad', 'f', 'Las rosas, conj res, country villas', '[]', NULL, '2025-09-01 16:43:09', '2025-09-01 16:43:09', NULL, 'No', 'No', 'No', 'No', '', 'No', '', NULL, '', '', '', ''),
-(31, 'c16a5320fa475530d9583c34fd356ef5', 'guarenas', '123123123', 1, 'Ruben Martinez', '2025-07-01', '04123920817', 'rubemm18@gmail.com', 'fgdfgdf', 'm', 'Las rosas, conj res, country villas', '[{\"platform\":\"Instagram\",\"username\":\"asdadasda\"}]', '254099046', '2026-01-19 23:16:35', '2026-01-19 23:16:35', NULL, 'Sí', 'No', 'Si, 3 a 6 horas', 'No', NULL, 'Sí', 'catarata', NULL, '', 'Diabetes', 'Astigmatismo|Miopía', ''),
-(32, '6364d3f0f495b6ab9dcf8d3b5c6e0b01', 'guarenas', '14569321', 0, 'Blanca Castro', '1928-06-07', '04123920817', 'rubemm18@gmail.com', 'Maestra', 'f', 'Castillejo', '[]', NULL, '2026-02-11 13:21:13', '2026-02-11 13:21:13', NULL, 'Sí', 'No', 'Sí, 3 a 6 horas', 'Sí', 'golpe en ojo izquierdo por caida', 'No', '', 'Polvo, tierra', 'Diabetes|Hipertensión|Traumatismo ocular|Orzuelos', 'Diabetes|Hipertensión', 'Problemas renales', ''),
-(33, '55baf34e-17c0-49b9-8512-64133d8ac69e', 'guatire', '999999999', 1, 'Paciente Test Guatire', '1990-01-01', '04120000000', 'paciente@test.com', 'Pruebas', 'M', 'Guatire, Miranda', '[]', NULL, '2026-03-16 15:20:02', '2026-03-16 15:20:02', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `pacientes` (`id`, `pkey`, `sede_id`, `cedula`, `sin_cedula`, `nombre`, `fecha_nacimiento`, `telefono`, `email`, `ocupacion`, `genero`, `direccion`, `redes_sociales`, `empresa_rif`, `created_at`, `updated_at`, `deleted_at`, `tiene_lentes`, `fotofobia`, `uso_dispositivo_electronico`, `traumatismo_ocular`, `traumatismo_ocular_descripcion`, `cirugia_ocular`, `cirugia_ocular_descripcion`, `alergias`, `antecedentes_personales`, `antecedentes_familiares`, `patologias`) VALUES
+(1, 'c4ca4238a0b923820dcc509a6f75849b', 'guarenas', '24367965', 0, 'Ruben dario Martinez castro', '1994-11-20', '04120000000', 'ruben@example.com', 'Ingeniero', 'm', 'Guarenas', '[]', NULL, '2026-03-17 07:44:51', '2026-03-17 07:44:51', NULL, 'No', 'No', 'Sí', 'No', '', 'No', '', 'Ninguna', '', '', 'Ninguna');
 
 -- --------------------------------------------------------
 
@@ -638,7 +639,7 @@ CREATE TABLE `usuarios` (
 INSERT INTO `usuarios` (`id`, `rol_id`, `cargo_id`, `cedula`, `nombre`, `password`, `correo`, `telefono`, `fecha_nacimiento`, `ruta_imagen`, `avatar_url`, `activo`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (4, 'admin', 'gerente', '25409904', 'Jefferson Torres', '$2b$10$rVR3GakmyWh.aJylX4Lv0eNPUFtwDCGClViFXHnXglrdajmoEBLca', 'jeffersonjtorresu@gmail.com', '04128977574', '1996-06-11', NULL, NULL, 1, '2025-03-28 18:31:30', '2025-11-14 13:29:14', NULL),
 (24, 'asesor-optico', 'asesor-optico-1', '11554570', 'Heriberto Torres', '$2b$10$7KuJRh76glMvnAPw7l.S9ebE2y6lalWWui7R3Znwyjk4pqStyPnOy', 'heriberto@gmail.com', '04241738615', '1996-06-11', NULL, NULL, 1, '2025-07-27 15:19:32', '2025-07-27 15:19:32', NULL),
-(25, 'admin', 'administrador', '999999999', 'Test API User', '$2a$12$qZVUV4aoxqnj3qc5nEKYze3yQU9/nZW8mlIjkyzE2E03IBT./zzE2', 'testapi@example.com', NULL, NULL, NULL, NULL, 1, '2026-03-16 15:11:55', '2026-03-16 15:11:55', NULL);
+(25, 'admin', 'administrador', '999999999', 'Test API User', '$2b$10$evWisltZZdEaHIEdGgQqFuRxcUFxQpg3Rn5/zEFzhDAG1K4s/1FkS', 'testapi@example.com', NULL, NULL, NULL, NULL, 1, '2026-03-16 15:11:55', '2026-03-16 15:11:55', NULL);
 
 -- --------------------------------------------------------
 
@@ -685,6 +686,14 @@ CREATE TABLE `ventas` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ventas`
+--
+
+INSERT INTO `ventas` (`id`, `venta_key`, `numero_control`, `sede`, `tipo_venta`, `paciente_key`, `cliente_tipo`, `cliente_informacion_persona`, `cliente_informacion_nombre`, `cliente_informacion_cedula`, `cliente_informacion_telefono`, `cliente_informacion_email`, `empresa_rif`, `empresa_nombre`, `empresa_telefono`, `empresa_correo`, `empresa_direccion`, `moneda`, `tasa_moneda`, `tasas_actuales`, `forma_pago`, `iva_porcentaje`, `descuento`, `subtotal`, `iva`, `total`, `observaciones`, `fecha`, `pago_completo`, `created_by`, `asesor_id`, `especialista_cedula`, `estatus_venta`, `estatus_pago`, `motivo_cancelacion`, `created_at`, `updated_at`) VALUES
+(1, 'b6547031-0d9a-47dd-8d4c-8c6955504024', 231, 'guarenas', 'solo_consulta', 'c4ca4238a0b923820dcc509a6f75849b', 'cliente_paciente', 'v', 'Ruben dario', '24367965', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'dolar', 0, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', 'contado', 0, 0, 0, 0, 20, NULL, '2026-03-17 07:44:51', 1, '999999999', NULL, NULL, 'completada', 'completada', NULL, '2026-03-17 07:44:51', '2026-03-17 07:44:51'),
+(2, '63780710-9d43-45c7-9e41-85b8f4e41ae3', 232, 'guarenas', 'solo_consulta', 'c4ca4238a0b923820dcc509a6f75849b', 'cliente_paciente', 'v', 'Ruben dario', '24367965', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'dolar', 0, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', 'de_contado-pendiente', 0, 0, 0, 0, 20, NULL, '2026-03-17 07:44:51', 1, '999999999', NULL, NULL, 'completada', 'completada', NULL, '2026-03-17 07:44:51', '2026-03-17 07:44:51');
 
 -- --------------------------------------------------------
 
@@ -735,6 +744,14 @@ CREATE TABLE `ventas_consultas` (
   `monto_original` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
+--
+-- Volcado de datos para la tabla `ventas_consultas`
+--
+
+INSERT INTO `ventas_consultas` (`id`, `venta_key`, `historia_id`, `pago_medico`, `pago_optica`, `es_formula_externa`, `tipo_especialista`, `monto_original`) VALUES
+(1, 'b6547031-0d9a-47dd-8d4c-8c6955504024', 1, 10, 10, 0, 'medico', 20),
+(2, '63780710-9d43-45c7-9e41-85b8f4e41ae3', 2, 10, 10, 0, 'medico', 20);
+
 -- --------------------------------------------------------
 
 --
@@ -757,6 +774,15 @@ CREATE TABLE `ventas_pagos` (
   `updated_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `ventas_pagos`
+--
+
+INSERT INTO `ventas_pagos` (`id`, `venta_key`, `numero_pago`, `tipo`, `monto`, `moneda_id`, `monto_moneda_base`, `referencia`, `bancoCodigo`, `bancoNombre`, `created_by`, `created_at`, `updated_at`) VALUES
+(1, 'b6547031-0d9a-47dd-8d4c-8c6955504024', 1, 'efectivo', 20, 'dolar', 20, NULL, NULL, NULL, '999999999', '2026-03-17 07:44:51', '2026-03-17 07:44:51'),
+(2, '63780710-9d43-45c7-9e41-85b8f4e41ae3', 1, 'efectivo', 10, 'dolar', 10, NULL, NULL, NULL, '999999999', '2026-03-17 07:44:51', '2026-03-17 07:44:51'),
+(3, '63780710-9d43-45c7-9e41-85b8f4e41ae3', 2, 'efectivo', 10, 'dolar', 10, NULL, NULL, NULL, '999999999', '2026-03-17 07:44:51', '2026-03-17 07:44:51');
+
 -- --------------------------------------------------------
 
 --
@@ -774,6 +800,15 @@ CREATE TABLE `ventas_pagos_agrupados` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ventas_pagos_agrupados`
+--
+
+INSERT INTO `ventas_pagos_agrupados` (`id`, `venta_key`, `numero_pago`, `monto_abonado`, `observaciones`, `tasas_actuales`, `created_by`, `created_at`, `updated_at`) VALUES
+(1, 'b6547031-0d9a-47dd-8d4c-8c6955504024', 1, 20, NULL, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', '999999999', '2026-03-17 07:44:51', '2026-03-17 07:44:51'),
+(2, '63780710-9d43-45c7-9e41-85b8f4e41ae3', 1, 10, NULL, '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', '999999999', '2026-03-17 07:44:51', '2026-03-17 07:44:51'),
+(3, '63780710-9d43-45c7-9e41-85b8f4e41ae3', 2, 10, 'Pago completado', '[{\"id\":\"dolar\",\"valor\":100},{\"id\":\"euro\",\"valor\":200}]', '999999999', '2026-03-17 07:44:51', '2026-03-17 07:44:51');
 
 -- --------------------------------------------------------
 
@@ -991,7 +1026,7 @@ ALTER TABLE `categorias`
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `configuraciones`
@@ -1009,7 +1044,7 @@ ALTER TABLE `empresas`
 -- AUTO_INCREMENT de la tabla `historiales_medicos`
 --
 ALTER TABLE `historiales_medicos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=999004;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `historial_rastreo_bcv`
@@ -1021,7 +1056,7 @@ ALTER TABLE `historial_rastreo_bcv`
 -- AUTO_INCREMENT de la tabla `logins`
 --
 ALTER TABLE `logins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
 
 --
 -- AUTO_INCREMENT de la tabla `ordenes_trabajo`
@@ -1039,7 +1074,7 @@ ALTER TABLE `otps`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
@@ -1063,7 +1098,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas_cashea`
@@ -1081,19 +1116,19 @@ ALTER TABLE `ventas_cashea_cuotas`
 -- AUTO_INCREMENT de la tabla `ventas_consultas`
 --
 ALTER TABLE `ventas_consultas`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas_pagos`
 --
 ALTER TABLE `ventas_pagos`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas_pagos_agrupados`
 --
 ALTER TABLE `ventas_pagos_agrupados`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas_productos`

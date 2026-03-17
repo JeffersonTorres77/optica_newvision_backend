@@ -93,7 +93,7 @@ const VentaService = {
         }
     },
 
-    async validar_historia_medica(historia_id, t = null, venta_key = null) {
+    async validar_historia_medica(historia_id, t = null, venta_key = null, pago_completo = false) {
         if (!historia_id) {
             throw { message: "El ID de la historia médica es obligatorio para este tipo de venta." };
         }
@@ -104,8 +104,13 @@ const VentaService = {
 
         if (venta_key) {
             objHistorial.venta_key = venta_key;
-            await objHistorial.save({ transaction: t });
         }
+
+        // Sincronizar pago_pendiente con el estado de la venta
+        // pago_pendiente = 1 (true) si la venta NO está completa
+        objHistorial.pago_pendiente = !pago_completo;
+
+        await objHistorial.save({ transaction: t });
         return objHistorial;
     },
 

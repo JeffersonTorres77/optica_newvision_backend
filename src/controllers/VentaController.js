@@ -17,6 +17,7 @@ const HistorialMedico = require('../models/HistorialMedico');
 const Tasa = require('../models/Tasa');
 const VentaConsulta = require('../models/VentaConsulta');
 const ConfiguracionService = require('../services/ConfiguracionService');
+const OrdenTrabajo = require('../models/OrdenTrabajo');
 
 const VentaController = {
     add: async (req, res) => {
@@ -112,7 +113,8 @@ const VentaController = {
             pagos: [],
             cashea: null,
             cashea_cuotas: null,
-            consulta: consulta || null
+            consulta: consulta || null,
+            forma_pago: formaPago
         };
 
         objVenta.productos = await VentaService.prepare_productos_array(productos_array_db, objTasa);
@@ -169,7 +171,7 @@ const VentaController = {
 
             if (tipoVenta === 'solo_consulta' || tipoVenta === 'consulta_productos') {
                 const historiaId = (consulta) ? consulta.historiaId : null;
-                await VentaService.validar_historia_medica(historiaId, t, objVenta.venta_key);
+                await VentaService.validar_historia_medica(historiaId, t, objVenta.venta_key, objVenta.pago_completo);
                 await VentaService.sincronizar_costos_consulta(t, FormatUtils.float(consulta.pagoMedico), FormatUtils.float(consulta.pagoOptica), req.sede.id);
             }
 
@@ -180,6 +182,7 @@ const VentaController = {
             await t.commit();
         }
         catch (error) {
+            console.error("ERROR IN VentaController.add:", error);
             await t.rollback();
             throw { message: error.message || error.toString() };
         }
@@ -506,11 +509,22 @@ const VentaController = {
                 objVenta.estatus_pago = 'completada';
                 objVenta.pago_completo = true;
                 await objVenta.save({ transaction: t });
+
+                // Sincronizar pago_pendiente en la historia médica si existe
+                const objVentaConsulta = await VentaConsulta.findOne({ where: { venta_key: objVenta.venta_key }, transaction: t });
+                if (objVentaConsulta) {
+                    const objHistorial = await HistorialMedico.findOne({ where: { id: objVentaConsulta.historia_id }, transaction: t });
+                    if (objHistorial) {
+                        objHistorial.pago_pendiente = false;
+                        await objHistorial.save({ transaction: t });
+                    }
+                }
             }
 
             await t.commit();
         }
         catch (error) {
+            console.error("ERROR IN VentaController.abonar:", error);
             await t.rollback();
             throw { message: error.message || error.toString() };
         }

@@ -19,6 +19,17 @@ const HistorialMedico = sequelize.define('HistorialMedico', {
     allowNull: true,
     collate: 'utf8mb4_general_ci'
   },
+  pago_pendiente: {
+    type: DataTypes.TINYINT(4),
+    allowNull: false,
+    defaultValue: 1,
+    get() {
+      return this.getDataValue('pago_pendiente') === 1;
+    },
+    set(value) {
+      this.setDataValue('pago_pendiente', value ? 1 : 0);
+    }
+  },
   fecha: {
     type: DataTypes.DATEONLY,
     allowNull: false,
@@ -70,17 +81,6 @@ const HistorialMedico = sequelize.define('HistorialMedico', {
     },
     set(value) {
       this.setDataValue('formula_externa', value ? 1 : 0);
-    }
-  },
-  pago_pendiente: {
-    type: DataTypes.TINYINT(4),
-    allowNull: false,
-    defaultValue: 0,
-    get() {
-      return this.getDataValue('pago_pendiente') === 1;
-    },
-    set(value) {
-      this.setDataValue('pago_pendiente', value ? 1 : 0);
     }
   },
   // ========================================
