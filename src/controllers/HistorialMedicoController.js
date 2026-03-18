@@ -43,6 +43,9 @@ const HistorialMedicoController = {
             tipo_lentes_contacto: datosConsulta.tipoLentesContacto,
             ultima_graduacion: datosConsulta.fechaUltimaGraduacion,
             medico: datosConsulta.medico,
+            consulta_medico: datosConsulta.consultaMedico,
+            consulta_medico_referido: datosConsulta.consultaMedicoReferido,
+            consulta_lugar_consultorio: datosConsulta.consultaLugarConsultorio,
             formula_externa: datosConsulta.formulaExterna,
             // ========================================
             examen_ocular_lensometria: examenOcular.lensometria,
@@ -109,6 +112,9 @@ const HistorialMedicoController = {
                 tipoLentesContacto: historial.tipo_lentes_contacto,
                 fechaUltimaGraduacion: historial.ultima_graduacion,
                 medico: user_medico_plain,
+                consultaMedico: historial.consulta_medico,
+                consultaMedicoReferido: historial.consulta_medico_referido,
+                consultaLugarConsultorio: historial.consulta_lugar_consultorio,
                 formulaExterna: historial.formula_externa,
             },
 
@@ -176,6 +182,9 @@ const HistorialMedicoController = {
         objHistorial.tipo_lentes_contacto = datosConsulta.tipoLentesContacto;
         objHistorial.ultima_graduacion = datosConsulta.fechaUltimaGraduacion;
         objHistorial.medico = datosConsulta.medico;
+        objHistorial.consulta_medico = datosConsulta.consultaMedico;
+        objHistorial.consulta_medico_referido = datosConsulta.consultaMedicoReferido;
+        objHistorial.consulta_lugar_consultorio = datosConsulta.consultaLugarConsultorio;
         // ========================================
         objHistorial.examen_ocular_lensometria = examenOcular.lensometria;
         objHistorial.examen_ocular_refraccion = examenOcular.refraccion;
@@ -240,6 +249,9 @@ const HistorialMedicoController = {
                 tipoLentesContacto: historial.tipo_lentes_contacto,
                 fechaUltimaGraduacion: historial.ultima_graduacion,
                 medico: user_medico_plain,
+                consultaMedico: historial.consulta_medico,
+                consultaMedicoReferido: historial.consulta_medico_referido,
+                consultaLugarConsultorio: historial.consulta_lugar_consultorio,
                 formulaExterna: historial.formula_externa,
             },
 
@@ -339,6 +351,9 @@ const HistorialMedicoController = {
                     tipoLentesContacto: historial.tipo_lentes_contacto,
                     fechaUltimaGraduacion: historial.ultima_graduacion,
                     medico: user_medico_plain,
+                    consultaMedico: historial.consulta_medico,
+                    consultaMedicoReferido: historial.consulta_medico_referido,
+                    consultaLugarConsultorio: historial.consulta_lugar_consultorio,
                     formulaExterna: historial.formula_externa,
                 },
 
@@ -432,6 +447,9 @@ const HistorialMedicoController = {
                     tipoLentesContacto: historial.tipo_lentes_contacto,
                     fechaUltimaGraduacion: historial.ultima_graduacion,
                     medico: user_medico_plain,
+                    consultaMedico: historial.consulta_medico,
+                    consultaMedicoReferido: historial.consulta_medico_referido,
+                    consultaLugarConsultorio: historial.consulta_lugar_consultorio,
                     formulaExterna: historial.formula_externa,
                 },
 

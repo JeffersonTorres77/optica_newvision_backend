@@ -72,6 +72,21 @@ const HistorialMedico = sequelize.define('HistorialMedico', {
     allowNull: true,
     collate: 'utf8mb4_general_ci'
   },
+  consulta_medico: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
+  consulta_medico_referido: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
+  consulta_lugar_consultorio: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
   formula_externa: {
     type: DataTypes.TINYINT(4),
     allowNull: false,
