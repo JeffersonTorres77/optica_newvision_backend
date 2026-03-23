@@ -18,6 +18,11 @@ const HistorialMedicoController = {
             conformidad,
         } = req.body;
 
+        const especialista = (datosConsulta && datosConsulta.especialista) ? datosConsulta.especialista : {};
+        const especialistaExterno = (especialista && especialista.externo) ? especialista.externo : {};
+        const formulaOriginal = (datosConsulta && datosConsulta.formulaOriginal) ? datosConsulta.formulaOriginal : {};
+        const formulaOriginalMedicoOrigen = (formulaOriginal && formulaOriginal.medicoOrigen) ? formulaOriginal.medicoOrigen : {};
+
         const objPaciente = await Paciente.findOne({ where: { pkey: pacienteId } });
         if (!objPaciente) {
             throw { message: `El paciente no existe.` };
@@ -42,10 +47,13 @@ const HistorialMedicoController = {
             tipo_cristal_actual: datosConsulta.tipoCristalActual,
             tipo_lentes_contacto: datosConsulta.tipoLentesContacto,
             ultima_graduacion: datosConsulta.fechaUltimaGraduacion,
-            medico: datosConsulta.medico,
-            consulta_medico: datosConsulta.medico,
-            consulta_medico_referido: datosConsulta.medicoReferido,
-            consulta_lugar_consultorio: datosConsulta.lugarConsultorio,
+            especialista_tipo: especialista.tipo || null,
+            especialista_cedula: especialista.cedula || null,
+            especialista_externo_nombre: especialistaExterno.nombre || null,
+            especialista_externo_lugar: especialistaExterno.lugarConsultorio || null,
+            formula_original_tipo: formulaOriginalMedicoOrigen.tipo || null,
+            formula_original_nombre: formulaOriginalMedicoOrigen.nombre || null,
+            formula_original_lugar: formulaOriginalMedicoOrigen.lugarConsultorio || null,
             formula_externa: datosConsulta.formulaExterna,
             // ========================================
             examen_ocular_lensometria: examenOcular.lensometria,
@@ -67,11 +75,6 @@ const HistorialMedicoController = {
 
         const historial = objHistorial.get({ plain: true });
 
-        const user_medico = await Usuario.findOne({
-            where: { cedula: historial.medico },
-            attributes: ['cedula', 'nombre', 'cargo_id'],
-            include: ['cargo']
-        });
         const user_creador = await Usuario.findOne({
             where: { cedula: historial.created_by },
             attributes: ['cedula', 'nombre', 'cargo_id'],
@@ -82,11 +85,13 @@ const HistorialMedicoController = {
             attributes: ['cedula', 'nombre', 'cargo_id'],
             include: ['cargo']
         });
-
-        let user_medico_plain = null;
-        if (user_medico) {
-            user_medico_plain = { cedula: user_medico.cedula, nombre: user_medico.nombre, cargo: user_medico.cargo.nombre };
-        }
+        const user_especialista = (historial.especialista_cedula)
+            ? await Usuario.findOne({
+                where: { cedula: historial.especialista_cedula },
+                attributes: ['cedula', 'nombre', 'cargo_id'],
+                include: ['cargo']
+            })
+            : null;
 
         let user_creador_plain = null;
         if (user_creador) {
@@ -111,10 +116,23 @@ const HistorialMedicoController = {
                 tipoCristalActual: historial.tipo_cristal_actual,
                 tipoLentesContacto: historial.tipo_lentes_contacto,
                 fechaUltimaGraduacion: historial.ultima_graduacion,
-                medico: user_medico_plain,
-                medico: historial.consulta_medico,
-                medicoReferido: historial.consulta_medico_referido,
-                lugarConsultorio: historial.consulta_lugar_consultorio,
+                especialista: {
+                    tipo: historial.especialista_tipo,
+                    cedula: historial.especialista_cedula,
+                    nombre: user_especialista ? user_especialista.nombre : null,
+                    cargo: (user_especialista && user_especialista.cargo) ? user_especialista.cargo.nombre : null,
+                    externo: {
+                        nombre: historial.especialista_externo_nombre,
+                        lugarConsultorio: historial.especialista_externo_lugar,
+                    }
+                },
+                formulaOriginal: {
+                    medicoOrigen: {
+                        tipo: historial.formula_original_tipo,
+                        nombre: historial.formula_original_nombre,
+                        lugarConsultorio: historial.formula_original_lugar,
+                    }
+                },
                 formulaExterna: historial.formula_externa,
             },
 
@@ -175,16 +193,24 @@ const HistorialMedicoController = {
             conformidad,
         } = req.body;
 
+        const especialista = (datosConsulta && datosConsulta.especialista) ? datosConsulta.especialista : {};
+        const especialistaExterno = (especialista && especialista.externo) ? especialista.externo : {};
+        const formulaOriginal = (datosConsulta && datosConsulta.formulaOriginal) ? datosConsulta.formulaOriginal : {};
+        const formulaOriginalMedicoOrigen = (formulaOriginal && formulaOriginal.medicoOrigen) ? formulaOriginal.medicoOrigen : {};
+
         // ========================================
         objHistorial.motivo_consulta = datosConsulta.motivo;
         objHistorial.otro_motivo_consulta = datosConsulta.otroMotivo;
         objHistorial.tipo_cristal_actual = datosConsulta.tipoCristalActual;
         objHistorial.tipo_lentes_contacto = datosConsulta.tipoLentesContacto;
         objHistorial.ultima_graduacion = datosConsulta.fechaUltimaGraduacion;
-        objHistorial.medico = datosConsulta.medico;
-        objHistorial.consulta_medico = datosConsulta.medico;
-        objHistorial.consulta_medico_referido = datosConsulta.medicoReferido;
-        objHistorial.consulta_lugar_consultorio = datosConsulta.lugarConsultorio;
+        objHistorial.especialista_tipo = especialista.tipo || null;
+        objHistorial.especialista_cedula = especialista.cedula || null;
+        objHistorial.especialista_externo_nombre = especialistaExterno.nombre || null;
+        objHistorial.especialista_externo_lugar = especialistaExterno.lugarConsultorio || null;
+        objHistorial.formula_original_tipo = formulaOriginalMedicoOrigen.tipo || null;
+        objHistorial.formula_original_nombre = formulaOriginalMedicoOrigen.nombre || null;
+        objHistorial.formula_original_lugar = formulaOriginalMedicoOrigen.lugarConsultorio || null;
         // ========================================
         objHistorial.examen_ocular_lensometria = examenOcular.lensometria;
         objHistorial.examen_ocular_refraccion = examenOcular.refraccion;
@@ -204,11 +230,6 @@ const HistorialMedicoController = {
 
         const historial = objHistorial.get({ plain: true });
 
-        const user_medico = await Usuario.findOne({
-            where: { cedula: historial.medico },
-            attributes: ['cedula', 'nombre', 'cargo_id'],
-            include: ['cargo']
-        });
         const user_creador = await Usuario.findOne({
             where: { cedula: historial.created_by },
             attributes: ['cedula', 'nombre', 'cargo_id'],
@@ -219,11 +240,13 @@ const HistorialMedicoController = {
             attributes: ['cedula', 'nombre', 'cargo_id'],
             include: ['cargo']
         });
-
-        let user_medico_plain = null;
-        if (user_medico) {
-            user_medico_plain = { cedula: user_medico.cedula, nombre: user_medico.nombre, cargo: user_medico.cargo.nombre };
-        }
+        const user_especialista = (historial.especialista_cedula)
+            ? await Usuario.findOne({
+                where: { cedula: historial.especialista_cedula },
+                attributes: ['cedula', 'nombre', 'cargo_id'],
+                include: ['cargo']
+            })
+            : null;
 
         let user_creador_plain = null;
         if (user_creador) {
@@ -248,10 +271,23 @@ const HistorialMedicoController = {
                 tipoCristalActual: historial.tipo_cristal_actual,
                 tipoLentesContacto: historial.tipo_lentes_contacto,
                 fechaUltimaGraduacion: historial.ultima_graduacion,
-                medico: user_medico_plain,
-                medico: historial.consulta_medico,
-                medicoReferido: historial.consulta_medico_referido,
-                lugarConsultorio: historial.consulta_lugar_consultorio,
+                especialista: {
+                    tipo: historial.especialista_tipo,
+                    cedula: historial.especialista_cedula,
+                    nombre: user_especialista ? user_especialista.nombre : null,
+                    cargo: (user_especialista && user_especialista.cargo) ? user_especialista.cargo.nombre : null,
+                    externo: {
+                        nombre: historial.especialista_externo_nombre,
+                        lugarConsultorio: historial.especialista_externo_lugar,
+                    }
+                },
+                formulaOriginal: {
+                    medicoOrigen: {
+                        tipo: historial.formula_original_tipo,
+                        nombre: historial.formula_original_nombre,
+                        lugarConsultorio: historial.formula_original_lugar,
+                    }
+                },
                 formulaExterna: historial.formula_externa,
             },
 
@@ -305,11 +341,6 @@ const HistorialMedicoController = {
 
         let historiales_output = [];
         for (let historial of historiales_bd) {
-            const user_medico = await Usuario.findOne({
-                where: { cedula: historial.medico },
-                attributes: ['cedula', 'nombre', 'cargo_id'],
-                include: ['cargo']
-            });
             const user_creador = await Usuario.findOne({
                 where: { cedula: historial.created_by },
                 attributes: ['cedula', 'nombre', 'cargo_id'],
@@ -320,11 +351,13 @@ const HistorialMedicoController = {
                 attributes: ['cedula', 'nombre', 'cargo_id'],
                 include: ['cargo']
             });
-
-            let user_medico_plain = null;
-            if (user_medico) {
-                user_medico_plain = { cedula: user_medico.cedula, nombre: user_medico.nombre, cargo: user_medico.cargo.nombre };
-            }
+            const user_especialista = (historial.especialista_cedula)
+                ? await Usuario.findOne({
+                    where: { cedula: historial.especialista_cedula },
+                    attributes: ['cedula', 'nombre', 'cargo_id'],
+                    include: ['cargo']
+                })
+                : null;
 
             let user_creador_plain = null;
             if (user_creador) {
@@ -350,10 +383,23 @@ const HistorialMedicoController = {
                     tipoCristalActual: historial.tipo_cristal_actual,
                     tipoLentesContacto: historial.tipo_lentes_contacto,
                     fechaUltimaGraduacion: historial.ultima_graduacion,
-                    medico: user_medico_plain,
-                    medico: historial.consulta_medico,
-                    medicoReferido: historial.consulta_medico_referido,
-                    lugarConsultorio: historial.consulta_lugar_consultorio,
+                    especialista: {
+                        tipo: historial.especialista_tipo,
+                        cedula: historial.especialista_cedula,
+                        nombre: user_especialista ? user_especialista.nombre : null,
+                        cargo: (user_especialista && user_especialista.cargo) ? user_especialista.cargo.nombre : null,
+                        externo: {
+                            nombre: historial.especialista_externo_nombre,
+                            lugarConsultorio: historial.especialista_externo_lugar,
+                        }
+                    },
+                    formulaOriginal: {
+                        medicoOrigen: {
+                            tipo: historial.formula_original_tipo,
+                            nombre: historial.formula_original_nombre,
+                            lugarConsultorio: historial.formula_original_lugar,
+                        }
+                    },
                     formulaExterna: historial.formula_externa,
                 },
 
@@ -402,11 +448,6 @@ const HistorialMedicoController = {
 
         let historiales_output = [];
         for (let historial of historiales_bd) {
-            const user_medico = await Usuario.findOne({
-                where: { cedula: historial.medico },
-                attributes: ['cedula', 'nombre', 'cargo_id'],
-                include: ['cargo']
-            });
             const user_creador = await Usuario.findOne({
                 where: { cedula: historial.created_by },
                 attributes: ['cedula', 'nombre', 'cargo_id'],
@@ -417,11 +458,13 @@ const HistorialMedicoController = {
                 attributes: ['cedula', 'nombre', 'cargo_id'],
                 include: ['cargo']
             });
-
-            let user_medico_plain = null;
-            if (user_medico) {
-                user_medico_plain = { cedula: user_medico.cedula, nombre: user_medico.nombre, cargo: user_medico.cargo.nombre };
-            }
+            const user_especialista = (historial.especialista_cedula)
+                ? await Usuario.findOne({
+                    where: { cedula: historial.especialista_cedula },
+                    attributes: ['cedula', 'nombre', 'cargo_id'],
+                    include: ['cargo']
+                })
+                : null;
 
             let user_creador_plain = null;
             if (user_creador) {
@@ -446,10 +489,23 @@ const HistorialMedicoController = {
                     tipoCristalActual: historial.tipo_cristal_actual,
                     tipoLentesContacto: historial.tipo_lentes_contacto,
                     fechaUltimaGraduacion: historial.ultima_graduacion,
-                    medico: user_medico_plain,
-                    medico: historial.consulta_medico,
-                    medicoReferido: historial.consulta_medico_referido,
-                    lugarConsultorio: historial.consulta_lugar_consultorio,
+                    especialista: {
+                        tipo: historial.especialista_tipo,
+                        cedula: historial.especialista_cedula,
+                        nombre: user_especialista ? user_especialista.nombre : null,
+                        cargo: (user_especialista && user_especialista.cargo) ? user_especialista.cargo.nombre : null,
+                        externo: {
+                            nombre: historial.especialista_externo_nombre,
+                            lugarConsultorio: historial.especialista_externo_lugar,
+                        }
+                    },
+                    formulaOriginal: {
+                        medicoOrigen: {
+                            tipo: historial.formula_original_tipo,
+                            nombre: historial.formula_original_nombre,
+                            lugarConsultorio: historial.formula_original_lugar,
+                        }
+                    },
                     formulaExterna: historial.formula_externa,
                 },
 

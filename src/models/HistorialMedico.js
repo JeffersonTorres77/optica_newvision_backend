@@ -1,7 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
 const Paciente = require('./Paciente');
-const Usuario = require('./Usuario');
 
 const HistorialMedico = sequelize.define('HistorialMedico', {
   id: {
@@ -67,23 +66,38 @@ const HistorialMedico = sequelize.define('HistorialMedico', {
     allowNull: true,
     collate: 'utf8mb4_general_ci'
   },
-  medico: {
+  especialista_tipo: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
+  especialista_cedula: {
+    type: DataTypes.STRING(25),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
+  especialista_externo_nombre: {
     type: DataTypes.STRING(255),
     allowNull: true,
     collate: 'utf8mb4_general_ci'
   },
-  consulta_medico: {
-    type: DataTypes.STRING(100),
+  especialista_externo_lugar: {
+    type: DataTypes.STRING(255),
     allowNull: true,
     collate: 'utf8mb4_general_ci'
   },
-  consulta_medico_referido: {
-    type: DataTypes.STRING(100),
+  formula_original_tipo: {
+    type: DataTypes.STRING(20),
     allowNull: true,
     collate: 'utf8mb4_general_ci'
   },
-  consulta_lugar_consultorio: {
-    type: DataTypes.STRING(100),
+  formula_original_nombre: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
+  formula_original_lugar: {
+    type: DataTypes.STRING(255),
     allowNull: true,
     collate: 'utf8mb4_general_ci'
   },
@@ -190,12 +204,6 @@ HistorialMedico.belongsTo(Paciente, {
   foreignKey: 'paciente_id',
   targetKey: 'pkey',
   as: 'paciente'
-});
-
-HistorialMedico.belongsTo(Usuario, {
-  foreignKey: 'medico',
-  targetKey: 'cedula',
-  as: 'usuario_medico'
 });
 
 function getArray(fieldName) {
