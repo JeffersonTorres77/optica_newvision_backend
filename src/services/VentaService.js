@@ -438,8 +438,8 @@ const VentaService = {
                 id: producto.datos_producto.id.toString(),
                 nombre: producto.datos_producto.nombre,
                 codigo: producto.datos_producto.codigo,
-                precio: producto.precio_unitario,
-                precioConIva: producto.precio_unitario, // Asumimos que precio_unitario ya es con IVA
+                precio: producto.precio_unitario_sin_iva,
+                precioConIva: producto.precio_unitario,
                 moneda: producto.moneda_producto,
                 cantidad: producto.cantidad,
                 aplicaIva: producto.tiene_iva === 1,
