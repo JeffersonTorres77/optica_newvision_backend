@@ -487,6 +487,7 @@ const VentaService = {
             },
             formaPagoDetalle: {
                 tipo: objVenta.forma_pago,
+                tasasActuales: objVenta.tasas_actuales,
                 montoTotal: objVenta.total,
                 totalPagado: FormatUtils.float(total_pagado),
                 deuda: FormatUtils.float(objVenta.total - total_pagado),
