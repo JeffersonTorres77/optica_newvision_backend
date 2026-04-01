@@ -491,7 +491,7 @@ const VentaService = {
                 totalPagado: FormatUtils.float(total_pagado),
                 deuda: FormatUtils.float(objVenta.total - total_pagado),
                 ...(objVenta.forma_pago === 'cashea' && objVenta.datos_cashea ? {
-                    nivel: objVenta.datos_cashea.nivel,
+                    nivel: objVenta.datos_cashea.nivel_cashea,
                     montoInicial: objVenta.datos_cashea.monto_inicial,
                     cantidadCuotas: objVenta.datos_cashea.cantidad_cuotas,
                     montoPorCuota: objVenta.datos_cashea.monto_por_cuota,
