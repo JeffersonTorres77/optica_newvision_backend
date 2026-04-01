@@ -1,9 +1,9 @@
 {
   "info": {
-    "_postman_id": "6d6de83f-98b2-4449-9b41-b4cb10971c62",
+    "_postman_id": "9f950326-9dc1-481c-9839-189195d5271d",
     "name": "optica",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "13401550"
+    "_exporter_id": "12303250"
   },
   "item": [
     {
@@ -19,7 +19,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"sede\": \"guarenas\",\r\n    \"cedula\": \"999999999\",\r\n    \"password\": \"999999999\"\r\n}",
+              "raw": "{\r\n    \"sede\": \"guarenas\",\r\n    \"cedula\": \"25409904\",\r\n    \"password\": \"11554570\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1657,7 +1657,7 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/ventas-get?busquedaGeneral=V-000200",
+              "raw": "{{baseURL}}/api/ventas-get",
               "host": [
                 "{{baseURL}}"
               ],
@@ -1698,7 +1698,8 @@
                 },
                 {
                   "key": "busquedaGeneral",
-                  "value": "V-000200"
+                  "value": "V-000200",
+                  "disabled": true
                 }
               ]
             }
@@ -1713,7 +1714,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg0ODE4MDIsImV4cCI6MTc2ODU2ODIwMn0.-Gr9C9l-1oXs5RbGyCBcW-qvdubzk8WMGbzt1JDbabA",
+                  "value": "{{token}}",
                   "type": "string"
                 }
               ]
@@ -1728,6 +1729,14 @@
               "path": [
                 "api",
                 "ventas-get-total"
+              ],
+              "query": [
+                {
+                  "key": "tipoVenta",
+                  "value": "solo_consulta",
+                  "type": "text",
+                  "disabled": true
+                }
               ]
             }
           },
@@ -1741,7 +1750,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzA0Nzc0NjIsImV4cCI6MTc3MDU2Mzg2Mn0.OVwOSgjf8BfIJkBGbbSe9PB9Cu9EFkrb0jObMGeRdic",
+                  "value": "{{token}}",
                   "type": "string"
                 }
               ]
@@ -1750,7 +1759,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "//crear venta - solo productos \r\n{\r\n    \"tipoVenta\": \"solo_productos\",\r\n    \"moneda\": \"dolar\",\r\n    \"sede\": \"guatire\",\r\n    \"total\": 55.67,\r\n    \"descuento\": 10,\r\n    \"impuesto\": 16,\r\n    \"formaPago\": \"contado\",\r\n    \"metodosDePago\": [\r\n        {\r\n            \"tipo\": \"efectivo\",\r\n            \"monto\": 55.67,\r\n            \"moneda\": \"dolar\",\r\n            \"referencia\": \"12121212\",\r\n            \"bancoCodigo\": \"0102\",\r\n            \"bancoNombre\": \"Banco de Venezuela\"\r\n        }\r\n    ],\r\n    \"formaPagoDetalle\": {\r\n        \"tipo\": \"contado\",\r\n        \"montoTotal\": 55.67184,\r\n        \"totalPagado\": 55.67\r\n    },\r\n    \"cliente\": {\r\n        \"tipoCliente\": \"cliente_general\",\r\n        \"tipoPersona\": \"natural\",\r\n        \"nombre\": \"Ruben dario Martinez castro\",\r\n        \"cedula\": \"24367965\",\r\n        \"telefono\": \"04123920817\",\r\n        \"email\": \"rubemm@gmail.com\"\r\n    },\r\n    \"especialista\": null,\r\n    \"ordenTrabajo\": false,\r\n    \"asesor\": {\r\n        \"id\": 5\r\n    },\r\n    \"auditoria\": {\r\n        \"usuarioCreacion\": 5,\r\n        \"fechaCreacion\": \"2026-03-15T17:11:32.398Z\"\r\n    },\r\n    \"productos\": [\r\n        {\r\n            \"id\": \"17\",\r\n            \"nombre\": \"Lentes de prueba\",\r\n            \"codigo\": \"PR-000017\",\r\n            \"precio\": 31.86,\r\n            \"precioConIva\": 31.86,\r\n            \"moneda\": \"dolar\",\r\n            \"cantidad\": 1,\r\n            \"aplicaIva\": false,\r\n            \"stock\": 26,\r\n            \"tipo\": \"PRODUCTO\",\r\n            \"descripcion\": \"Test\"\r\n        },\r\n        {\r\n            \"id\": \"28\",\r\n            \"nombre\": \"Montura\",\r\n            \"codigo\": \"PR-000028\",\r\n            \"precio\": 25.86,\r\n            \"precioConIva\": 30,\r\n            \"moneda\": \"dolar\",\r\n            \"cantidad\": 1,\r\n            \"aplicaIva\": true,\r\n            \"stock\": 10,\r\n            \"tipo\": \"PRODUCTO\",\r\n            \"descripcion\": \"Montura premium de marca Palazzo\"\r\n        }\r\n    ]\r\n}",
+              "raw": "//crear venta - solo productos \r\n{\r\n    \"tipoVenta\": \"solo_productos\",\r\n    \"moneda\": \"dolar\",\r\n    \"sede\": \"guatire\",\r\n    \"total\": 55.67,\r\n    \"descuento\": 10,\r\n    \"impuesto\": 16,\r\n    \"formaPago\": \"contado\",\r\n    \"metodosDePago\": [\r\n        {\r\n            \"tipo\": \"efectivo\",\r\n            \"monto\": 55.67,\r\n            \"moneda\": \"dolar\",\r\n            \"referencia\": \"12121212\",\r\n            \"bancoCodigo\": \"0102\",\r\n            \"bancoNombre\": \"Banco de Venezuela\"\r\n        }\r\n    ],\r\n    \"formaPagoDetalle\": {\r\n        \"tipo\": \"contado\",\r\n        \"montoTotal\": 55.67184,\r\n        \"totalPagado\": 55.67\r\n    },\r\n    \"cliente\": {\r\n        \"tipoCliente\": \"cliente_general\",\r\n        \"tipoPersona\": \"natural\",\r\n        \"nombre\": \"Ruben dario Martinez castro\",\r\n        \"cedula\": \"24367965\",\r\n        \"telefono\": \"04123920817\",\r\n        \"email\": \"rubemm@gmail.com\"\r\n    },\r\n    \"especialista\": null,\r\n    \"ordenTrabajo\": false,\r\n    \"asesor\": {\r\n        \"id\": 5\r\n    },\r\n    \"auditoria\": {\r\n        \"usuarioCreacion\": 5,\r\n        \"fechaCreacion\": \"2026-03-15T17:11:32.398Z\"\r\n    },\r\n    \"productos\": [\r\n        {\r\n            \"id\": \"5\",\r\n            \"nombre\": \"Lentes de prueba\",\r\n            \"codigo\": \"PR-000017\",\r\n            \"precio\": 31.86,\r\n            \"precioConIva\": 31.86,\r\n            \"moneda\": \"dolar\",\r\n            \"cantidad\": 1,\r\n            \"aplicaIva\": false,\r\n            \"stock\": 26,\r\n            \"tipo\": \"PRODUCTO\",\r\n            \"descripcion\": \"Test\"\r\n        },\r\n        {\r\n            \"id\": \"6\",\r\n            \"nombre\": \"Montura\",\r\n            \"codigo\": \"PR-000028\",\r\n            \"precio\": 25.86,\r\n            \"precioConIva\": 30,\r\n            \"moneda\": \"dolar\",\r\n            \"cantidad\": 1,\r\n            \"aplicaIva\": true,\r\n            \"stock\": 10,\r\n            \"tipo\": \"PRODUCTO\",\r\n            \"descripcion\": \"Montura premium de marca Palazzo\"\r\n        }\r\n    ]\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
