@@ -319,13 +319,19 @@ const VentaController = {
 
     get_total: async (req, res) => {
         const moneda_base = await ConfiguracionService.get_moneda_base(req.sede.id);
+        const tipoVenta = req.query.tipoVenta;
 
         const ventas = { count: 0, amount: 0 };
         const completadas = { count: 0, amount: 0 };
         const pendientes = { count: 0, amount: 0 };
         const canceladas = { count: 0, amount: 0 };
 
-        const array_ventas = await Venta.findAll({ where: { sede: req.sede.id } });
+        const where = { sede: req.sede.id };
+        if (tipoVenta) {
+            where.tipo_venta = tipoVenta;
+        }
+
+        const array_ventas = await Venta.findAll({ where });
         for (const venta of array_ventas) {
             const tasas_actuales = venta.tasas_actuales;
             tasas_actuales.push({ id: 'bolivar', valor: 1 });
@@ -453,7 +459,7 @@ const VentaController = {
 
         const {
             montoAbonado,
-            metodosPago,
+            metodosDePago,
             observaciones
         } = req.body;
 
@@ -470,7 +476,7 @@ const VentaController = {
         }
 
         const objTasaVenta = await VentaService.get_tasa(objVenta.moneda);
-        const pagos_preparados = await VentaService.prepare_metodos_de_pago_array(metodosPago, objTasaVenta);
+        const pagos_preparados = await VentaService.prepare_metodos_de_pago_array(metodosDePago, objTasaVenta);
         const array_tasas = await VentaService.get_tasas_actuales();
 
         const t = await sequelize.transaction();
