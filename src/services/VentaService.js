@@ -384,6 +384,41 @@ const VentaService = {
         const metodosDePago = [];
         let total_pagado = 0;
 
+        let asesorOutput = { id: objVenta.asesor_id };
+        let especialistaOutput = { cedula: objVenta.especialista_cedula };
+
+        if (objVenta.asesor_id) {
+            const asesorUsuario = await Usuario.findOne({
+                where: { id: objVenta.asesor_id },
+                include: [{ association: 'cargo', attributes: ['id', 'nombre'], required: false }],
+                attributes: ['id', 'cedula', 'nombre']
+            });
+
+            if (asesorUsuario) {
+                asesorOutput = {
+                    cedula: asesorUsuario.cedula,
+                    nombre: asesorUsuario.nombre,
+                    cargo: (asesorUsuario.cargo) ? asesorUsuario.cargo.nombre : null
+                };
+            }
+        }
+
+        if (objVenta.especialista_cedula) {
+            const especialistaUsuario = await Usuario.findOne({
+                where: { cedula: objVenta.especialista_cedula },
+                include: [{ association: 'cargo', attributes: ['id', 'nombre'], required: false }],
+                attributes: ['id', 'cedula', 'nombre']
+            });
+
+            if (especialistaUsuario) {
+                especialistaOutput = {
+                    cedula: especialistaUsuario.cedula,
+                    nombre: especialistaUsuario.nombre,
+                    cargo: (especialistaUsuario.cargo) ? especialistaUsuario.cargo.nombre : null
+                };
+            }
+        }
+
         for (let pago of objVenta.array_pagos) {
             metodosDePago.push({
                 tipo: pago.tipo,
@@ -443,13 +478,9 @@ const VentaService = {
                     empresaCorreo: objVenta.empresa_correo
                 }
             },
-            especialista: {
-                cedula: objVenta.especialista_cedula
-            },
+            especialista: especialistaOutput,
             ordenTrabajo: !!objVenta.datos_orden_trabajo,
-            asesor: {
-                id: objVenta.asesor_id
-            },
+            asesor: asesorOutput,
             auditoria: {
                 usuarioCreacion: objVenta.asesor_id, // Usamos el asesor como creador según el ejemplo
                 fechaCreacion: objVenta.created_at
