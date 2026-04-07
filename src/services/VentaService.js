@@ -422,8 +422,56 @@ const VentaService = {
 
         const moneda_base_id = await ConfiguracionService.get_moneda_base(objVenta.sede);
         const moneda_base_tasa = await Tasa.findOne({ where: { id: moneda_base_id.valor } });
+        const arrayPagos = Array.isArray(objVenta.array_pagos) ? objVenta.array_pagos : [];
+        const arrayPagosAgrupados = Array.isArray(objVenta.array_pagos_agrupados) ? objVenta.array_pagos_agrupados : [];
 
-        for (let pago of objVenta.array_pagos) {
+        const pagosIniciales = arrayPagos.filter(p => Number(p.numero_pago) === 1);
+        const pagosAbonos = arrayPagos.filter(p => Number(p.numero_pago) >= 2);
+
+        const tasaMonedaVenta = (() => {
+            if (objVenta.moneda === 'bolivar') return 1;
+            const objTasa = (objVenta.tasas_actuales || []).find(t => t.id === objVenta.moneda);
+            return objTasa ? objTasa.valor : null;
+        })();
+
+        const mapPagoParaAbono = (pago) => {
+            let tasaPago = null;
+            for (let tasa of (objVenta.tasas_actuales || [])) {
+                if (tasa.id === pago.moneda_id) {
+                    tasaPago = tasa;
+                    break;
+                }
+            }
+
+            let montoEnMonedaVenta = null;
+            let tasaUsada = null;
+
+            if (tasaMonedaVenta !== null) {
+                if (pago.moneda_id === objVenta.moneda) {
+                    montoEnMonedaVenta = FormatUtils.float(pago.monto);
+                    tasaUsada = null;
+                } else if (pago.moneda_id === 'bolivar') {
+                    montoEnMonedaVenta = FormatUtils.float(pago.monto / tasaMonedaVenta);
+                    tasaUsada = tasaMonedaVenta;
+                } else if (tasaPago) {
+                    montoEnMonedaVenta = FormatUtils.float((pago.monto * tasaPago.valor) / tasaMonedaVenta);
+                    tasaUsada = tasaPago.valor;
+                }
+            }
+
+            return {
+                tipo: pago.tipo,
+                monto: pago.monto,
+                moneda: pago.moneda_id,
+                montoEnMonedaVenta,
+                tasaUsada,
+                bancoCodigo: pago.bancoCodigo,
+                bancoNombre: pago.bancoNombre,
+                referencia: pago.referencia,
+            };
+        };
+
+        for (let pago of pagosIniciales) {
             let tasa_moneda_pago = null;
             for(let tasa of objVenta.tasas_actuales) {
                 if(tasa.id === pago.moneda_id) {
@@ -464,8 +512,39 @@ const VentaService = {
                 });
             }
             
-            total_pagado += pago.monto_moneda_base; // Esto sumará todos los pagos realizados hasta ahora
+            total_pagado += pago.monto_moneda_base;
         }
+
+        for (let pago of pagosAbonos) {
+            total_pagado += pago.monto_moneda_base;
+        }
+
+        const abonosAgrupados = arrayPagosAgrupados
+            .filter(a => Number(a.numero_pago) >= 2)
+            .sort((a, b) => Number(a.numero_pago) - Number(b.numero_pago));
+
+        const agrupadoInicial = arrayPagosAgrupados.find(a => Number(a.numero_pago) === 1);
+        let acumulado = agrupadoInicial
+            ? FormatUtils.float(agrupadoInicial.monto_abonado)
+            : FormatUtils.float(pagosIniciales.reduce((sum, p) => sum + p.monto_moneda_base, 0));
+
+        const abonos = abonosAgrupados.map((abono, index) => {
+            const montoAbonado = FormatUtils.float(abono.monto_abonado || 0);
+            acumulado = FormatUtils.float(acumulado + montoAbonado);
+
+            const metodosDePagoAbono = pagosAbonos
+                .filter(p => Number(p.numero_pago) === Number(abono.numero_pago))
+                .map(mapPagoParaAbono);
+
+            return {
+                numero: index + 1,
+                fecha: abono.created_at,
+                montoAbonado,
+                deudaPendiente: FormatUtils.float(objVenta.total - acumulado),
+                observaciones: abono.observaciones,
+                metodosDePago: metodosDePagoAbono
+            };
+        });
 
         const productos = [];
         for (let producto of objVenta.array_productos) {
@@ -520,12 +599,20 @@ const VentaService = {
                 usuarioCreacion: objVenta.asesor_id, // Usamos el asesor como creador según el ejemplo
                 fechaCreacion: objVenta.created_at
             },
+            formaPago: {
+                tipo: objVenta.forma_pago,
+                montoTotal: objVenta.total,
+                totalPagado: FormatUtils.float(total_pagado),
+                deudaPendiente: FormatUtils.float(objVenta.total - total_pagado),
+                abonos
+            },
             formaPagoDetalle: {
                 tipo: objVenta.forma_pago,
                 tasasActuales: objVenta.tasas_actuales,
                 montoTotal: objVenta.total,
                 totalPagado: FormatUtils.float(total_pagado),
                 deuda: FormatUtils.float(objVenta.total - total_pagado),
+                abonos,
                 ...(objVenta.forma_pago === 'cashea' && objVenta.datos_cashea ? {
                     nivel: objVenta.datos_cashea.nivel_cashea,
                     montoInicial: objVenta.datos_cashea.monto_inicial,
