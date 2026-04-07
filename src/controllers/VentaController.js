@@ -459,7 +459,7 @@ const VentaController = {
 
         const {
             montoAbonado,
-            metodosDePago,
+            metodosPago,
             observaciones
         } = req.body;
 
@@ -476,7 +476,7 @@ const VentaController = {
         }
 
         const objTasaVenta = await VentaService.get_tasa(objVenta.moneda);
-        const pagos_preparados = await VentaService.prepare_metodos_de_pago_array(metodosDePago, objTasaVenta);
+        const pagos_preparados = await VentaService.prepare_metodos_de_pago_array(metodosPago, objTasaVenta);
         const array_tasas = await VentaService.get_tasas_actuales();
 
         const t = await sequelize.transaction();
