@@ -482,7 +482,8 @@ const VentaController = {
         const t = await sequelize.transaction();
         try {
             const maxNumero = await VentaPagoAgrupado.max('numero_pago', { where: { venta_key: objVenta.venta_key }, transaction: t });
-            const numero_pago = (maxNumero || 0) + 1;
+            const numero_pago_temp = (maxNumero || 0) + 1;
+            const numero_pago = (numero_pago_temp < 2) ? 2 : numero_pago_temp;
 
             await VentaPagoAgrupado.create({
                 venta_key: objVenta.venta_key,
