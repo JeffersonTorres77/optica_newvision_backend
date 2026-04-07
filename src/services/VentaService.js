@@ -431,21 +431,39 @@ const VentaService = {
                     break;
                 }
             }
+
+            if(tasa_moneda_pago === null) {
+                metodosDePago.push({
+                    tipo: pago.tipo,
+                    monto: pago.monto,
+                    moneda: pago.moneda_id,
+
+                    montoEnMonedaSistema: null,
+                    monedaSistema: moneda_base_tasa.id,
+                    montoEnBolivar: null,
+                    tasaUasada: null,
+
+                    bancoCodigo: pago.bancoCodigo,
+                    bancoNombre: pago.bancoNombre,
+                    referencia: pago.referencia,
+                });
+            } else {
+                metodosDePago.push({
+                    tipo: pago.tipo,
+                    monto: pago.monto,
+                    moneda: pago.moneda_id,
+
+                    montoEnMonedaSistema: (pago.moneda_id == moneda_base_tasa.id) ? pago.monto : FormatUtils.float((pago.monto * tasa_moneda_pago.valor) / moneda_base_tasa.valor),
+                    monedaSistema: moneda_base_tasa.id,
+                    montoEnBolivar: FormatUtils.float(pago.monto * tasa_moneda_pago.valor),
+                    tasaUasada: tasa_moneda_pago.valor,
+
+                    bancoCodigo: pago.bancoCodigo,
+                    bancoNombre: pago.bancoNombre,
+                    referencia: pago.referencia,
+                });
+            }
             
-            metodosDePago.push({
-                tipo: pago.tipo,
-                monto: pago.monto,
-                moneda: pago.moneda_id,
-
-                montoEnMonedaSistema: (pago.moneda_id == moneda_base_tasa.id) ? pago.monto : FormatUtils.float((pago.monto * tasa_moneda_pago.valor) / moneda_base_tasa.valor),
-                monedaSistema: moneda_base_tasa.id,
-                montoEnBolivar: FormatUtils.float(pago.monto * tasa_moneda_pago.valor),
-                tasaUasada: tasa_moneda_pago.valor,
-
-                bancoCodigo: pago.bancoCodigo,
-                bancoNombre: pago.bancoNombre,
-                referencia: pago.referencia,
-            });
             total_pagado += pago.monto_moneda_base; // Esto sumará todos los pagos realizados hasta ahora
         }
 
