@@ -459,6 +459,7 @@ const VentaController = {
 
         const {
             montoAbonado,
+            ordenTrabajo,
             metodosPago,
             observaciones
         } = req.body;
@@ -505,8 +506,19 @@ const VentaController = {
                     referencia: pago.referencia,
                     bancoCodigo: pago.bancoCodigo,
                     bancoNombre: pago.bancoNombre,
+                    bancoReceptorCodigo: pago.bancoReceptorCodigo,
+                    bancoReceptorNombre: pago.bancoReceptorNombre,
+                    bancoReceptor: pago.bancoReceptor,
+                    notaPago: pago.notaPago,
                     created_by: req.user.cedula
                 }, { transaction: t });
+            }
+
+            if (ordenTrabajo === true) {
+                const objOrdenExistente = await OrdenTrabajo.findOne({ where: { venta_key: objVenta.venta_key }, transaction: t });
+                if (!objOrdenExistente) {
+                    await OrdenTrabajoService.agregar_orden_trabajo(t, objVenta);
+                }
             }
 
             const total_pagado = await VentaPago.sum('monto_moneda_base', { where: { venta_key: objVenta.venta_key }, transaction: t });

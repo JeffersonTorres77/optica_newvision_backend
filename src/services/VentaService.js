@@ -184,14 +184,22 @@ const VentaService = {
         for (let metodoDePago of metodosPago) {
             const objTasaPago = await Tasa.findOne({ where: { id: metodoDePago.moneda } });
 
+            const monto_moneda_venta = (metodoDePago.montoEnMonedaVenta !== undefined && metodoDePago.montoEnMonedaVenta !== null)
+                ? FormatUtils.float(metodoDePago.montoEnMonedaVenta)
+                : FormatUtils.float((metodoDePago.monto * objTasaPago.valor) / objTasaVenta.valor);
+
             output.push({
                 tipo: metodoDePago.tipo,
                 monto: FormatUtils.float(metodoDePago.monto),
                 moneda_id: objTasaPago.id,
-                monto_moneda_base: FormatUtils.float((metodoDePago.monto * objTasaPago.valor) / objTasaVenta.valor),
+                monto_moneda_base: monto_moneda_venta,
                 referencia: metodoDePago.referencia,
                 bancoCodigo: metodoDePago.bancoCodigo,
                 bancoNombre: metodoDePago.bancoNombre,
+                bancoReceptorCodigo: metodoDePago.bancoReceptorCodigo,
+                bancoReceptorNombre: metodoDePago.bancoReceptorNombre,
+                bancoReceptor: metodoDePago.bancoReceptor,
+                notaPago: metodoDePago.notaPago,
             });
         }
         return output;
@@ -289,6 +297,10 @@ const VentaService = {
                 referencia: pago.referencia,
                 bancoCodigo: pago.bancoCodigo,
                 bancoNombre: pago.bancoNombre,
+                bancoReceptorCodigo: pago.bancoReceptorCodigo,
+                bancoReceptorNombre: pago.bancoReceptorNombre,
+                bancoReceptor: pago.bancoReceptor,
+                notaPago: pago.notaPago,
                 created_by: venta_completa.created_by
             }, { transaction: t });
         }
@@ -443,18 +455,15 @@ const VentaService = {
                 }
             }
 
-            let montoEnMonedaVenta = null;
+            let montoEnMonedaVenta = FormatUtils.float(pago.monto_moneda_base);
             let tasaUsada = null;
 
             if (tasaMonedaVenta !== null) {
                 if (pago.moneda_id === objVenta.moneda) {
-                    montoEnMonedaVenta = FormatUtils.float(pago.monto);
                     tasaUsada = null;
                 } else if (pago.moneda_id === 'bolivar') {
-                    montoEnMonedaVenta = FormatUtils.float(pago.monto / tasaMonedaVenta);
                     tasaUsada = tasaMonedaVenta;
                 } else if (tasaPago) {
-                    montoEnMonedaVenta = FormatUtils.float((pago.monto * tasaPago.valor) / tasaMonedaVenta);
                     tasaUsada = tasaPago.valor;
                 }
             }
@@ -467,7 +476,11 @@ const VentaService = {
                 tasaUsada,
                 bancoCodigo: pago.bancoCodigo,
                 bancoNombre: pago.bancoNombre,
+                bancoReceptorCodigo: pago.bancoReceptorCodigo,
+                bancoReceptorNombre: pago.bancoReceptorNombre,
+                bancoReceptor: pago.bancoReceptor,
                 referencia: pago.referencia,
+                notaPago: pago.notaPago,
             };
         };
 
@@ -493,7 +506,11 @@ const VentaService = {
 
                     bancoCodigo: pago.bancoCodigo,
                     bancoNombre: pago.bancoNombre,
+                    bancoReceptorCodigo: pago.bancoReceptorCodigo,
+                    bancoReceptorNombre: pago.bancoReceptorNombre,
+                    bancoReceptor: pago.bancoReceptor,
                     referencia: pago.referencia,
+                    notaPago: pago.notaPago,
                 });
             } else {
                 metodosDePago.push({
@@ -508,7 +525,11 @@ const VentaService = {
 
                     bancoCodigo: pago.bancoCodigo,
                     bancoNombre: pago.bancoNombre,
+                    bancoReceptorCodigo: pago.bancoReceptorCodigo,
+                    bancoReceptorNombre: pago.bancoReceptorNombre,
+                    bancoReceptor: pago.bancoReceptor,
                     referencia: pago.referencia,
+                    notaPago: pago.notaPago,
                 });
             }
             
