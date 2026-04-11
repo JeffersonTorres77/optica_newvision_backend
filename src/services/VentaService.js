@@ -624,13 +624,7 @@ const VentaService = {
                 usuarioCreacion: objVenta.asesor_id, // Usamos el asesor como creador según el ejemplo
                 fechaCreacion: objVenta.created_at
             },
-            formaPago: {
-                tipo: objVenta.forma_pago,
-                montoTotal: objVenta.total,
-                totalPagado: FormatUtils.float(total_pagado),
-                deudaPendiente: FormatUtils.float(objVenta.total - total_pagado),
-                abonos
-            },
+            formaPago: objVenta.forma_pago,
             formaPagoDetalle: {
                 tipo: objVenta.forma_pago,
                 tasasActuales: objVenta.tasas_actuales,
