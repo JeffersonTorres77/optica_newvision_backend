@@ -436,6 +436,7 @@ const VentaService = {
         const moneda_base_tasa = await Tasa.findOne({ where: { id: moneda_base_id.valor } });
         const arrayPagos = Array.isArray(objVenta.array_pagos) ? objVenta.array_pagos : [];
         const arrayPagosAgrupados = Array.isArray(objVenta.array_pagos_agrupados) ? objVenta.array_pagos_agrupados : [];
+        const esFormaPagoAbono = objVenta.forma_pago === 'abono';
 
         const pagosIniciales = arrayPagos.filter(p => Number(p.numero_pago) === 1);
         const pagosAbonos = arrayPagos.filter(p => Number(p.numero_pago) >= 2);
@@ -484,7 +485,9 @@ const VentaService = {
             };
         };
 
-        for (let pago of pagosIniciales) {
+        const pagosParaMetodosDePago = esFormaPagoAbono ? [] : pagosIniciales;
+
+        for (let pago of pagosParaMetodosDePago) {
             let tasa_moneda_pago = null;
             for(let tasa of objVenta.tasas_actuales) {
                 if(tasa.id === pago.moneda_id) {
@@ -532,28 +535,28 @@ const VentaService = {
                     notaPago: pago.notaPago,
                 });
             }
-            
-            total_pagado += pago.monto_moneda_base;
         }
 
-        for (let pago of pagosAbonos) {
-            total_pagado += pago.monto_moneda_base;
-        }
+        total_pagado = FormatUtils.float(arrayPagos.reduce((sum, p) => sum + Number(p.monto_moneda_base || 0), 0));
 
         const abonosAgrupados = arrayPagosAgrupados
-            .filter(a => Number(a.numero_pago) >= 2)
+            .filter(a => esFormaPagoAbono ? Number(a.numero_pago) >= 1 : Number(a.numero_pago) >= 2)
             .sort((a, b) => Number(a.numero_pago) - Number(b.numero_pago));
 
         const agrupadoInicial = arrayPagosAgrupados.find(a => Number(a.numero_pago) === 1);
-        let acumulado = agrupadoInicial
-            ? FormatUtils.float(agrupadoInicial.monto_abonado)
-            : FormatUtils.float(pagosIniciales.reduce((sum, p) => sum + p.monto_moneda_base, 0));
+        let acumulado = esFormaPagoAbono
+            ? 0
+            : (agrupadoInicial
+                ? FormatUtils.float(agrupadoInicial.monto_abonado)
+                : FormatUtils.float(pagosIniciales.reduce((sum, p) => sum + Number(p.monto_moneda_base || 0), 0)));
+
+        const pagosParaAbonos = esFormaPagoAbono ? arrayPagos : pagosAbonos;
 
         const abonos = abonosAgrupados.map((abono, index) => {
             const montoAbonado = FormatUtils.float(abono.monto_abonado || 0);
             acumulado = FormatUtils.float(acumulado + montoAbonado);
 
-            const metodosDePagoAbono = pagosAbonos
+            const metodosDePagoAbono = pagosParaAbonos
                 .filter(p => Number(p.numero_pago) === Number(abono.numero_pago))
                 .map(mapPagoParaAbono);
 
