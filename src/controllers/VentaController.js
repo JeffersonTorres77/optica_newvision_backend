@@ -20,6 +20,48 @@ const ConfiguracionService = require('../services/ConfiguracionService');
 const OrdenTrabajo = require('../models/OrdenTrabajo');
 
 const VentaController = {
+    construir_filtros_url: (req) => {
+        const fecha_inicio = req.query.fechaDesde;
+        const fecha_final = req.query.fechaHasta;
+        const busqueda_general = req.query.busquedaGeneral;
+        const asesor_id = req.query.asesor;
+        const estatus_venta = req.query.estado;
+        const forma_pago = req.query.formaPago;
+        const tipo_venta = req.query.tipoVenta;
+
+        const where = { sede: req.sede.id };
+
+        if (fecha_inicio && fecha_final) {
+            const fechaInicio = new Date(`${fecha_inicio}T00:00:00.000`);
+            const fechaFinal = new Date(`${fecha_final}T23:59:59.999`);
+            where.fecha = { [Op.between]: [fechaInicio, fechaFinal] };
+        }
+
+        if (busqueda_general) {
+            const orConditions = [];
+            orConditions.push({ cliente_informacion_cedula: { [Op.like]: `%${busqueda_general}%` } });
+            orConditions.push({ cliente_informacion_nombre: { [Op.like]: `%${busqueda_general}%` } });
+
+            if (/[VR]\-([0-9]{3,})/.test(busqueda_general)) {
+                const numeroParsed = VentaService.extrear_numero_de_numero_control(busqueda_general);
+                orConditions.push({ numero_control: numeroParsed });
+            }
+
+            where[Op.or] = orConditions;
+        }
+
+        if (asesor_id) {
+            const ases = parseInt(asesor_id, 10);
+            if (!isNaN(ases)) where.asesor_id = ases;
+        }
+
+        if (estatus_venta) where.estatus_venta = estatus_venta;
+        if (forma_pago) where.forma_pago = forma_pago;
+        if (tipo_venta) where.tipo_venta = tipo_venta;
+
+        return where;
+    },
+
     add: async (req, res) => {
         const {
             moneda,
@@ -218,50 +260,7 @@ const VentaController = {
     },
 
     get: async (req, res) => {
-        const fecha_inicio = req.query.fechaDesde;
-        const fecha_final = req.query.fechaHasta;
-        const busqueda_general = req.query.busquedaGeneral
-        const asesor_id = req.query.asesor
-        const estatus_venta = req.query.estado
-        const forma_pago = req.query.formaPago
-
-        const where = {};
-        where.sede = req.sede.id;
-
-        if (fecha_inicio && fecha_final) {
-            where.fecha = { [Op.between]: [new Date(fecha_inicio), new Date(fecha_final)] };
-        }
-
-        if (busqueda_general) {
-            const orConditions = [];
-
-            // Buscar por cédula (coincidencia parcial)
-            orConditions.push({ cliente_informacion_cedula: { [Op.like]: `%${busqueda_general}%` } });
-
-            // Buscar por nombre (coincidencia parcial)
-            orConditions.push({ cliente_informacion_nombre: { [Op.like]: `%${busqueda_general}%` } });
-
-            // Buscar por número de control (si es número, coincidir exacto; si no, intentar like)
-            if (/[VR]\-([0-9]{3,})/.test(busqueda_general)) {
-                const numeroParsed = VentaService.extrear_numero_de_numero_control(busqueda_general);
-                orConditions.push({ numero_control: numeroParsed });
-            }
-
-            // Si ya existe una condición Op.or, combinar, sino asignar
-            if (where[Op.or]) {
-                where[Op.or] = where[Op.or].concat(orConditions);
-            } else {
-                where[Op.or] = orConditions;
-            }
-        }
-
-        if (asesor_id) {
-            const ases = parseInt(asesor_id, 10);
-            if (!isNaN(ases)) where.asesor_id = ases;
-        }
-
-        if (estatus_venta) where.estatus_venta = estatus_venta;
-        if (forma_pago) where.forma_pago = forma_pago;
+        const where = VentaController.construir_filtros_url(req);
 
         const page = parseInt(req.query.pagina, 10) || 1;
         const limit = parseInt(req.query.itemsPorPagina, 10) || 10;
@@ -295,7 +294,7 @@ const VentaController = {
             offset
         });
 
-        const total = await Venta.count();
+        const total = await Venta.count({ where });
         const pages = Math.max(1, Math.ceil(total / limit));
 
         const ventas_output = [];
@@ -319,17 +318,13 @@ const VentaController = {
 
     get_total: async (req, res) => {
         const moneda_base = await ConfiguracionService.get_moneda_base(req.sede.id);
-        const tipoVenta = req.query.tipoVenta;
 
         const ventas = { count: 0, amount: 0 };
         const completadas = { count: 0, amount: 0 };
         const pendientes = { count: 0, amount: 0 };
         const canceladas = { count: 0, amount: 0 };
 
-        const where = { sede: req.sede.id };
-        if (tipoVenta) {
-            where.tipo_venta = tipoVenta;
-        }
+        const where = VentaController.construir_filtros_url(req);
 
         const array_ventas = await Venta.findAll({ where });
         for (const venta of array_ventas) {
