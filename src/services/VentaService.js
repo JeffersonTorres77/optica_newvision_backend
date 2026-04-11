@@ -456,7 +456,7 @@ const VentaService = {
                 }
             }
 
-            let montoEnMonedaVenta = FormatUtils.float(pago.monto_moneda_base);
+            let montoMonedaSistema = FormatUtils.float(pago.monto_moneda_base);
             let tasaUsada = null;
 
             if (tasaMonedaVenta !== null) {
@@ -473,7 +473,7 @@ const VentaService = {
                 tipo: pago.tipo,
                 monto: pago.monto,
                 moneda: pago.moneda_id,
-                montoEnMonedaVenta,
+                montoMonedaSistema,
                 tasaUsada,
                 bancoCodigo: pago.bancoCodigo,
                 bancoNombre: pago.bancoNombre,
@@ -593,6 +593,7 @@ const VentaService = {
             numero_recibo: "R-" + String(objVenta.numero_control).padStart(6, "0"),
             tipoVenta: objVenta.tipo_venta,
             moneda: objVenta.moneda,
+            monedaSistema: moneda_base_tasa.id,
             sede: objVenta.sede,
             estatus_venta: objVenta.estatus_venta,
             estatus_pago: objVenta.estatus_pago,
