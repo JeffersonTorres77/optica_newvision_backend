@@ -8,6 +8,7 @@ const Usuario = require('./Usuario');
 const VentaPagoAgrupado = require('./VentaPagoAgrupado');
 const JsonUtil = require('../utils/JsonUtil');
 const VentaConsulta = require('./VentaConsulta');
+const HistorialMedico = require('./HistorialMedico');
 
 const Venta = sequelize.define('Venta', {
   id: {
@@ -179,6 +180,12 @@ Venta.hasOne(VentaConsulta, {
   foreignKey: 'venta_key',
   sourceKey: 'venta_key',
   as: 'venta_consulta'
+});
+
+Venta.hasOne(HistorialMedico, {
+  foreignKey: 'venta_key',
+  sourceKey: 'venta_key',
+  as: 'historia_medica'
 });
 
 Venta.hasMany(VentaCasheaCuota, {
