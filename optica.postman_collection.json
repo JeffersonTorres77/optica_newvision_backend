@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "6d6de83f-98b2-4449-9b41-b4cb10971c62",
+    "_postman_id": "a8a7c13d-ed37-4c8a-a8b6-1cf844e2b9d3",
     "name": "optica",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "13401550"
@@ -39,6 +39,37 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Cambio clave pre login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"jeffersonjtorresu@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/forgot-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -69,9 +100,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/account/edit-profile",
+              "raw": "{{base_url}}/api/account/edit-profile",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -107,9 +138,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/account/change-password--send-otp",
+              "raw": "{{base_url}}/api/account/change-password--send-otp",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -145,9 +176,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/account/change-password--verify-otp",
+              "raw": "{{base_url}}/api/account/change-password--verify-otp",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -183,9 +214,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/account/change-password--change-password",
+              "raw": "{{base_url}}/api/account/change-password--change-password",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -225,14 +256,14 @@
                   "key": "imagen",
                   "description": "[type: File]",
                   "type": "file",
-                  "src": "/C:/Users/Personal/OneDrive/Imágenes/1.png"
+                  "src": "/C:/Users/Personal/OneDrive/ImÃ¡genes/1.png"
                 }
               ]
             },
             "url": {
-              "raw": "{{baseURL}}/api/account/upload-profile-image",
+              "raw": "{{base_url}}/api/account/upload-profile-image",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -266,9 +297,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/account/remove-profile-image",
+              "raw": "{{base_url}}/api/account/remove-profile-image",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -300,9 +331,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseURL}}/api/configuracion/get",
+              "raw": "{{base_url}}/api/configuracion/get",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -329,9 +360,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseURL}}/api/configuracion/costoConsultas",
+              "raw": "{{base_url}}/api/configuracion/costoConsultas",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -358,9 +389,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseURL}}/api/configuracion/moneda_base-get",
+              "raw": "{{base_url}}/api/configuracion/moneda_base-get",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -396,9 +427,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/configuracion/moneda_base-update",
+              "raw": "{{base_url}}/api/configuracion/moneda_base-update",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -426,9 +457,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/get-usuarios",
+              "raw": "{{base_url}}/api/get-usuarios",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -450,9 +481,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/get-usuarios/25409904",
+              "raw": "{{base_url}}/api/get-usuarios/25409904",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -484,9 +515,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/add-usuarios",
+              "raw": "{{base_url}}/api/add-usuarios",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -517,9 +548,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/update-usuarios/25409904",
+              "raw": "{{base_url}}/api/update-usuarios/25409904",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -542,9 +573,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/delete-usuarios/11554570",
+              "raw": "{{base_url}}/api/delete-usuarios/11554570",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -576,9 +607,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/activar-usuarios/11554570",
+              "raw": "{{base_url}}/api/activar-usuarios/11554570",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -606,9 +637,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/cargos-get",
+              "raw": "{{base_url}}/api/cargos-get",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -630,9 +661,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/cargos-get/adminsitrador",
+              "raw": "{{base_url}}/api/cargos-get/adminsitrador",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -660,9 +691,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/roles-get",
+              "raw": "{{base_url}}/api/roles-get",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -684,9 +715,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/roles-get/admin",
+              "raw": "{{base_url}}/api/roles-get/admin",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -714,9 +745,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/tasas/",
+              "raw": "{{base_url}}/api/tasas/",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -740,9 +771,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/get-tasa-bcv/",
+              "raw": "{{base_url}}/api/get-tasa-bcv/",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -765,9 +796,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/tasas/dolar",
+              "raw": "{{base_url}}/api/tasas/dolar",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -799,9 +830,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/tasas-update/euro",
+              "raw": "{{base_url}}/api/tasas-update/euro",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -824,9 +855,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/tasas-update-with-bcv",
+              "raw": "{{base_url}}/api/tasas-update-with-bcv",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -857,9 +888,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/tasas-update-with-bcv/euro",
+              "raw": "{{base_url}}/api/tasas-update-with-bcv/euro",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -882,9 +913,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/tasas-history/euro",
+              "raw": "{{base_url}}/api/tasas-history/euro",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -916,9 +947,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/tasas-rastreo-automatico/euro",
+              "raw": "{{base_url}}/api/tasas-rastreo-automatico/euro",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -950,9 +981,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseURL}}/api/paciente-get/d3d9446802a44259755d38e6d163e820",
+              "raw": "{{base_url}}/api/paciente-get/d3d9446802a44259755d38e6d163e820",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -985,9 +1016,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/paciente-get/d3d9446802a44259755d38e6d163e820",
+              "raw": "{{base_url}}/api/paciente-get/d3d9446802a44259755d38e6d163e820",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1015,7 +1046,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"informacionPersonal\": {\r\n        \"esMenorSinCedula\": null,\r\n        \"nombreCompleto\": \"Blanca Castro\",\r\n        \"cedula\": \"14569321\",\r\n        \"telefono\": \"04123920817\",\r\n        \"email\": \"rubemm18@gmail.com\",\r\n        \"fechaNacimiento\": \"1928-06-07\",\r\n        \"ocupacion\": \"Maestra\",\r\n        \"genero\": \"f\",\r\n        \"direccion\": \"Castillejo\"\r\n    },\r\n    \"redesSociales\": [],\r\n    \"informacionEmpresa\": null,\r\n    \"historiaClinica\": {\r\n        \"usuarioLentes\": \"Sí\",\r\n        \"fotofobia\": \"No\",\r\n        \"usoDispositivo\": \"Sí, 3 a 6 horas\",\r\n        \"traumatismoOcular\": \"Sí\",\r\n        \"traumatismoOcularDescripcion\": \"golpe en ojo izquierdo por caida\",\r\n        \"cirugiaOcular\": \"No\",\r\n        \"cirugiaOcularDescripcion\": \"\",\r\n        \"alergicoA\": \"Polvo, tierra\",\r\n        \"antecedentesPersonales\": [\r\n            \"Diabetes\",\r\n            \"Hipertensión\",\r\n            \"Traumatismo ocular\",\r\n            \"Orzuelos\"\r\n        ],\r\n        \"antecedentesFamiliares\": [\r\n            \"Diabetes\",\r\n            \"Hipertensión\"\r\n        ],\r\n        \"patologias\": \"Problemas renales\"\r\n    }\r\n}",
+              "raw": "{\r\n    \"informacionPersonal\": {\r\n        \"esMenorSinCedula\": null,\r\n        \"nombreCompleto\": \"Blanca Castro\",\r\n        \"cedula\": \"14569321\",\r\n        \"telefono\": \"04123920817\",\r\n        \"email\": \"rubemm18@gmail.com\",\r\n        \"fechaNacimiento\": \"1928-06-07\",\r\n        \"ocupacion\": \"Maestra\",\r\n        \"genero\": \"f\",\r\n        \"direccion\": \"Castillejo\"\r\n    },\r\n    \"redesSociales\": [],\r\n    \"informacionEmpresa\": null,\r\n    \"historiaClinica\": {\r\n        \"usuarioLentes\": \"SÃ­\",\r\n        \"fotofobia\": \"No\",\r\n        \"usoDispositivo\": \"SÃ­, 3 a 6 horas\",\r\n        \"traumatismoOcular\": \"SÃ­\",\r\n        \"traumatismoOcularDescripcion\": \"golpe en ojo izquierdo por caida\",\r\n        \"cirugiaOcular\": \"No\",\r\n        \"cirugiaOcularDescripcion\": \"\",\r\n        \"alergicoA\": \"Polvo, tierra\",\r\n        \"antecedentesPersonales\": [\r\n            \"Diabetes\",\r\n            \"HipertensiÃ³n\",\r\n            \"Traumatismo ocular\",\r\n            \"Orzuelos\"\r\n        ],\r\n        \"antecedentesFamiliares\": [\r\n            \"Diabetes\",\r\n            \"HipertensiÃ³n\"\r\n        ],\r\n        \"patologias\": \"Problemas renales\"\r\n    }\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1023,9 +1054,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/paciente-add",
+              "raw": "{{base_url}}/api/paciente-add",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1060,9 +1091,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/paciente-update/d3d9446802a44259755d38e6d163e820",
+              "raw": "{{base_url}}/api/paciente-update/d3d9446802a44259755d38e6d163e820",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1085,9 +1116,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/paciente-delete/guarenas-25409904",
+              "raw": "{{base_url}}/api/paciente-delete/guarenas-25409904",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1126,9 +1157,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/historial-medico-all/",
+              "raw": "{{base_url}}/api/historial-medico-all/",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1151,9 +1182,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/historial-medico-all/H-20250801-001",
+              "raw": "{{base_url}}/api/historial-medico-all/H-20250801-001",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1176,9 +1207,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/historial-medico-paciente/guarenas-25409904",
+              "raw": "{{base_url}}/api/historial-medico-paciente/guarenas-25409904",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1202,7 +1233,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"pacienteId\": \"c16a5320fa475530d9583c34fd356ef5\",\r\n    \"datosConsulta\": {\r\n        \"motivo\": [\r\n            \"Otro\"\r\n        ],\r\n        \"otroMotivo\": \"test\",\r\n        \"tipoCristalActual\": \"LENTES_CONTACTO\",\r\n        \"tipoLentesContacto\": \"TORICOS\",\r\n        \"fechaUltimaGraduacion\": \"2023-02-14\",\r\n        \"medico\": \"8759927\"\r\n    },\r\n    \"examenOcular\": {\r\n        \"lensometria\": {\r\n            \"esf_od\": {\r\n                \"value\": \"+0.50\",\r\n                \"label\": \"+0.50\"\r\n            },\r\n            \"cil_od\": \"-0.50\",\r\n            \"eje_od\": 3,\r\n            \"add_od\": \"+1.25\",\r\n            \"av_lejos_od\": \"20/30\",\r\n            \"av_cerca_od\": \"J3\",\r\n            \"av_lejos_bi\": \"20/30\",\r\n            \"esf_oi\": \"+0.50\",\r\n            \"cil_oi\": \"-0.50\",\r\n            \"eje_oi\": 3,\r\n            \"add_oi\": \"+1.25\",\r\n            \"av_lejos_oi\": \"20/30\",\r\n            \"av_cerca_oi\": \"J3\",\r\n            \"av_cerca_bi\": \"J3\"\r\n        },\r\n        \"refraccion\": {\r\n            \"esf_od\": \"+0.50\",\r\n            \"cil_od\": \"-0.50\",\r\n            \"eje_od\": 3,\r\n            \"add_od\": \"+1.25\",\r\n            \"avccl_od\": \"20/30\",\r\n            \"avccc_od\": \"J3\",\r\n            \"avccl_bi\": \"20/30\",\r\n            \"avccc_bi\": \"J3\",\r\n            \"esf_oi\": \"+0.50\",\r\n            \"cil_oi\": \"-0.50\",\r\n            \"eje_oi\": 3,\r\n            \"add_oi\": \"+1.25\",\r\n            \"avccl_oi\": \"20/30\",\r\n            \"avccc_oi\": \"J3\"\r\n        },\r\n        \"refraccionFinal\": {\r\n            \"esf_od\": \"+0.50\",\r\n            \"cil_od\": \"-0.50\",\r\n            \"eje_od\": 3,\r\n            \"add_od\": \"+1.25\",\r\n            \"alt_od\": \"2\",\r\n            \"dp_od\": \"12\",\r\n            \"esf_oi\": \"+0.50\",\r\n            \"cil_oi\": \"-0.50\",\r\n            \"eje_oi\": 3,\r\n            \"add_oi\": \"+1.25\",\r\n            \"alt_oi\": \"2\",\r\n            \"dp_oi\": \"12\"\r\n        },\r\n        \"avsc_avae_otros\": {\r\n            \"avsc_lejos_od\": \"20/30\",\r\n            \"avsc_cerca_od\": \"J3\",\r\n            \"avae_od\": \"20/30\",\r\n            \"otros_od\": \"test\",\r\n            \"avsc_lejos_oi\": \"20/30\",\r\n            \"avsc_cerca_oi\": \"J3\",\r\n            \"avae_oi\": \"J3\",\r\n            \"otros_oi\": \"test\"\r\n        }\r\n    },\r\n    \"diagnosticoTratamiento\": {\r\n        \"diagnostico\": \"rar\",\r\n        \"tratamiento\": \"test\"\r\n    },\r\n    \"recomendaciones\": [\r\n        {\r\n            \"cristal\": \"Progresivo convencional\",\r\n            \"material\": [\r\n                \"POLICARBONATO\"\r\n            ],\r\n            \"montura\": \"test\",\r\n            \"observaciones\": \"test\",\r\n            \"tipoLentesContacto\": \"\",\r\n            \"medidaHorizontal\": 2,\r\n            \"medidaVertical\": 4,\r\n            \"medidaDiagonal\": 7,\r\n            \"medidaPuente\": 5\r\n        },\r\n        {\r\n            \"cristal\": \"Monofocal visión sencilla\",\r\n            \"material\": [\r\n                \"CR39\"\r\n            ],\r\n            \"montura\": \"test\",\r\n            \"observaciones\": \"test\",\r\n            \"tipoLentesContacto\": \"\",\r\n            \"medidaHorizontal\": \"\",\r\n            \"medidaVertical\": \"\",\r\n            \"medidaDiagonal\": \"\",\r\n            \"medidaPuente\": \"\"\r\n        }\r\n    ],\r\n    \"conformidad\": {\r\n        \"notaConformidad\": \"PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.\"\r\n    }\r\n}",
+              "raw": "{\r\n    \"pacienteId\": \"c16a5320fa475530d9583c34fd356ef5\",\r\n    \"datosConsulta\": {\r\n        \"motivo\": [\r\n            \"Otro\"\r\n        ],\r\n        \"otroMotivo\": \"test\",\r\n        \"tipoCristalActual\": \"LENTES_CONTACTO\",\r\n        \"tipoLentesContacto\": \"TORICOS\",\r\n        \"fechaUltimaGraduacion\": \"2023-02-14\",\r\n        \"medico\": \"8759927\"\r\n    },\r\n    \"examenOcular\": {\r\n        \"lensometria\": {\r\n            \"esf_od\": {\r\n                \"value\": \"+0.50\",\r\n                \"label\": \"+0.50\"\r\n            },\r\n            \"cil_od\": \"-0.50\",\r\n            \"eje_od\": 3,\r\n            \"add_od\": \"+1.25\",\r\n            \"av_lejos_od\": \"20/30\",\r\n            \"av_cerca_od\": \"J3\",\r\n            \"av_lejos_bi\": \"20/30\",\r\n            \"esf_oi\": \"+0.50\",\r\n            \"cil_oi\": \"-0.50\",\r\n            \"eje_oi\": 3,\r\n            \"add_oi\": \"+1.25\",\r\n            \"av_lejos_oi\": \"20/30\",\r\n            \"av_cerca_oi\": \"J3\",\r\n            \"av_cerca_bi\": \"J3\"\r\n        },\r\n        \"refraccion\": {\r\n            \"esf_od\": \"+0.50\",\r\n            \"cil_od\": \"-0.50\",\r\n            \"eje_od\": 3,\r\n            \"add_od\": \"+1.25\",\r\n            \"avccl_od\": \"20/30\",\r\n            \"avccc_od\": \"J3\",\r\n            \"avccl_bi\": \"20/30\",\r\n            \"avccc_bi\": \"J3\",\r\n            \"esf_oi\": \"+0.50\",\r\n            \"cil_oi\": \"-0.50\",\r\n            \"eje_oi\": 3,\r\n            \"add_oi\": \"+1.25\",\r\n            \"avccl_oi\": \"20/30\",\r\n            \"avccc_oi\": \"J3\"\r\n        },\r\n        \"refraccionFinal\": {\r\n            \"esf_od\": \"+0.50\",\r\n            \"cil_od\": \"-0.50\",\r\n            \"eje_od\": 3,\r\n            \"add_od\": \"+1.25\",\r\n            \"alt_od\": \"2\",\r\n            \"dp_od\": \"12\",\r\n            \"esf_oi\": \"+0.50\",\r\n            \"cil_oi\": \"-0.50\",\r\n            \"eje_oi\": 3,\r\n            \"add_oi\": \"+1.25\",\r\n            \"alt_oi\": \"2\",\r\n            \"dp_oi\": \"12\"\r\n        },\r\n        \"avsc_avae_otros\": {\r\n            \"avsc_lejos_od\": \"20/30\",\r\n            \"avsc_cerca_od\": \"J3\",\r\n            \"avae_od\": \"20/30\",\r\n            \"otros_od\": \"test\",\r\n            \"avsc_lejos_oi\": \"20/30\",\r\n            \"avsc_cerca_oi\": \"J3\",\r\n            \"avae_oi\": \"J3\",\r\n            \"otros_oi\": \"test\"\r\n        }\r\n    },\r\n    \"diagnosticoTratamiento\": {\r\n        \"diagnostico\": \"rar\",\r\n        \"tratamiento\": \"test\"\r\n    },\r\n    \"recomendaciones\": [\r\n        {\r\n            \"cristal\": \"Progresivo convencional\",\r\n            \"material\": [\r\n                \"POLICARBONATO\"\r\n            ],\r\n            \"montura\": \"test\",\r\n            \"observaciones\": \"test\",\r\n            \"tipoLentesContacto\": \"\",\r\n            \"medidaHorizontal\": 2,\r\n            \"medidaVertical\": 4,\r\n            \"medidaDiagonal\": 7,\r\n            \"medidaPuente\": 5\r\n        },\r\n        {\r\n            \"cristal\": \"Monofocal visiÃ³n sencilla\",\r\n            \"material\": [\r\n                \"CR39\"\r\n            ],\r\n            \"montura\": \"test\",\r\n            \"observaciones\": \"test\",\r\n            \"tipoLentesContacto\": \"\",\r\n            \"medidaHorizontal\": \"\",\r\n            \"medidaVertical\": \"\",\r\n            \"medidaDiagonal\": \"\",\r\n            \"medidaPuente\": \"\"\r\n        }\r\n    ],\r\n    \"conformidad\": {\r\n        \"notaConformidad\": \"PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.\"\r\n    }\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1210,9 +1241,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/historial-medico-add",
+              "raw": "{{base_url}}/api/historial-medico-add",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1235,7 +1266,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"datosConsulta\": {\r\n    \"motivo\": [\"asdadasd\", \"Dificultad visual cerca\"],\r\n    \"otroMotivo\": \"\",\r\n    \"tipoCristalActual\": \"Alguno\",\r\n    \"fechaUltimaGraduacion\": \"2025-08-10\",\r\n    \"medico\": \"Dr. José Martínez\",\r\n  },\r\n\r\n  \"examenOcular\": {\r\n    \"lensometria\": {\r\n      \"esf_od\": \"+1.00\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"av_lejos_od\": \"20/30\",\r\n      \"av_cerca_od\": \"J3\",\r\n      \"av_lejos_bi\": \"20/25\",\r\n      \"av_bi\": \"J2\",\r\n      \"esf_oi\": \"+1.25\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"av_lejos_oi\": \"20/30\",\r\n      \"av_cerca_oi\": \"J3\",\r\n      \"av_cerca_bi\": \"J2\"\r\n    },\r\n    \"refraccion\": {\r\n      \"esf_od\": \"+1.25\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"avccl_od\": \"20/25\",\r\n      \"avccc_od\": \"J2\",\r\n      \"avccl_bi\": \"20/20\",\r\n      \"avccc_bi\": \"J1\",\r\n      \"esf_oi\": \"+1.50\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"avccl_oi\": \"20/25\",\r\n      \"avccc_oi\": \"J2\"\r\n    },\r\n    \"refraccionFinal\": {\r\n      \"esf_od\": \"+1.25\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"alt_od\": \"3\",\r\n      \"dp_od\": \"64\",\r\n      \"esf_oi\": \"+1.50\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"alt_oi\": \"3\",\r\n      \"dp_oi\": \"64\"\r\n    },\r\n    \"avsc_avae_otros\": {\r\n      \"avsc_od\": \"20/25\",\r\n      \"avae_od\": \"J2\",\r\n      \"otros_od\": \"\",\r\n      \"avsc_oi\": \"20/25\",\r\n      \"avae_oi\": \"J2\",\r\n      \"otros_oi\": \"\",\r\n      \"avsc_bi\": \"20/20\"\r\n    }\r\n  },\r\n\r\n  \"diagnosticoTratamiento\": {\r\n    \"diagnostico\": \"Presbicia con astigmatismo leve\",\r\n    \"tratamiento\": \"Uso de lentes progresivos digitales\"\r\n  },\r\n\r\n  \"recomendaciones\": [\r\n    {\r\n      \"cristal\": [\"Progresivo digital intermedio\"],\r\n      \"material\": [\"POLICARBONATO\", \"FOTOCROMATICO_BLUE_BLOCK\", \"Trivex\"],\r\n      \"montura\": \"Acetato\",\r\n      \"cristalSugerido\": \"Progresivo digital amplio\",\r\n      \"observaciones\": \"Se recomienda uso en ambientes con luz artificial prolongada\"\r\n    }\r\n  ],\r\n\r\n  \"conformidad\": {\r\n    \"notaConformidad\": \"PACIENTE CONFORME CON LA EXPLICACION REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.\",\r\n  }\r\n}",
+              "raw": "{\r\n  \"datosConsulta\": {\r\n    \"motivo\": [\"asdadasd\", \"Dificultad visual cerca\"],\r\n    \"otroMotivo\": \"\",\r\n    \"tipoCristalActual\": \"Alguno\",\r\n    \"fechaUltimaGraduacion\": \"2025-08-10\",\r\n    \"medico\": \"Dr. JosÃ© MartÃ­nez\",\r\n  },\r\n\r\n  \"examenOcular\": {\r\n    \"lensometria\": {\r\n      \"esf_od\": \"+1.00\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"av_lejos_od\": \"20/30\",\r\n      \"av_cerca_od\": \"J3\",\r\n      \"av_lejos_bi\": \"20/25\",\r\n      \"av_bi\": \"J2\",\r\n      \"esf_oi\": \"+1.25\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"av_lejos_oi\": \"20/30\",\r\n      \"av_cerca_oi\": \"J3\",\r\n      \"av_cerca_bi\": \"J2\"\r\n    },\r\n    \"refraccion\": {\r\n      \"esf_od\": \"+1.25\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"avccl_od\": \"20/25\",\r\n      \"avccc_od\": \"J2\",\r\n      \"avccl_bi\": \"20/20\",\r\n      \"avccc_bi\": \"J1\",\r\n      \"esf_oi\": \"+1.50\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"avccl_oi\": \"20/25\",\r\n      \"avccc_oi\": \"J2\"\r\n    },\r\n    \"refraccionFinal\": {\r\n      \"esf_od\": \"+1.25\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"alt_od\": \"3\",\r\n      \"dp_od\": \"64\",\r\n      \"esf_oi\": \"+1.50\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"alt_oi\": \"3\",\r\n      \"dp_oi\": \"64\"\r\n    },\r\n    \"avsc_avae_otros\": {\r\n      \"avsc_od\": \"20/25\",\r\n      \"avae_od\": \"J2\",\r\n      \"otros_od\": \"\",\r\n      \"avsc_oi\": \"20/25\",\r\n      \"avae_oi\": \"J2\",\r\n      \"otros_oi\": \"\",\r\n      \"avsc_bi\": \"20/20\"\r\n    }\r\n  },\r\n\r\n  \"diagnosticoTratamiento\": {\r\n    \"diagnostico\": \"Presbicia con astigmatismo leve\",\r\n    \"tratamiento\": \"Uso de lentes progresivos digitales\"\r\n  },\r\n\r\n  \"recomendaciones\": [\r\n    {\r\n      \"cristal\": [\"Progresivo digital intermedio\"],\r\n      \"material\": [\"POLICARBONATO\", \"FOTOCROMATICO_BLUE_BLOCK\", \"Trivex\"],\r\n      \"montura\": \"Acetato\",\r\n      \"cristalSugerido\": \"Progresivo digital amplio\",\r\n      \"observaciones\": \"Se recomienda uso en ambientes con luz artificial prolongada\"\r\n    }\r\n  ],\r\n\r\n  \"conformidad\": {\r\n    \"notaConformidad\": \"PACIENTE CONFORME CON LA EXPLICACION REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.\",\r\n  }\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1243,9 +1274,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/historial-medico-update/H-20250801-001",
+              "raw": "{{base_url}}/api/historial-medico-update/H-20250801-001",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1268,9 +1299,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/historial-medico-delete/H-20250801-001",
+              "raw": "{{base_url}}/api/historial-medico-delete/H-20250801-001",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1298,9 +1329,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/producto-get",
+              "raw": "{{base_url}}/api/producto-get",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1322,9 +1353,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/categorias-get",
+              "raw": "{{base_url}}/api/categorias-get",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1424,9 +1455,9 @@
               ]
             },
             "url": {
-              "raw": "{{baseURL}}/api/producto-add",
+              "raw": "{{base_url}}/api/producto-add",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1520,15 +1551,15 @@
                 {
                   "key": "imagen",
                   "type": "file",
-                  "src": "/C:/Users/Personal/OneDrive/Imágenes/2-25632_m.jpg",
+                  "src": "/C:/Users/Personal/OneDrive/ImÃ¡genes/2-25632_m.jpg",
                   "disabled": true
                 }
               ]
             },
             "url": {
-              "raw": "{{baseURL}}/api/producto-update/9",
+              "raw": "{{base_url}}/api/producto-update/9",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1551,9 +1582,9 @@
               }
             ],
             "url": {
-              "raw": "{{baseURL}}/api/producto-delete/1",
+              "raw": "{{base_url}}/api/producto-delete/1",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1580,9 +1611,9 @@
             "method": "PUT",
             "header": [],
             "url": {
-              "raw": "{{baseURL}}/api/producto-remove-image/5",
+              "raw": "{{base_url}}/api/producto-remove-image/5",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1691,9 +1722,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseURL}}/api/ventas-get-total",
+              "raw": "{{base_url}}/api/ventas-get-total",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1728,9 +1759,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/ventas-add",
+              "raw": "{{base_url}}/api/ventas-add",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1765,9 +1796,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/ventas-anular/b9627580-abb8-4474-b449-ed976ca4ecf1",
+              "raw": "{{base_url}}/api/ventas-anular/b9627580-abb8-4474-b449-ed976ca4ecf1",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1803,9 +1834,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/ventas-abonar/bed7a6ac-de4d-412e-a0a5-e6f8618dcff0",
+              "raw": "{{base_url}}/api/ventas-abonar/bed7a6ac-de4d-412e-a0a5-e6f8618dcff0",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1846,9 +1877,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/clientes-add",
+              "raw": "{{base_url}}/api/clientes-add",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1886,9 +1917,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/clientes-get?cedula=25409904",
+              "raw": "{{base_url}}/api/clientes-get?cedula=25409904",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1929,9 +1960,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/clientes-update/123123123",
+              "raw": "{{base_url}}/api/clientes-update/123123123",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -1958,9 +1989,9 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{baseURL}}/api/clientes-delete/123123123",
+              "raw": "{{base_url}}/api/clientes-delete/123123123",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -2029,9 +2060,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/orden-trabajo-change-status",
+              "raw": "{{base_url}}/api/orden-trabajo-change-status",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -2066,9 +2097,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/orden-trabajo-update-fecha-entrega-estimada",
+              "raw": "{{base_url}}/api/orden-trabajo-update-fecha-entrega-estimada",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -2103,9 +2134,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/orden-trabajo-update-process",
+              "raw": "{{base_url}}/api/orden-trabajo-update-process",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -2140,9 +2171,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/orden-trabajo-change-status-all",
+              "raw": "{{base_url}}/api/orden-trabajo-change-status-all",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -2177,9 +2208,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/orden-trabajo-archive",
+              "raw": "{{base_url}}/api/orden-trabajo-archive",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -2214,9 +2245,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/orden-trabajo-unarchive",
+              "raw": "{{base_url}}/api/orden-trabajo-unarchive",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -2251,9 +2282,9 @@
               }
             },
             "url": {
-              "raw": "{{baseURL}}/api/orden-trabajo-update-days-to-archive",
+              "raw": "{{base_url}}/api/orden-trabajo-update-days-to-archive",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -2284,9 +2315,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseURL}}/api/empresas-get",
+              "raw": "{{base_url}}/api/empresas-get",
               "host": [
-                "{{baseURL}}"
+                "{{base_url}}"
               ],
               "path": [
                 "api",
@@ -2313,35 +2344,221 @@
       ]
     },
     {
-      "name": "Cambio clave pre login",
-      "request": {
-        "auth": {
-          "type": "noauth"
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"email\": \"jeffersonjtorresu@gmail.com\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+      "name": "Bancos y metodos",
+      "item": [
+        {
+          "name": "Bancos Receptores - Get",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/bancos_receptores-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "bancos_receptores-get"
+              ]
             }
-          }
+          },
+          "response": []
         },
-        "url": {
-          "raw": "{{baseURL}}/api/auth/forgot-password",
-          "host": [
-            "{{baseURL}}"
-          ],
-          "path": [
-            "api",
-            "auth",
-            "forgot-password"
-          ]
+        {
+          "name": "Bancos Receptores - Save",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"codigo\": \"CITIUS33\",\r\n  \"nombre\": \"Citibank N.A.\",\r\n  \"scope\": \"international\",\r\n  \"activo\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/bancos_receptores-save",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "bancos_receptores-save"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Bancos Receptores - Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Bank of America (BOFA)\",\r\n  \"scope\": \"international\",\r\n  \"activo\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/bancos_receptores-update/BOFAUS3N",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "bancos_receptores-update",
+                "BOFAUS3N"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Metodos Pago Config - Get",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/metodos_pago_config-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "metodos_pago_config-get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Metodos Pago Config - Save",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"key\": \"binance\",\r\n  \"label\": \"Binance\",\r\n  \"description\": \"RecepciÃ³n de pagos digitales con wallet operativa y titular configurado.\",\r\n  \"enabled\": true,\r\n  \"currency\": \"USDT\",\r\n  \"requiresReceiverAccount\": true,\r\n  \"isCustom\": false,\r\n  \"accounts\": [\r\n    {\r\n      \"id\": \"binance-1\",\r\n      \"bank\": \"\",\r\n      \"bankCode\": \"\",\r\n      \"ownerName\": \"Ruben Martinez\",\r\n      \"ownerId\": \"\",\r\n      \"phone\": \"\",\r\n      \"email\": \"\",\r\n      \"walletAddress\": \"TRX-TN8J8A2EXAMPLEWALLET001\",\r\n      \"accountDescription\": \"Wallet principal para cobros por Binance Pay\"\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/metodos_pago_config-save",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "metodos_pago_config-save"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Metodos Pago Config - Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"label\": \"Pago MÃ³vil\",\r\n  \"description\": \"Pago mÃ³vil interbancario con selecciÃ³n de banco receptor.\",\r\n  \"enabled\": false,\r\n  \"currency\": \"VES\",\r\n  \"requiresReceiverAccount\": true,\r\n  \"isCustom\": false,\r\n  \"accounts\": [\r\n    {\r\n      \"id\": \"pm-1\",\r\n      \"bank\": \"Banco Provincial\",\r\n      \"bankCode\": \"0108\",\r\n      \"ownerName\": \"Ruben Martinez\",\r\n      \"ownerId\": \"24367965\",\r\n      \"phone\": \"04123920817\",\r\n      \"email\": \"\",\r\n      \"walletAddress\": \"\",\r\n      \"accountDescription\": \"Cuenta personal de Ruben\"\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/metodos_pago_config-update/pago_movil",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "metodos_pago_config-update",
+                "pago_movil"
+              ]
+            }
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
     },
     {
       "name": "Obtener datos de la sesion",
@@ -2358,9 +2575,9 @@
           }
         ],
         "url": {
-          "raw": "{{baseURL}}/api/auth/get_data",
+          "raw": "{{base_url}}/api/auth/get_data",
           "host": [
-            "{{baseURL}}"
+            "{{base_url}}"
           ],
           "path": [
             "api",
@@ -2380,9 +2597,9 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{baseURL}}/api/sedes-get",
+          "raw": "{{base_url}}/api/sedes-get",
           "host": [
-            "{{baseURL}}"
+            "{{base_url}}"
           ],
           "path": [
             "api",
@@ -2392,7 +2609,6 @@
       },
       "response": []
     }
-
   ],
   "event": [
     {
@@ -2416,24 +2632,6 @@
           ""
         ]
       }
-    }
-  ],
-  "variable": [
-    {
-      "key": "baseURL",
-      "value": "http://localhost:3000"
-    },
-    {
-      "key": "baseURL2",
-      "value": ""
-    },
-    {
-      "key": "baseURL3",
-      "value": ""
-    },
-    {
-      "key": "token",
-      "value": ""
     }
   ]
 }

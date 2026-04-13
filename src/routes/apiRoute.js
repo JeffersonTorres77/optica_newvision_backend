@@ -68,6 +68,12 @@ router.get('/configuracion/get', authMiddleware, CatchGeneric(ConfiguracionContr
 router.get('/configuracion/costoConsultas', authMiddleware, CatchGeneric(ConfiguracionController.get_costos_consultas));
 router.get('/configuracion/moneda_base-get', authMiddleware, CatchGeneric(ConfiguracionController.consultar_moneda_base));
 router.put('/configuracion/moneda_base-update', authMiddleware, CatchGeneric(ConfiguracionController.modificar_moneda_base));
+router.get('/configuracion/bancos_receptores-get', authMiddleware, CatchGeneric(ConfiguracionController.bancos_receptores_get));
+router.post('/configuracion/bancos_receptores-save', authMiddleware, CatchGeneric(ConfiguracionController.bancos_receptores_save));
+router.put('/configuracion/bancos_receptores-update/:codigo', authMiddleware, CatchGeneric(ConfiguracionController.bancos_receptores_update));
+router.get('/configuracion/metodos_pago_config-get', authMiddleware, CatchGeneric(ConfiguracionController.metodos_pago_config_get));
+router.post('/configuracion/metodos_pago_config-save', authMiddleware, CatchGeneric(ConfiguracionController.metodos_pago_config_save));
+router.put('/configuracion/metodos_pago_config-update/:key', authMiddleware, CatchGeneric(ConfiguracionController.metodos_pago_config_update));
 
 router.get('/get-usuarios/:cedula?', authMiddleware, CatchGeneric(UsuarioController.get));
 router.post('/add-usuarios/', authMiddleware, CatchGeneric(UsuarioController.add));
