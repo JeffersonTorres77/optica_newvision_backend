@@ -62,6 +62,73 @@ const VentaController = {
         return where;
     },
 
+    construir_filtros_resumen: (req) => {
+        const filtros = req.body || {};
+        const where = { sede: req.sede.id };
+
+        const fechaDesde = filtros.fechaDesde;
+        const fechaHasta = filtros.fechaHasta;
+        const anio = Number(filtros.anio) || null;
+        const mes = Number(filtros.mes) || null;
+        const asesorId = Number(filtros.asesor) || null;
+
+        if (fechaDesde && fechaHasta) {
+            where.fecha = {
+                [Op.between]: [
+                    new Date(`${fechaDesde}T00:00:00.000`),
+                    new Date(`${fechaHasta}T23:59:59.999`)
+                ]
+            };
+        } else if (anio) {
+            const mesSeguro = mes >= 1 && mes <= 12 ? mes : null;
+            const fechaInicio = mesSeguro
+                ? new Date(anio, mesSeguro - 1, 1, 0, 0, 0, 0)
+                : new Date(anio, 0, 1, 0, 0, 0, 0);
+            const fechaFin = mesSeguro
+                ? new Date(anio, mesSeguro, 0, 23, 59, 59, 999)
+                : new Date(anio, 11, 31, 23, 59, 59, 999);
+
+            where.fecha = { [Op.between]: [fechaInicio, fechaFin] };
+        }
+
+        if (asesorId) {
+            where.asesor_id = asesorId;
+        }
+
+        if (filtros.formaPago) {
+            const formaPagoMap = {
+                credito: 'de_contado-pendiente',
+                'contado-pendiente': 'de_contado-pendiente'
+            };
+
+            where.forma_pago = formaPagoMap[filtros.formaPago] || filtros.formaPago;
+        }
+
+        return where;
+    },
+
+    convertir_monto_moneda_base_actual: (venta, montoEnMonedaVenta, monedaBaseId) => {
+        const tasasActuales = Array.isArray(venta.tasas_actuales) ? [...venta.tasas_actuales] : [];
+
+        if (!tasasActuales.some(tasa => tasa.id === 'bolivar')) {
+            tasasActuales.push({ id: 'bolivar', valor: 1 });
+        }
+
+        const tasaOrigen = venta.moneda === 'bolivar'
+            ? 1
+            : Number((tasasActuales.find(tasa => tasa.id === venta.moneda) || {}).valor || 0);
+
+        const tasaDestino = monedaBaseId === 'bolivar'
+            ? 1
+            : Number((tasasActuales.find(tasa => tasa.id === monedaBaseId) || {}).valor || 0);
+
+        if (!tasaOrigen || !tasaDestino) {
+            throw { message: `No se encontraron tasas válidas para la venta ${venta.id}.` };
+        }
+
+        return FormatUtils.float((Number(montoEnMonedaVenta || 0) * tasaOrigen) / tasaDestino);
+    },
+
     add: async (req, res) => {
         const {
             moneda,
@@ -377,6 +444,193 @@ const VentaController = {
             montoCompletadas: completadas.amount,
             montoPendientes: pendientes.amount,
             montoCanceladas: canceladas.amount,
+        });
+    },
+
+    estadisticas_financieras: async (req, res) => {
+        const monedaBase = await ConfiguracionService.get_moneda_base(req.sede.id);
+        const monedaBaseId = monedaBase.valor;
+        const where = VentaController.construir_filtros_resumen(req);
+
+        const ventas = await Venta.findAll({
+            where,
+            include: [
+                { model: VentaPago, as: 'array_pagos' },
+                { model: Usuario, as: 'asesor_user', attributes: ['id', 'nombre'], required: false }
+            ],
+            order: [['fecha', 'DESC']]
+        });
+
+        const formatearDiaClave = (fecha) => {
+            const date = new Date(fecha);
+            const year = date.getFullYear();
+            const month = `${date.getMonth() + 1}`.padStart(2, '0');
+            const day = `${date.getDate()}`.padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
+        const formatearMesClave = (fecha) => {
+            const date = new Date(fecha);
+            const year = date.getFullYear();
+            const month = `${date.getMonth() + 1}`.padStart(2, '0');
+            return `${year}-${month}`;
+        };
+
+        const crearPuntoSerie = (labelKey, label) => ({
+            key: labelKey,
+            label,
+            ventas: 0,
+            facturado: 0,
+            cobrado: 0,
+            pendiente: 0
+        });
+
+        const seriesDiariasMap = new Map();
+        const seriesMensualesMap = new Map();
+        const rankingAsesoresMap = new Map();
+
+        const resumen = {
+            montoTotal: 0,
+            totalAbonos: 0,
+            deudaPendiente: 0,
+            deudaCashea: 0,
+            deudaAbonos: 0,
+            deudaContado: 0,
+            ventasContado: { cantidad: 0, montoTotal: 0 },
+            ventasAbono: { cantidad: 0, montoTotal: 0 },
+            ventasCashea: { cantidad: 0, montoTotal: 0 },
+            ventasCredito: { cantidad: 0, montoTotal: 0 }
+        };
+
+        for (const venta of ventas) {
+            if (venta.estatus_venta === 'anulada') {
+                continue;
+            }
+
+            const totalVenta = VentaController.convertir_monto_moneda_base_actual(venta, venta.total, monedaBaseId);
+            const totalPagadoVenta = VentaController.convertir_monto_moneda_base_actual(
+                venta,
+                (venta.array_pagos || []).reduce((sum, pago) => sum + Number(pago.monto_moneda_base || 0), 0),
+                monedaBaseId
+            );
+            const deudaVenta = FormatUtils.float(Math.max(totalVenta - totalPagadoVenta, 0));
+
+            resumen.montoTotal = FormatUtils.float(resumen.montoTotal + totalVenta);
+            resumen.totalAbonos = FormatUtils.float(resumen.totalAbonos + totalPagadoVenta);
+            resumen.deudaPendiente = FormatUtils.float(resumen.deudaPendiente + deudaVenta);
+
+            const fechaVenta = new Date(venta.fecha);
+            const diaKey = formatearDiaClave(fechaVenta);
+            const mesKey = formatearMesClave(fechaVenta);
+            const diaLabel = fechaVenta.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
+            const mesLabel = fechaVenta.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' });
+
+            if (!seriesDiariasMap.has(diaKey)) {
+                seriesDiariasMap.set(diaKey, crearPuntoSerie(diaKey, diaLabel));
+            }
+
+            if (!seriesMensualesMap.has(mesKey)) {
+                seriesMensualesMap.set(mesKey, crearPuntoSerie(mesKey, mesLabel));
+            }
+
+            const puntoDia = seriesDiariasMap.get(diaKey);
+            puntoDia.ventas += 1;
+            puntoDia.facturado = FormatUtils.float(puntoDia.facturado + totalVenta);
+            puntoDia.cobrado = FormatUtils.float(puntoDia.cobrado + totalPagadoVenta);
+            puntoDia.pendiente = FormatUtils.float(puntoDia.pendiente + deudaVenta);
+
+            const puntoMes = seriesMensualesMap.get(mesKey);
+            puntoMes.ventas += 1;
+            puntoMes.facturado = FormatUtils.float(puntoMes.facturado + totalVenta);
+            puntoMes.cobrado = FormatUtils.float(puntoMes.cobrado + totalPagadoVenta);
+            puntoMes.pendiente = FormatUtils.float(puntoMes.pendiente + deudaVenta);
+
+            const asesorId = venta.asesor_user?.id || venta.asesor_id || 0;
+            const asesorNombre = venta.asesor_user?.nombre || 'Sin asesor';
+
+            if (!rankingAsesoresMap.has(asesorId)) {
+                rankingAsesoresMap.set(asesorId, {
+                    asesorId,
+                    asesorNombre,
+                    ventas: 0,
+                    facturado: 0,
+                    cobrado: 0,
+                    pendiente: 0
+                });
+            }
+
+            const puntoAsesor = rankingAsesoresMap.get(asesorId);
+            puntoAsesor.ventas += 1;
+            puntoAsesor.facturado = FormatUtils.float(puntoAsesor.facturado + totalVenta);
+            puntoAsesor.cobrado = FormatUtils.float(puntoAsesor.cobrado + totalPagadoVenta);
+            puntoAsesor.pendiente = FormatUtils.float(puntoAsesor.pendiente + deudaVenta);
+
+            switch (venta.forma_pago) {
+                case 'contado':
+                    resumen.ventasContado.cantidad += 1;
+                    resumen.ventasContado.montoTotal = FormatUtils.float(resumen.ventasContado.montoTotal + totalVenta);
+                    break;
+                case 'abono':
+                    resumen.ventasAbono.cantidad += 1;
+                    resumen.ventasAbono.montoTotal = FormatUtils.float(resumen.ventasAbono.montoTotal + totalVenta);
+                    resumen.deudaAbonos = FormatUtils.float(resumen.deudaAbonos + deudaVenta);
+                    break;
+                case 'cashea':
+                    resumen.ventasCashea.cantidad += 1;
+                    resumen.ventasCashea.montoTotal = FormatUtils.float(resumen.ventasCashea.montoTotal + totalVenta);
+                    resumen.deudaCashea = FormatUtils.float(resumen.deudaCashea + deudaVenta);
+                    break;
+                case 'de_contado-pendiente':
+                    resumen.ventasCredito.cantidad += 1;
+                    resumen.ventasCredito.montoTotal = FormatUtils.float(resumen.ventasCredito.montoTotal + totalVenta);
+                    resumen.deudaContado = FormatUtils.float(resumen.deudaContado + deudaVenta);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        const seriesDiaria = [...seriesDiariasMap.values()]
+            .sort((a, b) => a.key.localeCompare(b.key))
+            .map(item => ({
+                fecha: item.key,
+                label: item.label,
+                ventas: item.ventas,
+                facturado: item.facturado,
+                cobrado: item.cobrado,
+                pendiente: item.pendiente
+            }));
+
+        const seriesMensual = [...seriesMensualesMap.values()]
+            .sort((a, b) => a.key.localeCompare(b.key))
+            .map(item => ({
+                periodo: item.key,
+                label: item.label,
+                ventas: item.ventas,
+                facturado: item.facturado,
+                cobrado: item.cobrado,
+                pendiente: item.pendiente
+            }));
+
+        const rankingAsesores = [...rankingAsesoresMap.values()]
+            .sort((a, b) => b.facturado - a.facturado)
+            .map(item => ({
+                asesorId: item.asesorId,
+                asesorNombre: item.asesorNombre,
+                ventas: item.ventas,
+                facturado: item.facturado,
+                cobrado: item.cobrado,
+                pendiente: item.pendiente
+            }));
+
+        res.status(200).json({
+            message: 'ok',
+            data: {
+                ...resumen,
+                seriesDiaria,
+                seriesMensual,
+                rankingAsesores
+            }
         });
     },
 

@@ -103,6 +103,7 @@ router.put('/producto-remove-image/:id', authMiddleware, CatchGeneric(ProductoCo
 router.post('/ventas-add', authMiddleware, CatchGeneric(VentaController.add));
 router.get('/ventas-get', authMiddleware, CatchGeneric(VentaController.get));
 router.get('/ventas-get-total', authMiddleware, CatchGeneric(VentaController.get_total));
+router.post('/estadisticas-financieras', authMiddleware, CatchGeneric(VentaController.estadisticas_financieras));
 router.put('/ventas-anular/:venta_key', authMiddleware, CatchGeneric(VentaController.anular));
 router.put('/ventas-abonar/:venta_key', authMiddleware, CatchGeneric(VentaController.abonar));
 
