@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-04-2026 a las 17:30:08
+-- Tiempo de generación: 13-04-2026 a las 21:39:47
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -24,11 +24,12 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `bancos_receptores`
+-- Estructura de tabla para la tabla `bancos_receptores_config`
 --
 
-CREATE TABLE `bancos_receptores` (
-  `id` int(10) UNSIGNED NOT NULL,
+CREATE TABLE `bancos_receptores_config` (
+  `id` int(11) NOT NULL,
+  `sede` varchar(50) NOT NULL,
   `codigo` varchar(20) NOT NULL,
   `nombre` varchar(150) NOT NULL,
   `scope` enum('national','international') NOT NULL,
@@ -38,42 +39,26 @@ CREATE TABLE `bancos_receptores` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Volcado de datos para la tabla `bancos_receptores`
+-- Volcado de datos para la tabla `bancos_receptores_config`
 --
 
-INSERT INTO `bancos_receptores` (`id`, `codigo`, `nombre`, `scope`, `activo`, `created_at`, `updated_at`) VALUES
-(1, '0102', 'Banco de Venezuela', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(2, '0104', 'Venezolano de Credito', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(3, '0105', 'Mercantil', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(4, '0108', 'Banco Provincial', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(5, '0114', 'Bancaribe', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(6, '0115', 'Banco Exterior', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(7, '0128', 'Banco Caroni', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(8, '0134', 'Banesco', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(9, '0137', 'Banco Sofitasa', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(10, '0138', 'Banco Plaza', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(11, '0146', 'Banco de la Gente Emprendedora', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(12, '0151', 'Banco Fondo Comun', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(13, '0156', '100% Banco', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(14, '0157', 'DelSur', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(15, '0163', 'Banco del Tesoro', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(16, '0166', 'Banco Agricola de Venezuela', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(17, '0168', 'Bancrecer', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(18, '0169', 'Mi Banco', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(19, '0171', 'Banco Activo', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(20, '0172', 'Bancamiga', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(21, '0173', 'Banco Internacional de Desarrollo', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(22, '0174', 'Banplus', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(23, '0175', 'Banco Bicentenario del Pueblo', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(24, '0177', 'Banco de la Fuerza Armada Nacional Bolivariana', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(25, '0191', 'Banco Nacional de Credito', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(26, '0601', 'Instituto Municipal de Credito Popular', 'national', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(27, 'BOFAUS3N', 'Bank of America (BOFA)', 'international', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(28, 'CHASUS33', 'JPMorgan Chase Bank', 'international', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(29, 'CITIUS33', 'Citibank N.A.', 'international', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(30, 'WFBIUS6S', 'Wells Fargo Bank', 'international', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(31, 'USBKUS44', 'U.S. Bank', 'international', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27'),
-(32, 'PNCCUS33', 'PNC Bank', 'international', 1, '2026-04-13 11:10:06', '2026-04-13 11:17:27');
+INSERT INTO `bancos_receptores_config` (`id`, `sede`, `codigo`, `nombre`, `scope`, `activo`, `created_at`, `updated_at`) VALUES
+(3, 'guatire', '0102', 'Banco de Venezuela', 'national', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(4, 'guatire', '0104', 'Venezolano de Crédito', 'national', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(5, 'guatire', '0108', 'Banco Provincial', 'national', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(6, 'guatire', '0134', 'Banesco', 'national', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(7, 'guatire', '0172', 'Bancamiga', 'national', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(8, 'guatire', '0191', 'Banco Nacional de Crédito', 'national', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(9, 'guatire', 'BOFAUS3N', 'Bank of America (BOFA)', 'international', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(10, 'guatire', 'CHASUS33', 'JPMorgan Chase Bank', 'international', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(11, 'guarenas', '0102', 'Banco de Venezuela', 'national', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(12, 'guarenas', '0104', 'Venezolano de Crédito', 'national', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(13, 'guarenas', '0108', 'Banco Provincial', 'national', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(14, 'guarenas', '0134', 'Banesco', 'national', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(15, 'guarenas', '0172', 'Bancamiga', 'national', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(16, 'guarenas', '0191', 'Banco Nacional de Crédito', 'national', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(17, 'guarenas', 'BOFAUS3N', 'Bank of America (BOFA)', 'international', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(18, 'guarenas', 'CHASUS33', 'JPMorgan Chase Bank', 'international', 1, '2026-04-13 15:32:42', '2026-04-13 15:32:42');
 
 -- --------------------------------------------------------
 
@@ -434,7 +419,47 @@ INSERT INTO `logins` (`id`, `sede_id`, `usu_cedula`, `token`, `ip`, `created_at`
 (117, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzU5MzU3MjksImV4cCI6MTc3NjAyMjEyOX0.Jk6vSqfLcNvB0ACbwvjbi_X5t4QtN15LhKG2Bs2TXpk', '::1', '2026-04-11 15:28:49', '2026-04-11 15:28:49'),
 (118, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzU5MzU3MzUsImV4cCI6MTc3NjAyMjEzNX0.bQkl9ocZRVro11mo_866laJEjX4L47vu6bpCKeiRK5c', '::1', '2026-04-11 15:28:55', '2026-04-11 15:28:55'),
 (119, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NTkzNTc2MywiZXhwIjoxNzc2MDIyMTYzfQ.z8XdpG49wMITKmRRJwDOf9JCPBdYBG59U8EH3exoakU', '::1', '2026-04-11 15:29:23', '2026-04-11 15:29:23'),
-(120, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NjA5NDAwMywiZXhwIjoxNzc2MTgwNDAzfQ.3PtYyjMPPhlHPEB9MdUFiyXMCKZmQt5lEzwfoSdNvGI', '::1', '2026-04-13 11:26:43', '2026-04-13 11:26:43');
+(120, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NjA5NDAwMywiZXhwIjoxNzc2MTgwNDAzfQ.3PtYyjMPPhlHPEB9MdUFiyXMCKZmQt5lEzwfoSdNvGI', '::1', '2026-04-13 11:26:43', '2026-04-13 11:26:43'),
+(121, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NjEwNTMwMywiZXhwIjoxNzc2MTkxNzAzfQ.biKkTXEi9G63lxAE6PY-kQedr823Pfna9GZSnALG7Gw', '::1', '2026-04-13 14:35:03', '2026-04-13 14:35:03'),
+(122, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NjEwNTgzNywiZXhwIjoxNzc2MTkyMjM3fQ.7CeUtFZZ91d2X8WYr_1WZClK9mqx5Cfr70SzZIV_cdU', '::1', '2026-04-13 14:43:57', '2026-04-13 14:43:57'),
+(123, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NjEwNTg4MCwiZXhwIjoxNzc2MTkyMjgwfQ.RQ6YVxEDzzvlRKhNXQz7fzrya8kBu6EE5RLh3six-ag', '::1', '2026-04-13 14:44:40', '2026-04-13 14:44:40'),
+(124, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NjEwNjkzOCwiZXhwIjoxNzc2MTkzMzM4fQ.4NJWVpNM3M055579-EidY4ksRmigY6SiaryNGLrtlQw', '::1', '2026-04-13 15:02:18', '2026-04-13 15:02:18'),
+(125, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzYxMDY5MzgsImV4cCI6MTc3NjE5MzMzOH0.iRa2fRzekOlikOC6I_LVttU-AshmpHFIyZFXjEX0GoA', '::1', '2026-04-13 15:02:18', '2026-04-13 15:02:18');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `metodos_pago_config`
+--
+
+CREATE TABLE `metodos_pago_config` (
+  `id` int(11) NOT NULL,
+  `sede` varchar(50) NOT NULL,
+  `metodo_key` varchar(80) NOT NULL,
+  `label` varchar(120) NOT NULL,
+  `description` text NOT NULL,
+  `enabled` tinyint(1) NOT NULL DEFAULT 1,
+  `currency` varchar(20) NOT NULL,
+  `requires_receiver_account` tinyint(1) NOT NULL DEFAULT 0,
+  `is_custom` tinyint(1) NOT NULL DEFAULT 0,
+  `accounts` longtext NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `metodos_pago_config`
+--
+
+INSERT INTO `metodos_pago_config` (`id`, `sede`, `metodo_key`, `label`, `description`, `enabled`, `currency`, `requires_receiver_account`, `is_custom`, `accounts`, `created_at`, `updated_at`) VALUES
+(3, 'guatire', 'efectivo', 'Efectivo', 'Pago inmediato en caja para operaciones presenciales.', 1, 'MULTI', 0, 0, '[]', '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(4, 'guatire', 'punto_de_venta', 'Punto de Venta', 'Cobro con tarjetas procesadas a través de puntos de venta físicos internos.', 1, 'VES', 1, 0, '[{\"id\":\"punto-1\",\"bank\":\"Bancamiga\",\"bankCode\":\"0172\",\"ownerName\":\"\",\"ownerId\":\"\",\"phone\":\"\",\"email\":\"\",\"walletAddress\":\"\",\"accountDescription\":\"Punto de venta interno - Óptica Principal\"}]', '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(5, 'guatire', 'pago_movil', 'Pago Móvil', 'Pago móvil interbancario con selección de banco receptor.', 1, 'VES', 1, 0, '[{\"id\":\"pm-1\",\"bank\":\"Banco Provincial\",\"bankCode\":\"0108\",\"ownerName\":\"Ruben Martinez\",\"ownerId\":\"24367965\",\"phone\":\"04123920817\",\"email\":\"\",\"walletAddress\":\"\",\"accountDescription\":\"Cuenta personal de Ruben\"}]', '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(6, 'guatire', 'zelle', 'Zelle', 'Transferencia electrónica en USD con destino operativo definido.', 1, 'USD', 1, 0, '[{\"id\":\"zelle-1\",\"bank\":\"Bank of America (BOFA)\",\"bankCode\":\"BOFAUS3N\",\"ownerName\":\"Ruben Perez\",\"ownerId\":\"V-12345678\",\"phone\":\"+15875551234\",\"email\":\"ruben.perez@email.com\",\"walletAddress\":\"\",\"accountDescription\":\"Cuenta personal de Ruben (Zelle)\"}]', '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(7, 'guarenas', 'efectivo', 'Efectivo', 'Pago inmediato en caja para operaciones presenciales.', 1, 'MULTI', 0, 0, '[]', '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(8, 'guarenas', 'punto_de_venta', 'Punto de Venta', 'Cobro con tarjetas procesadas a través de puntos de venta físicos internos.', 1, 'VES', 1, 0, '[{\"id\":\"punto-1\",\"bank\":\"Bancamiga\",\"bankCode\":\"0172\",\"ownerName\":\"\",\"ownerId\":\"\",\"phone\":\"\",\"email\":\"\",\"walletAddress\":\"\",\"accountDescription\":\"Punto de venta interno - Óptica Principal\"}]', '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(9, 'guarenas', 'pago_movil', 'Pago Móvil', 'Pago móvil interbancario con selección de banco receptor.', 1, 'VES', 1, 0, '[{\"id\":\"pm-1\",\"bank\":\"Banco Provincial\",\"bankCode\":\"0108\",\"ownerName\":\"Ruben Martinez\",\"ownerId\":\"24367965\",\"phone\":\"04123920817\",\"email\":\"\",\"walletAddress\":\"\",\"accountDescription\":\"Cuenta personal de Ruben\"}]', '2026-04-13 15:32:42', '2026-04-13 15:32:42'),
+(10, 'guarenas', 'zelle', 'Zelle', 'Transferencia electrónica en USD con destino operativo definido.', 1, 'USD', 1, 0, '[{\"id\":\"zelle-1\",\"bank\":\"Bank of America (BOFA)\",\"bankCode\":\"BOFAUS3N\",\"ownerName\":\"Ruben Perez\",\"ownerId\":\"V-12345678\",\"phone\":\"+15875551234\",\"email\":\"ruben.perez@email.com\",\"walletAddress\":\"\",\"accountDescription\":\"Cuenta personal de Ruben (Zelle)\"}]', '2026-04-13 15:32:42', '2026-04-13 15:32:42');
 
 -- --------------------------------------------------------
 
@@ -959,13 +984,12 @@ INSERT INTO `ventas_productos` (`id`, `venta_key`, `producto_id`, `cantidad`, `t
 --
 
 --
--- Indices de la tabla `bancos_receptores`
+-- Indices de la tabla `bancos_receptores_config`
 --
-ALTER TABLE `bancos_receptores`
+ALTER TABLE `bancos_receptores_config`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uk_bancos_receptores_codigo` (`codigo`),
-  ADD KEY `idx_bancos_receptores_scope` (`scope`),
-  ADD KEY `idx_bancos_receptores_activo` (`activo`);
+  ADD UNIQUE KEY `uk_bancos_receptores_config_sede_codigo` (`sede`,`codigo`),
+  ADD KEY `idx_bancos_receptores_config_sede` (`sede`);
 
 --
 -- Indices de la tabla `cargos`
@@ -1015,6 +1039,14 @@ ALTER TABLE `historial_rastreo_bcv`
 --
 ALTER TABLE `logins`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `metodos_pago_config`
+--
+ALTER TABLE `metodos_pago_config`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_metodos_pago_config_sede_key` (`sede`,`metodo_key`),
+  ADD KEY `idx_metodos_pago_config_sede` (`sede`);
 
 --
 -- Indices de la tabla `ordenes_trabajo`
@@ -1148,10 +1180,10 @@ ALTER TABLE `ventas_productos`
 --
 
 --
--- AUTO_INCREMENT de la tabla `bancos_receptores`
+-- AUTO_INCREMENT de la tabla `bancos_receptores_config`
 --
-ALTER TABLE `bancos_receptores`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+ALTER TABLE `bancos_receptores_config`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `categorias`
@@ -1169,7 +1201,7 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT de la tabla `configuraciones`
 --
 ALTER TABLE `configuraciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `empresas`
@@ -1193,7 +1225,13 @@ ALTER TABLE `historial_rastreo_bcv`
 -- AUTO_INCREMENT de la tabla `logins`
 --
 ALTER TABLE `logins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
+
+--
+-- AUTO_INCREMENT de la tabla `metodos_pago_config`
+--
+ALTER TABLE `metodos_pago_config`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `ordenes_trabajo`
