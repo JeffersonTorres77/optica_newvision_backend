@@ -434,6 +434,7 @@ const VentaService = {
 
         const moneda_base_id = await ConfiguracionService.get_moneda_base(objVenta.sede);
         const moneda_base_tasa = await Tasa.findOne({ where: { id: moneda_base_id.valor } });
+        const historiaMedica = objVenta.historia_medica || null;
         const arrayPagos = Array.isArray(objVenta.array_pagos) ? objVenta.array_pagos : [];
         const arrayPagosAgrupados = Array.isArray(objVenta.array_pagos_agrupados) ? objVenta.array_pagos_agrupados : [];
         const esFormaPagoAbono = objVenta.forma_pago === 'abono';
@@ -486,6 +487,68 @@ const VentaService = {
         };
 
         const pagosParaMetodosDePago = esFormaPagoAbono ? [] : pagosIniciales;
+
+        const especialistaConsulta = historiaMedica ? {
+            tipo: historiaMedica.especialista_tipo || objVenta.venta_consulta?.tipo_especialista || null,
+            cedula: historiaMedica.especialista_cedula || especialistaOutput?.cedula || null,
+            nombre: (historiaMedica.especialista_tipo || '').toUpperCase() === 'EXTERNO'
+                ? historiaMedica.especialista_externo_nombre
+                : (especialistaOutput?.nombre || null),
+            cargo: especialistaOutput?.cargo || null,
+            externo: {
+                nombre: historiaMedica.especialista_externo_nombre || null,
+                lugarConsultorio: historiaMedica.especialista_externo_lugar || null,
+            }
+        } : {
+            nombre: especialistaOutput?.nombre || null,
+            tipo: objVenta.venta_consulta?.tipo_especialista || null,
+            cedula: especialistaOutput?.cedula || null,
+            cargo: especialistaOutput?.cargo || null,
+            externo: {
+                nombre: null,
+                lugarConsultorio: null,
+            }
+        };
+
+        const datosConsultaHistorial = historiaMedica ? {
+            pagoPendiente: !!historiaMedica.pago_pendiente,
+            motivo: historiaMedica.motivo_consulta,
+            otroMotivo: historiaMedica.otro_motivo_consulta,
+            tipoCristalActual: historiaMedica.tipo_cristal_actual,
+            tipoLentesContacto: historiaMedica.tipo_lentes_contacto,
+            fechaUltimaGraduacion: historiaMedica.ultima_graduacion,
+            especialista: especialistaConsulta,
+            formulaOriginal: (historiaMedica.formula_original_tipo || historiaMedica.formula_original_nombre || historiaMedica.formula_original_lugar)
+                ? {
+                    medicoOrigen: {
+                        tipo: historiaMedica.formula_original_tipo || null,
+                        nombre: historiaMedica.formula_original_nombre || null,
+                        lugarConsultorio: historiaMedica.formula_original_lugar || null,
+                    }
+                }
+                : null,
+            formulaExterna: !!historiaMedica.formula_externa,
+        } : null;
+
+        const historiaMedicaResumen = historiaMedica ? {
+            id: historiaMedica.id,
+            numero: historiaMedica.numero,
+            datosConsulta: datosConsultaHistorial,
+            examenOcular: {
+                lensometria: historiaMedica.examen_ocular_lensometria,
+                refraccion: historiaMedica.examen_ocular_refraccion,
+                refraccionFinal: historiaMedica.examen_ocular_refraccion_final,
+                avsc_avae_otros: historiaMedica.examen_ocular_avsc_avae_otros,
+            },
+            diagnosticoTratamiento: {
+                diagnostico: historiaMedica.diagnostico,
+                tratamiento: historiaMedica.tratamiento,
+            },
+            recomendaciones: historiaMedica.recomendaciones,
+            conformidad: {
+                notaConformidad: historiaMedica.conformidad_nota,
+            }
+        } : null;
 
         for (let pago of pagosParaMetodosDePago) {
             let tasa_moneda_pago = null;
@@ -656,7 +719,14 @@ const VentaService = {
                 esFormulaExterna: objVenta.venta_consulta.es_formula_externa === 1,
                 tipoEspecialista: objVenta.venta_consulta.tipo_especialista,
                 tipoVentaConsulta: objVenta.tipo_venta,
-                montoOriginal: objVenta.venta_consulta.monto_original
+                montoOriginal: objVenta.venta_consulta.monto_original,
+                especialista: especialistaConsulta,
+                datosConsulta: datosConsultaHistorial,
+                examenOcular: historiaMedicaResumen?.examenOcular || null,
+                diagnosticoTratamiento: historiaMedicaResumen?.diagnosticoTratamiento || null,
+                recomendaciones: historiaMedicaResumen?.recomendaciones || [],
+                conformidad: historiaMedicaResumen?.conformidad || null,
+                historiaMedica: historiaMedicaResumen
             } : null
         };
     },

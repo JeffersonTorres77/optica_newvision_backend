@@ -157,6 +157,7 @@ const VentaController = {
             impuesto,
             descuento,
             total,
+            observaciones,
             cliente,
             asesor,
             productos,
@@ -232,7 +233,7 @@ const VentaController = {
             subtotal: 0,  // Removed from input, set to 0
             iva: 0,  // Removed from input, set to 0
             total: FormatUtils.float(total),
-            observaciones: null,
+            observaciones: (typeof observaciones === 'string' && observaciones.trim().length > 0) ? observaciones.trim() : null,
             fecha: fecha,
             pago_completo: null,
             created_by: req.user.cedula,
@@ -339,7 +340,8 @@ const VentaController = {
                 { model: Usuario, as: 'creater_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'asesor_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'especialista_user', attributes: ['id', 'cedula', 'nombre'] },
-                { model: VentaConsulta, as: 'venta_consulta' }
+                { model: VentaConsulta, as: 'venta_consulta' },
+                { model: HistorialMedico, as: 'historia_medica' }
             ]
         });
 
@@ -377,6 +379,7 @@ const VentaController = {
                 { model: Usuario, as: 'creater_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'asesor_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'especialista_user', attributes: ['id', 'cedula', 'nombre'] },
+                { model: HistorialMedico, as: 'historia_medica' },
             ],
             order: [['fecha', 'DESC']],
             limit,
@@ -846,6 +849,7 @@ const VentaController = {
                 { model: Usuario, as: 'asesor_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: Usuario, as: 'especialista_user', attributes: ['id', 'cedula', 'nombre'] },
                 { model: VentaConsulta, as: 'venta_consulta' },
+                { model: HistorialMedico, as: 'historia_medica' },
                 { model: OrdenTrabajo, as: 'datos_orden_trabajo' }
             ]
         });
