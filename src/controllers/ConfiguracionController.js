@@ -2,6 +2,7 @@ const Tasa = require('../models/Tasa');
 const ConfiguracionService = require('../services/ConfiguracionService');
 const { sequelize } = require('../config/db');
 const Configuracion = require('../models/Configuracion');
+const BancoReceptor = require('../models/BancoReceptor');
 
 const ConfiguracionController = {
     get: async (req, res) => {
@@ -54,6 +55,18 @@ const ConfiguracionController = {
             totalConsulta: costo_total_consulta.valor,
             costoMedico: costo_medico_consulta.valor,
             costoOptica: ''+(costo_total_consulta.valor - costo_medico_consulta.valor)+''
+        });
+    },
+
+    bancos_receptores_get: async (req, res) => {
+        const bancos = await BancoReceptor.findAll({
+            attributes: ['codigo', 'nombre', 'scope', 'activo'],
+            order: [['scope', 'ASC'], ['nombre', 'ASC']]
+        });
+
+        res.status(200).json({
+            message: 'Catálogo de bancos disponible',
+            bancos
         });
     },
 };

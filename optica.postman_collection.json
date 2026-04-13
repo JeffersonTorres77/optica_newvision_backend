@@ -39,37 +39,6 @@
             }
           },
           "response": []
-        },
-        {
-          "name": "Cambio clave pre login",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"email\": \"jeffersonjtorresu@gmail.com\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseURL}}/api/auth/forgot-password",
-              "host": [
-                "{{baseURL}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "forgot-password"
-              ]
-            }
-          },
-          "response": []
         }
       ]
     },
@@ -2344,6 +2313,37 @@
       ]
     },
     {
+      "name": "Cambio clave pre login",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"jeffersonjtorresu@gmail.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/api/auth/forgot-password",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "forgot-password"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Obtener datos de la sesion",
       "request": {
         "auth": {
@@ -2387,6 +2387,35 @@
           "path": [
             "api",
             "sedes-get"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Bancos - Get",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/configuracion/bancos_receptores-get",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "configuracion",
+            "bancos_receptores-get"
           ]
         }
       },
