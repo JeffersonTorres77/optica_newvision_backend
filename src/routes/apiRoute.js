@@ -68,7 +68,6 @@ router.get('/configuracion/get', authMiddleware, CatchGeneric(ConfiguracionContr
 router.get('/configuracion/costoConsultas', authMiddleware, CatchGeneric(ConfiguracionController.get_costos_consultas));
 router.get('/configuracion/moneda_base-get', authMiddleware, CatchGeneric(ConfiguracionController.consultar_moneda_base));
 router.put('/configuracion/moneda_base-update', authMiddleware, CatchGeneric(ConfiguracionController.modificar_moneda_base));
-router.get('/configuracion/bancos_receptores-get', authMiddleware, CatchGeneric(ConfiguracionController.bancos_receptores_get));
 
 router.get('/get-usuarios/:cedula?', authMiddleware, CatchGeneric(UsuarioController.get));
 router.post('/add-usuarios/', authMiddleware, CatchGeneric(UsuarioController.add));

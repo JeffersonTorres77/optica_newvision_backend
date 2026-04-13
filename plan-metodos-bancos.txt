@@ -1,0 +1,288 @@
+CONFIGURACION GENERAL - METODOS DE PAGO
+//catalogo de bancos receptores
+//cada banco se administra individualmente
+//GET /configuracion/bancos_receptores-get
+{
+    "message": "Catálogo de bancos disponible",
+    "bancos": [
+        {
+            "codigo": "0102",
+            "nombre": "Banco de Venezuela",
+            "scope": "national",
+            "activo": true
+        },
+        {
+            "codigo": "0104",
+            "nombre": "Venezolano de Crédito",
+            "scope": "national",
+            "activo": true
+        },
+        {
+            "codigo": "0108",
+            "nombre": "Banco Provincial",
+            "scope": "national",
+            "activo": true
+        },
+        {
+            "codigo": "0134",
+            "nombre": "Banesco",
+            "scope": "national",
+            "activo": true
+        },
+        {
+            "codigo": "0172",
+            "nombre": "Bancamiga",
+            "scope": "national",
+            "activo": true
+        },
+        {
+            "codigo": "0191",
+            "nombre": "Banco Nacional de Crédito",
+            "scope": "national",
+            "activo": true
+        },
+        {
+            "codigo": "BOFAUS3N",
+            "nombre": "Bank of America (BOFA)",
+            "scope": "international",
+            "activo": true
+        },
+        {
+            "codigo": "CHASUS33",
+            "nombre": "JPMorgan Chase Bank",
+            "scope": "international",
+            "activo": true
+        }
+    ]
+}
+
+//guardar banco receptor
+//POST /configuracion/bancos_receptores-save
+// Entrada
+{
+    "codigo": "CITIUS33",
+    "nombre": "Citibank N.A.",
+    "scope": "international",
+    "activo": true
+}
+// Salida
+{
+    "message": "Banco receptor guardado correctamente",
+    "banco": {
+        "codigo": "CITIUS33",
+        "nombre": "Citibank N.A.",
+        "scope": "international",
+        "activo": true
+    }
+}
+
+//actualizar banco receptor
+//PUT /configuracion/bancos_receptores-update/BOFAUS3N
+// Entrada
+{
+    "nombre": "Bank of America (BOFA)",
+    "scope": "international",
+    "activo": false
+}
+// Salida
+{
+    "message": "Banco receptor actualizado correctamente",
+    "banco": {
+        "codigo": "BOFAUS3N",
+        "nombre": "Bank of America (BOFA)",
+        "scope": "international",
+        "activo": false
+    }
+}
+
+//get metodos de pago configurables
+//cada metodo se administra individualmente
+//las cuentas receptoras se envian anidadas dentro del metodo
+//GET /configuracion/metodos_pago_config-get
+{
+    "message": "Métodos de pago configurables obtenidos correctamente",
+    "metodos": [
+        {
+            "key": "efectivo",
+            "label": "Efectivo",
+            "description": "Pago inmediato en caja para operaciones presenciales.",
+            "enabled": true,
+            "currency": "MULTI",
+            "requiresReceiverAccount": false,
+            "isCustom": false,
+            "accounts": []
+        },
+        {
+            "key": "punto_de_venta",
+            "label": "Punto de Venta",
+            "description": "Cobro con tarjetas procesadas a través de puntos de venta físicos internos.",
+            "enabled": true,
+            "currency": "VES",
+            "requiresReceiverAccount": true,
+            "isCustom": false,
+            "accounts": [
+                {
+                    "id": "punto-1",
+                    "bank": "Bancamiga",
+                    "bankCode": "0172",
+                    "ownerName": "",
+                    "ownerId": "",
+                    "phone": "",
+                    "email": "",
+                    "walletAddress": "",
+                    "accountDescription": "Punto de venta interno - Óptica Principal"
+                }
+            ]
+        },
+        {
+            "key": "pago_movil",
+            "label": "Pago Móvil",
+            "description": "Pago móvil interbancario con selección de banco receptor.",
+            "enabled": true,
+            "currency": "VES",
+            "requiresReceiverAccount": true,
+            "isCustom": false,
+            "accounts": [
+                {
+                    "id": "pm-1",
+                    "bank": "Banco Provincial",
+                    "bankCode": "0108",
+                    "ownerName": "Ruben Martinez",
+                    "ownerId": "24367965",
+                    "phone": "04123920817",
+                    "email": "",
+                    "walletAddress": "",
+                    "accountDescription": "Cuenta personal de Ruben"
+                }
+            ]
+        },
+        {
+            "key": "zelle",
+            "label": "Zelle",
+            "description": "Transferencia electrónica en USD con destino operativo definido.",
+            "enabled": true,
+            "currency": "USD",
+            "requiresReceiverAccount": true,
+            "isCustom": false,
+            "accounts": [
+                {
+                    "id": "zelle-1",
+                    "bank": "Bank of America (BOFA)",
+                    "bankCode": "BOFAUS3N",
+                    "ownerName": "Ruben Perez",
+                    "ownerId": "V-12345678",
+                    "phone": "+15875551234",
+                    "email": "ruben.perez@email.com",
+                    "walletAddress": "",
+                    "accountDescription": "Cuenta personal de Ruben (Zelle)"
+                }
+            ]
+        }
+    ],
+    "ultimaActualizacion": "2026-04-11T18:30:00.000Z"
+}
+
+//guardar metodo de pago
+//POST /configuracion/metodos_pago_config-save
+// Entrada
+{
+    "key": "binance",
+    "label": "Binance",
+    "description": "Recepción de pagos digitales con wallet operativa y titular configurado.",
+    "enabled": true,
+    "currency": "USDT",
+    "requiresReceiverAccount": true,
+    "isCustom": false,
+    "accounts": [
+        {
+            "id": "binance-1",
+            "bank": "",
+            "bankCode": "",
+            "ownerName": "Ruben Martinez",
+            "ownerId": "",
+            "phone": "",
+            "email": "",
+            "walletAddress": "TRX-TN8J8A2EXAMPLEWALLET001",
+            "accountDescription": "Wallet principal para cobros por Binance Pay"
+        }
+    ]
+}
+// Salida
+{
+    "message": "Método de pago guardado correctamente",
+    "metodo": {
+        "key": "binance",
+        "label": "Binance",
+        "description": "Recepción de pagos digitales con wallet operativa y titular configurado.",
+        "enabled": true,
+        "currency": "USDT",
+        "requiresReceiverAccount": true,
+        "isCustom": false,
+        "accounts": [
+            {
+                "id": "binance-1",
+                "bank": "",
+                "bankCode": "",
+                "ownerName": "Ruben Martinez",
+                "ownerId": "",
+                "phone": "",
+                "email": "",
+                "walletAddress": "TRX-TN8J8A2EXAMPLEWALLET001",
+                "accountDescription": "Wallet principal para cobros por Binance Pay"
+            }
+        ]
+    },
+    "ultimaActualizacion": "2026-04-11T18:40:00.000Z"
+}
+
+//actualizar metodo de pago
+//PUT /configuracion/metodos_pago_config-update/pago_movil
+// Entrada
+{
+    "label": "Pago Móvil",
+    "description": "Pago móvil interbancario con selección de banco receptor.",
+    "enabled": false,
+    "currency": "VES",
+    "requiresReceiverAccount": true,
+    "isCustom": false,
+    "accounts": [
+        {
+            "id": "pm-1",
+            "bank": "Banco Provincial",
+            "bankCode": "0108",
+            "ownerName": "Ruben Martinez",
+            "ownerId": "24367965",
+            "phone": "04123920817",
+            "email": "",
+            "walletAddress": "",
+            "accountDescription": "Cuenta personal de Ruben"
+        }
+    ]
+}
+// Salida
+{
+    "message": "Método de pago actualizado correctamente",
+    "metodo": {
+        "key": "pago_movil",
+        "label": "Pago Móvil",
+        "description": "Pago móvil interbancario con selección de banco receptor.",
+        "enabled": false,
+        "currency": "VES",
+        "requiresReceiverAccount": true,
+        "isCustom": false,
+        "accounts": [
+            {
+                "id": "pm-1",
+                "bank": "Banco Provincial",
+                "bankCode": "0108",
+                "ownerName": "Ruben Martinez",
+                "ownerId": "24367965",
+                "phone": "04123920817",
+                "email": "",
+                "walletAddress": "",
+                "accountDescription": "Cuenta personal de Ruben"
+            }
+        ]
+    },
+    "ultimaActualizacion": "2026-04-11T19:05:00.000Z"
+}
