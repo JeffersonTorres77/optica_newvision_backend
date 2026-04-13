@@ -15,6 +15,7 @@ const Paciente = require('../models/Paciente');
 const VentaPagoAgrupado = require('../models/VentaPagoAgrupado');
 const HistorialMedico = require('../models/HistorialMedico');
 const Tasa = require('../models/Tasa');
+const Sede = require('../models/Sede');
 const VentaConsulta = require('../models/VentaConsulta');
 const ConfiguracionService = require('../services/ConfiguracionService');
 const OrdenTrabajo = require('../models/OrdenTrabajo');
@@ -62,9 +63,9 @@ const VentaController = {
         return where;
     },
 
-    construir_filtros_resumen: (req) => {
+    construir_filtros_resumen: (req, sedeId = null) => {
         const filtros = req.body || {};
-        const where = { sede: req.sede.id };
+        const where = { sede: sedeId || req.sede.id };
 
         const fechaDesde = filtros.fechaDesde;
         const fechaHasta = filtros.fechaHasta;
@@ -105,6 +106,27 @@ const VentaController = {
         }
 
         return where;
+    },
+
+    resolver_sede_resumen: async (req) => {
+        const filtros = req.body || {};
+        const sedeSolicitada = `${filtros.sede || ''}`.trim().toLowerCase();
+
+        if (!sedeSolicitada || sedeSolicitada === req.sede.id) {
+            return req.sede;
+        }
+
+        const rolKey = `${req.user?.rol?.id || ''}`.trim().toLowerCase();
+        if (!['admin', 'gerente'].includes(rolKey)) {
+            throw { message: 'No tienes permisos para consultar estadisticas de otra sede.' };
+        }
+
+        const sede = await Sede.findOne({ where: { id: sedeSolicitada } });
+        if (!sede) {
+            throw { message: `La sede solicitada no existe: '${sedeSolicitada}'.` };
+        }
+
+        return sede;
     },
 
     convertir_monto_moneda_base_actual: (venta, montoEnMonedaVenta, monedaBaseId) => {
@@ -448,9 +470,10 @@ const VentaController = {
     },
 
     estadisticas_financieras: async (req, res) => {
-        const monedaBase = await ConfiguracionService.get_moneda_base(req.sede.id);
+        const sedeResumen = await VentaController.resolver_sede_resumen(req);
+        const monedaBase = await ConfiguracionService.get_moneda_base(sedeResumen.id);
         const monedaBaseId = monedaBase.valor;
-        const where = VentaController.construir_filtros_resumen(req);
+        const where = VentaController.construir_filtros_resumen(req, sedeResumen.id);
 
         const ventas = await Venta.findAll({
             where,
@@ -626,6 +649,11 @@ const VentaController = {
         res.status(200).json({
             message: 'ok',
             data: {
+                sede: {
+                    key: sedeResumen.id,
+                    nombre: sedeResumen.nombre
+                },
+                monedaBase: monedaBaseId,
                 ...resumen,
                 seriesDiaria,
                 seriesMensual,
