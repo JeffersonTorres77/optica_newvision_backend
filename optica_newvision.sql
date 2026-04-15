@@ -100,11 +100,13 @@ CREATE TABLE `categorias` (
 
 INSERT INTO `categorias` (`id`, `nombre`) VALUES
 (1, 'Monturas'),
-(2, 'Lentes'),
+(2, 'Cristales'),
 (3, 'Líquidos'),
 (4, 'Estuches'),
-(5, 'Misceláneos'),
-(6, 'Lentes de contacto');
+(5, 'Accesorios'),
+(6, 'Lentes de contacto'),
+(7, 'Filtro/Aditivos'),
+(8, 'Materiales');
 
 -- --------------------------------------------------------
 
@@ -587,6 +589,8 @@ CREATE TABLE `productos` (
   `moneda` varchar(20) NOT NULL,
   `activo` tinyint(4) NOT NULL,
   `descripcion` text DEFAULT NULL,
+  `requiere_formula` tinyint(4) NOT NULL DEFAULT 0,
+  `requiere_item_padre` tinyint(4) NOT NULL DEFAULT 0,
   `imagen_url` text DEFAULT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,

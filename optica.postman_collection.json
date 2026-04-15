@@ -1381,37 +1381,37 @@
               "formdata": [
                 {
                   "key": "nombre",
-                  "value": "Producto 6",
+                  "value": "Filtro/Aditivos - Luz azul",
                   "type": "text"
                 },
                 {
                   "key": "marca",
-                  "value": "Marca Generica 1",
+                  "value": "",
                   "type": "text"
                 },
                 {
                   "key": "color",
-                  "value": "Azul",
+                  "value": "",
                   "type": "text"
                 },
                 {
                   "key": "material",
-                  "value": "Plastico",
+                  "value": "",
                   "type": "text"
                 },
                 {
                   "key": "proveedor",
-                  "value": "Pepsi",
+                  "value": "",
                   "type": "text"
                 },
                 {
                   "key": "categoria",
-                  "value": "Lentes",
+                  "value": "Filtro/Aditivos",
                   "type": "text"
                 },
                 {
                   "key": "modelo",
-                  "value": "Modelo de prueba",
+                  "value": "Luz azul",
                   "type": "text"
                 },
                 {
@@ -1421,12 +1421,22 @@
                 },
                 {
                   "key": "precio",
-                  "value": "5",
+                  "value": "15",
                   "type": "text"
                 },
                 {
                   "key": "aplicaIva",
                   "value": "0",
+                  "type": "text"
+                },
+                {
+                  "key": "requiere_formula",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "requiere_item_padre",
+                  "value": "true",
                   "type": "text"
                 },
                 {
@@ -1443,7 +1453,7 @@
                 },
                 {
                   "key": "descripcion",
-                  "value": "Descripcion generica de muestra",
+                  "value": "Filtro adicional para protección frente a pantallas.",
                   "type": "text"
                 },
                 {
@@ -1483,37 +1493,37 @@
               "formdata": [
                 {
                   "key": "nombre",
-                  "value": "Producto Chevere 6",
+                  "value": "Cristales - Monofocal visión sencilla",
                   "type": "text"
                 },
                 {
                   "key": "marca",
-                  "value": "Marca Generica 1",
+                  "value": "",
                   "type": "text"
                 },
                 {
                   "key": "color",
-                  "value": "Azul",
+                  "value": "",
                   "type": "text"
                 },
                 {
                   "key": "material",
-                  "value": "Plastico",
+                  "value": "",
                   "type": "text"
                 },
                 {
                   "key": "proveedor",
-                  "value": "Pepsi",
+                  "value": "Laboratorio principal",
                   "type": "text"
                 },
                 {
                   "key": "categoria",
-                  "value": "Lentes",
+                  "value": "Cristales",
                   "type": "text"
                 },
                 {
                   "key": "modelo",
-                  "value": "Modelo de prueba",
+                  "value": "Monofocal visión sencilla",
                   "type": "text"
                 },
                 {
@@ -1523,12 +1533,22 @@
                 },
                 {
                   "key": "precio",
-                  "value": "10",
+                  "value": "12",
                   "type": "text"
                 },
                 {
                   "key": "aplicaIva",
-                  "value": "1",
+                  "value": "0",
+                  "type": "text"
+                },
+                {
+                  "key": "requiere_formula",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "requiere_item_padre",
+                  "value": "false",
                   "type": "text"
                 },
                 {
@@ -1545,7 +1565,7 @@
                 },
                 {
                   "key": "descripcion",
-                  "value": "Descripcion generica de muestra",
+                  "value": "Cristal monofocal actualizado con proveedor principal.",
                   "type": "text"
                 },
                 {

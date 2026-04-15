@@ -9,6 +9,62 @@ const fs = require('fs');
 const path = require('path');
 const ConfiguracionService = require('../services/ConfiguracionService');
 
+const IVA_PORCENTAJE = 16;
+
+function normalizarTexto(valor) {
+    return typeof valor === 'string' ? valor.trim() : '';
+}
+
+function normalizarTextoNullable(valor) {
+    const texto = normalizarTexto(valor);
+    return texto !== '' ? texto : null;
+}
+
+function normalizarBooleanFlexible(valor) {
+    return (valor === 'true' || valor === true || valor === 1 || valor === '1');
+}
+
+function normalizarCategoriaProducto(categoria) {
+    const categoriaLimpia = normalizarTexto(categoria);
+    const categoriaNormalizada = categoriaLimpia
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+
+    if (['filtro', 'filtros', 'aditivo', 'aditivos', 'filtro/aditivos', 'filtros/aditivos'].includes(categoriaNormalizada)) {
+        return 'Filtro/Aditivos';
+    }
+
+    return categoriaLimpia;
+}
+
+function construirProductoOutput(producto, imagenUrl) {
+    return {
+        id: producto.id,
+        sede_id: producto.sede_id,
+        nombre: producto.nombre,
+        marca: producto.marca,
+        color: producto.color,
+        codigo: producto.codigo,
+        material: producto.material,
+        proveedor: producto.proveedor,
+        categoria: normalizarCategoriaProducto(producto.categoria),
+        modelo: producto.modelo,
+        stock: producto.stock,
+        precio: producto.precio,
+        aplicaIva: producto.aplica_iva,
+        precioConIva: producto.precio_con_iva,
+        moneda: producto.moneda,
+        activo: producto.activo,
+        descripcion: producto.descripcion,
+        imagen_url: imagenUrl ?? producto.imagen_url,
+        created_at: producto.created_at,
+        updated_at: producto.updated_at,
+        requiere_formula: producto.requiere_formula,
+        requiere_item_padre: producto.requiere_item_padre,
+    };
+}
+
 const ProductoController = {
     add: async (req, res) => {
         if (!req.user) {
@@ -27,35 +83,37 @@ const ProductoController = {
 
             const {
                 nombre,
-                marca,
+                marca: marcaPar,
                 color: colorPar,
-                material,
+                material: materialPar,
                 proveedor: proveedorPar,
                 categoria,
                 modelo: modeloPar,
                 stock,
                 precio,
+                requiere_formula: requiereFormulaPar,
+                requiere_item_padre: requiereItemPadrePar,
                 activo: activo_string,
                 descripcion,
                 aplicaIva: aplicaIva_string
             } = req.body;
 
-            const activo = (activo_string === 'true' || activo_string === true || activo_string === 1 || activo_string === "1");
-            const aplicaIva = (aplicaIva_string === 'true' || aplicaIva_string === true || aplicaIva_string === 1 || aplicaIva_string === "1");
-            const color = (colorPar.trim() != '') ? colorPar : null;
-            const proveedor = (proveedorPar.trim() != '') ? proveedorPar : null;
-            const modelo = (modeloPar.trim() != '') ? modeloPar : null;
+            const activo = normalizarBooleanFlexible(activo_string);
+            const aplicaIva = normalizarBooleanFlexible(aplicaIva_string);
+            const requiereFormula = normalizarBooleanFlexible(requiereFormulaPar);
+            const requiereItemPadre = normalizarBooleanFlexible(requiereItemPadrePar);
+            const color = normalizarTextoNullable(colorPar);
+            const proveedor = normalizarTextoNullable(proveedorPar);
+            const modelo = normalizarTextoNullable(modeloPar);
+            const marca = normalizarTexto(marcaPar);
+            const materialNormalizado = normalizarTexto(materialPar);
+            const categoriaNormalizada = normalizarCategoriaProducto(categoria);
+            const descripcionNormalizada = normalizarTextoNullable(descripcion);
 
             if (!VerificationUtils.verify_nombre(nombre)) {
                 return res.status(400).json({ message: "El nombre no puede quedar vacio." });
             }
-            if (!VerificationUtils.verify_nombre(marca)) {
-                return res.status(400).json({ message: "La marca no puede quedar vacio." });
-            }
-            if (!VerificationUtils.verify_nombre(material)) {
-                return res.status(400).json({ message: "El material no puede quedar vacio." });
-            }
-            if (!VerificationUtils.verify_nombre(categoria)) {
+            if (!VerificationUtils.verify_nombre(categoriaNormalizada)) {
                 return res.status(400).json({ message: "La categoria no puede quedar vacio." });
             }
             if (!VerificationUtils.verify_numero(stock)) {
@@ -69,6 +127,12 @@ const ProductoController = {
             }
             if (!VerificationUtils.verify_boolean(aplicaIva)) {
                 return res.status(400).json({ message: "El parametro 'aplicaIva' debe ser booleano." });
+            }
+            if (!VerificationUtils.verify_boolean(requiereFormula)) {
+                return res.status(400).json({ message: "El parametro 'requiere_formula' debe ser booleano." });
+            }
+            if (!VerificationUtils.verify_boolean(requiereItemPadre)) {
+                return res.status(400).json({ message: "El parametro 'requiere_item_padre' debe ser booleano." });
             }
 
             const moneda_base = await ConfiguracionService.get_moneda_base(req.sede.id);
@@ -85,7 +149,7 @@ const ProductoController = {
                     nombre: nombre,
                     marca: marca,
                     color: color,
-                    categoria: categoria
+                    categoria: categoriaNormalizada
                 }
             });
             if (count > 0) {
@@ -104,9 +168,9 @@ const ProductoController = {
                 marca: marca,
                 color: color,
                 codigo: null,
-                material: material,
+                material: materialNormalizado,
                 proveedor: proveedor,
-                categoria: categoria,
+                categoria: categoriaNormalizada,
                 modelo: modelo,
                 stock: stock,
                 precio: Number(precio_sin_iva.toFixed(2)),
@@ -114,7 +178,9 @@ const ProductoController = {
                 precio_con_iva: Number(precio_number.toFixed(2)),
                 moneda: objTasa.id,
                 activo: activo,
-                descripcion: descripcion,
+                descripcion: descripcionNormalizada,
+                requiere_formula: requiereFormula,
+                requiere_item_padre: requiereItemPadre,
                 imagen_url: "/public/images/product-generic-image.jpg?t=" + Date.now()
             });
 
@@ -122,28 +188,7 @@ const ProductoController = {
             await objProducto.save();
 
             const producto = objProducto.get({ plain: true });
-            const producto_output = {
-                id: producto.id,
-                sede_id: producto.sede_id,
-                nombre: producto.nombre,
-                marca: producto.marca,
-                color: producto.color,
-                codigo: producto.codigo,
-                material: producto.material,
-                proveedor: producto.proveedor,
-                categoria: producto.categoria,
-                modelo: producto.modelo,
-                stock: producto.stock,
-                precio: producto.precio,
-                aplicaIva: producto.aplica_iva,
-                precioConIva: producto.precio_con_iva,
-                moneda: producto.moneda,
-                activo: producto.activo,
-                descripcion: producto.descripcion,
-                imagen_url: producto.imagen_url,
-                created_at: producto.created_at,
-                updated_at: producto.updated_at,
-            };
+            const producto_output = construirProductoOutput(producto);
 
             if (req.file) {
                 // Renombra el archivo subido con el ID del producto
@@ -161,7 +206,7 @@ const ProductoController = {
                 producto_output.imagen_url = objProducto.imagen_url;
             }
             
-            res.status(200).json({ message: 'ok', iva: 16, producto: producto_output });
+            res.status(200).json({ message: 'ok', iva: IVA_PORCENTAJE, producto: producto_output });
         });
     },
 
@@ -212,35 +257,37 @@ const ProductoController = {
 
             const {
                 nombre,
-                marca,
+                marca: marcaPar,
                 color: colorPar,
-                material,
+                material: materialPar,
                 proveedor: proveedorPar,
                 categoria,
                 modelo: modeloPar,
                 stock,
                 precio,
+                requiere_formula: requiereFormulaPar,
+                requiere_item_padre: requiereItemPadrePar,
                 activo: activo_string,
                 descripcion,
                 aplicaIva: aplicaIva_string
             } = req.body;
 
-            const activo = (activo_string === 'true' || activo_string === true || activo_string === 1 || activo_string === "1");
-            const aplicaIva = (aplicaIva_string === 'true' || aplicaIva_string === true || aplicaIva_string === 1 || aplicaIva_string === "1");
-            const color = (colorPar.trim() != '') ? colorPar : null;
-            const proveedor = (proveedorPar.trim() != '') ? proveedorPar : null;
-            const modelo = (modeloPar.trim() != '') ? modeloPar : null;
+            const activo = normalizarBooleanFlexible(activo_string);
+            const aplicaIva = normalizarBooleanFlexible(aplicaIva_string);
+            const requiereFormula = normalizarBooleanFlexible(requiereFormulaPar);
+            const requiereItemPadre = normalizarBooleanFlexible(requiereItemPadrePar);
+            const color = normalizarTextoNullable(colorPar);
+            const proveedor = normalizarTextoNullable(proveedorPar);
+            const modelo = normalizarTextoNullable(modeloPar);
+            const marca = normalizarTexto(marcaPar);
+            const materialNormalizado = normalizarTexto(materialPar);
+            const categoriaNormalizada = normalizarCategoriaProducto(categoria);
+            const descripcionNormalizada = normalizarTextoNullable(descripcion);
 
             if (!VerificationUtils.verify_nombre(nombre)) {
                 return res.status(400).json({ message: "El nombre no puede quedar vacio." });
             }
-            if (!VerificationUtils.verify_nombre(marca)) {
-                return res.status(400).json({ message: "La marca no puede quedar vacio." });
-            }
-            if (!VerificationUtils.verify_nombre(material)) {
-                return res.status(400).json({ message: "El material no puede quedar vacio." });
-            }
-            if (!VerificationUtils.verify_nombre(categoria)) {
+            if (!VerificationUtils.verify_nombre(categoriaNormalizada)) {
                 return res.status(400).json({ message: "La categoria no puede quedar vacio." });
             }
             if (!VerificationUtils.verify_numero(stock)) {
@@ -255,6 +302,12 @@ const ProductoController = {
             if (!VerificationUtils.verify_boolean(aplicaIva)) {
                 return res.status(400).json({ message: "El parametro 'aplicaIva' debe ser booleano." });
             }
+            if (!VerificationUtils.verify_boolean(requiereFormula)) {
+                return res.status(400).json({ message: "El parametro 'requiere_formula' debe ser booleano." });
+            }
+            if (!VerificationUtils.verify_boolean(requiereItemPadre)) {
+                return res.status(400).json({ message: "El parametro 'requiere_item_padre' debe ser booleano." });
+            }
 
             const count = await Producto.count({
                 where: {
@@ -263,7 +316,7 @@ const ProductoController = {
                     nombre: nombre,
                     marca: marca,
                     color: color,
-                    categoria: categoria
+                    categoria: categoriaNormalizada
                 }
             });
             if (count > 0) {
@@ -279,42 +332,23 @@ const ProductoController = {
             objProducto.nombre = nombre;
             objProducto.marca = marca;
             objProducto.color = color;
-            objProducto.material = material;
+            objProducto.material = materialNormalizado;
             objProducto.proveedor = proveedor;
-            objProducto.categoria = categoria;
+            objProducto.categoria = categoriaNormalizada;
             objProducto.modelo = modelo;
             objProducto.stock = stock;
             objProducto.precio = Number(precio_sin_iva.toFixed(2));
             objProducto.aplica_iva = aplicaIva;
             objProducto.precio_con_iva = Number(precio_number.toFixed(2));
             objProducto.activo = activo;
-            objProducto.descripcion = descripcion;
+            objProducto.descripcion = descripcionNormalizada;
+            objProducto.requiere_formula = requiereFormula;
+            objProducto.requiere_item_padre = requiereItemPadre;
 
             await objProducto.save();
 
             const producto = objProducto.get({ plain: true });
-            const producto_output = {
-                id: producto.id,
-                sede_id: producto.sede_id,
-                nombre: producto.nombre,
-                marca: producto.marca,
-                color: producto.color,
-                codigo: producto.codigo,
-                material: producto.material,
-                proveedor: producto.proveedor,
-                categoria: producto.categoria,
-                modelo: producto.modelo,
-                stock: producto.stock,
-                precio: producto.precio,
-                aplicaIva: producto.aplica_iva,
-                precioConIva: producto.precio_con_iva,
-                moneda: producto.moneda,
-                activo: producto.activo,
-                descripcion: producto.descripcion,
-                imagen_url: producto.imagen_url,
-                created_at: producto.created_at,
-                updated_at: producto.updated_at,
-            };
+            const producto_output = construirProductoOutput(producto);
 
             if (req.file) {
                 // Renombra el archivo subido con el ID del producto
@@ -332,7 +366,7 @@ const ProductoController = {
                 producto_output.imagen_url = objProducto.imagen_url;
             }
 
-            res.status(200).json({ message: 'ok', iva: 16, producto: producto_output });
+            res.status(200).json({ message: 'ok', iva: IVA_PORCENTAJE, producto: producto_output });
         });
     },
 
@@ -357,31 +391,10 @@ const ProductoController = {
             const existe_imagen = (producto.imagen_url !== null && limpiarYValidarRuta(producto.imagen_url));
             const ruta_imagen = (existe_imagen) ? (producto.imagen_url) : ("/public/images/product-generic-image.jpg?t=" + Date.now());
 
-            productos_output.push({
-                id: producto.id,
-                sede_id: producto.sede_id,
-                nombre: producto.nombre,
-                marca: producto.marca,
-                color: producto.color,
-                codigo: producto.codigo,
-                material: producto.material,
-                proveedor: producto.proveedor,
-                categoria: producto.categoria,
-                modelo: producto.modelo,
-                stock: producto.stock,
-                precio: producto.precio,
-                aplicaIva: producto.aplica_iva,
-                precioConIva: producto.precio_con_iva,
-                moneda: producto.moneda,
-                activo: producto.activo,
-                descripcion: producto.descripcion,
-                imagen_url: ruta_imagen,
-                created_at: producto.created_at,
-                updated_at: producto.updated_at,
-            });
+            productos_output.push(construirProductoOutput(producto, ruta_imagen));
         }
 
-        res.status(200).json({ message: 'ok', iva: 16, productos: productos_output });
+        res.status(200).json({ message: 'ok', iva: IVA_PORCENTAJE, productos: productos_output });
     },
 
     get_categorias: async (req, res) => {
@@ -390,8 +403,23 @@ const ProductoController = {
         }
 
         const categorias_db = await Categoria.findAll({});
+        const categorias_output = [];
+        const categoriasVistas = new Set();
 
-        res.status(200).json({ message: 'ok', categorias: categorias_db });
+        categorias_db.forEach(categoria => {
+            const nombreNormalizado = normalizarCategoriaProducto(categoria.nombre);
+            if (categoriasVistas.has(nombreNormalizado)) {
+                return;
+            }
+
+            categoriasVistas.add(nombreNormalizado);
+            categorias_output.push({
+                id: categoria.id,
+                nombre: nombreNormalizado
+            });
+        });
+
+        res.status(200).json({ message: 'ok', categorias: categorias_output });
     },
 
     delete: async (req, res) => {

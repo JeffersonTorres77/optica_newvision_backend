@@ -97,6 +97,28 @@ const Producto = sequelize.define('Producto', {
         allowNull: true,
         collate: 'utf8mb4_general_ci'
     },
+    requiere_formula: {
+        type: DataTypes.TINYINT(4),
+        allowNull: false,
+        defaultValue: 0,
+        get() {
+            return this.getDataValue('requiere_formula') === 1;
+        },
+        set(value) {
+            this.setDataValue('requiere_formula', value ? 1 : 0);
+        }
+    },
+    requiere_item_padre: {
+        type: DataTypes.TINYINT(4),
+        allowNull: false,
+        defaultValue: 0,
+        get() {
+            return this.getDataValue('requiere_item_padre') === 1;
+        },
+        set(value) {
+            this.setDataValue('requiere_item_padre', value ? 1 : 0);
+        }
+    },
     imagen_url: {
         type: DataTypes.TEXT,
         allowNull: true,
