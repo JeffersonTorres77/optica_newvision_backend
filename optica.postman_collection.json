@@ -1771,7 +1771,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "//crear venta - solo productos \r\n{\r\n    \"tipoVenta\": \"solo_productos\",\r\n    \"moneda\": \"dolar\",\r\n    \"sede\": \"guatire\",\r\n    \"total\": 55.67,\r\n    \"descuento\": 10,\r\n    \"impuesto\": 16,\r\n    \"formaPago\": \"contado\",\r\n    \"metodosDePago\": [\r\n        {\r\n            \"tipo\": \"efectivo\",\r\n            \"monto\": 55.67,\r\n            \"moneda\": \"dolar\",\r\n            \"referencia\": \"12121212\",\r\n            \"bancoCodigo\": \"0102\",\r\n            \"bancoNombre\": \"Banco de Venezuela\"\r\n        }\r\n    ],\r\n    \"formaPagoDetalle\": {\r\n        \"tipo\": \"contado\",\r\n        \"montoTotal\": 55.67184,\r\n        \"totalPagado\": 55.67\r\n    },\r\n    \"cliente\": {\r\n        \"tipoCliente\": \"cliente_general\",\r\n        \"tipoPersona\": \"natural\",\r\n        \"nombre\": \"Ruben dario Martinez castro\",\r\n        \"cedula\": \"24367965\",\r\n        \"telefono\": \"04123920817\",\r\n        \"email\": \"rubemm@gmail.com\"\r\n    },\r\n    \"especialista\": null,\r\n    \"ordenTrabajo\": false,\r\n    \"asesor\": {\r\n        \"id\": 5\r\n    },\r\n    \"auditoria\": {\r\n        \"usuarioCreacion\": 5,\r\n        \"fechaCreacion\": \"2026-03-15T17:11:32.398Z\"\r\n    },\r\n    \"productos\": [\r\n        {\r\n            \"id\": \"17\",\r\n            \"nombre\": \"Lentes de prueba\",\r\n            \"codigo\": \"PR-000017\",\r\n            \"precio\": 31.86,\r\n            \"precioConIva\": 31.86,\r\n            \"moneda\": \"dolar\",\r\n            \"cantidad\": 1,\r\n            \"aplicaIva\": false,\r\n            \"stock\": 26,\r\n            \"tipo\": \"PRODUCTO\",\r\n            \"descripcion\": \"Test\"\r\n        },\r\n        {\r\n            \"id\": \"28\",\r\n            \"nombre\": \"Montura\",\r\n            \"codigo\": \"PR-000028\",\r\n            \"precio\": 25.86,\r\n            \"precioConIva\": 30,\r\n            \"moneda\": \"dolar\",\r\n            \"cantidad\": 1,\r\n            \"aplicaIva\": true,\r\n            \"stock\": 10,\r\n            \"tipo\": \"PRODUCTO\",\r\n            \"descripcion\": \"Montura premium de marca Palazzo\"\r\n        }\r\n    ]\r\n}",
+              "raw": "//crear venta - solo productos\r\n// Nota: para metodos con cuenta receptora enviar cuentaReceptora.id.\r\n{\r\n    \"tipoVenta\": \"solo_productos\",\r\n    \"moneda\": \"dolar\",\r\n    \"sede\": \"guatire\",\r\n    \"total\": 55.67,\r\n    \"descuento\": 10,\r\n    \"impuesto\": 16,\r\n    \"formaPago\": \"contado\",\r\n    \"metodosDePago\": [\r\n        {\r\n            \"tipo\": \"efectivo\",\r\n            \"monto\": 55.67,\r\n            \"moneda\": \"dolar\"\r\n        }\r\n    ],\r\n    \"formaPagoDetalle\": {\r\n        \"tipo\": \"contado\",\r\n        \"montoTotal\": 55.67184,\r\n        \"totalPagado\": 55.67\r\n    },\r\n    \"cliente\": {\r\n        \"tipoCliente\": \"cliente_general\",\r\n        \"tipoPersona\": \"natural\",\r\n        \"nombre\": \"Ruben dario Martinez castro\",\r\n        \"cedula\": \"24367965\",\r\n        \"telefono\": \"04123920817\",\r\n        \"email\": \"rubemm@gmail.com\"\r\n    },\r\n    \"especialista\": null,\r\n    \"ordenTrabajo\": false,\r\n    \"asesor\": {\r\n        \"id\": 5\r\n    },\r\n    \"auditoria\": {\r\n        \"usuarioCreacion\": 5,\r\n        \"fechaCreacion\": \"2026-03-15T17:11:32.398Z\"\r\n    },\r\n    \"productos\": [\r\n        {\r\n            \"id\": \"17\",\r\n            \"nombre\": \"Lentes de prueba\",\r\n            \"codigo\": \"PR-000017\",\r\n            \"precio\": 31.86,\r\n            \"precioConIva\": 31.86,\r\n            \"moneda\": \"dolar\",\r\n            \"cantidad\": 1,\r\n            \"aplicaIva\": false,\r\n            \"stock\": 26,\r\n            \"tipo\": \"PRODUCTO\",\r\n            \"descripcion\": \"Test\"\r\n        },\r\n        {\r\n            \"id\": \"28\",\r\n            \"nombre\": \"Montura\",\r\n            \"codigo\": \"PR-000028\",\r\n            \"precio\": 25.86,\r\n            \"precioConIva\": 30,\r\n            \"moneda\": \"dolar\",\r\n            \"cantidad\": 1,\r\n            \"aplicaIva\": true,\r\n            \"stock\": 10,\r\n            \"tipo\": \"PRODUCTO\",\r\n            \"descripcion\": \"Montura premium de marca Palazzo\"\r\n        }\r\n    ]\r\n}\r\n\r\n// ejemplo metodo con cuenta receptora\r\n// {\r\n//     \"tipo\": \"pagomovil\",\r\n//     \"monto\": 2000,\r\n//     \"referencia\": \"12121212\",\r\n//     \"moneda\": \"bolivar\",\r\n//     \"cuentaEmisora\": {\r\n//         \"bancoCodigo\": \"0102\",\r\n//         \"bancoNombre\": \"Banco de Venezuela\"\r\n//     },\r\n//     \"cuentaReceptora\": {\r\n//         \"id\": \"pagomovil-guatire-provincial-personal\",\r\n//         \"bancoCodigo\": \"0108\",\r\n//         \"bancoNombre\": \"Banco Provincial\",\r\n//         \"titular\": \"Ruben Martinez\",\r\n//         \"cedulaRif\": \"24367965\",\r\n//         \"telefono\": \"0412392081\",\r\n//         \"descripcionCuenta\": \"Cuenta personal de Ruben\"\r\n//     }\r\n// }",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1846,7 +1846,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"montoAbonado\": 10,\r\n    \"monedaVenta\": \"dolar\",\r\n    \"metodosPago\": [\r\n        {\r\n            \"tipo\": \"efectivo\",\r\n            \"monto\": 1.2,\r\n            \"moneda\": \"euro\",\r\n            \"referencia\": null,\r\n            \"bancoCodigo\": null,\r\n            \"bancoNombre\": null,\r\n            \"montoMonedaSistema\": 10\r\n        }\r\n    ],\r\n    \"observaciones\": \"Prueba de sistema\",\r\n    \"totalMetodosMonedaSistema\": 10\r\n}",
+              "raw": "// Para metodos con cuenta receptora enviar cuentaReceptora.id\r\n{\r\n    \"montoAbonado\": 10,\r\n    \"monedaVenta\": \"dolar\",\r\n    \"metodosPago\": [\r\n        {\r\n            \"tipo\": \"efectivo\",\r\n            \"monto\": 1.2,\r\n            \"moneda\": \"euro\",\r\n            \"montoMonedaSistema\": 10\r\n        }\r\n    ],\r\n    \"observaciones\": \"Prueba de sistema\",\r\n    \"totalMetodosMonedaSistema\": 10\r\n}\r\n\r\n// ejemplo abono con cuenta receptora\r\n// {\r\n//     \"montoAbonado\": 75,\r\n//     \"monedaVenta\": \"dolar\",\r\n//     \"metodosPago\": [\r\n//         {\r\n//             \"tipo\": \"zelle\",\r\n//             \"monto\": 75,\r\n//             \"moneda\": \"dolar\",\r\n//             \"referencia\": \"ZELLE-4455\",\r\n//             \"cuentaReceptora\": {\r\n//                 \"id\": \"zelle-guatire-bofa-ruben\",\r\n//                 \"bancoCodigo\": \"BOFAUS3N\",\r\n//                 \"bancoNombre\": \"Bank of America (BOFA)\",\r\n//                 \"titular\": \"Ruben Perez\",\r\n//                 \"cedulaRif\": \"V-12345678\",\r\n//                 \"correo\": \"ruben.perez@email.com\",\r\n//                 \"descripcionCuenta\": \"Cuenta personal de Ruben\"\r\n//             }\r\n//         }\r\n//     ],\r\n//     \"observaciones\": \"Abono por Zelle\",\r\n//     \"totalMetodosMonedaSistema\": 75\r\n// }",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2628,6 +2628,309 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Cierre de caja",
+      "item": [
+        {
+          "name": "Cierre de caja - Resumen",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/resumen?fecha={{cierre_fecha}}&sede={{cierre_sede}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "resumen"
+              ],
+              "query": [
+                {
+                  "key": "fecha",
+                  "value": "{{cierre_fecha}}"
+                },
+                {
+                  "key": "sede",
+                  "value": "{{cierre_sede}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cierre de caja - Apertura",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data && data.cierre && data.cierre.id) pm.collectionVariables.set('cierre_id', data.cierre.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"fecha\": \"{{cierre_fecha}}\",\r\n    \"sede\": \"{{cierre_sede}}\",\r\n    \"efectivoInicial\": {\r\n        \"totalSistema\": 120,\r\n        \"detalle\": {\r\n            \"Bs\": 0,\r\n            \"USD\": 120,\r\n            \"EUR\": 0\r\n        }\r\n    },\r\n    \"tasasCambio\": {\r\n        \"dolar\": 1,\r\n        \"euro\": 0.91,\r\n        \"bolivar\": 36.75\r\n    },\r\n    \"observaciones\": \"Apertura validada para Postman\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/apertura",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "apertura"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cierre de caja - Crear transaccion manual",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data && data.transaccion && data.transaccion.id) pm.collectionVariables.set('transaccion_id', data.transaccion.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cierreId\": \"{{cierre_id}}\",\r\n    \"fecha\": \"{{cierre_fecha}}T10:30:00.000Z\",\r\n    \"tipo\": \"egreso\",\r\n    \"descripcion\": \"Gasto de caja de prueba\",\r\n    \"monto\": 10,\r\n    \"moneda\": \"USD\",\r\n    \"montoSistema\": 10,\r\n    \"metodoPago\": \"efectivo\",\r\n    \"categoria\": \"gasto_operativo\",\r\n    \"observaciones\": \"Prueba automatizada\",\r\n    \"comprobante\": \"PM-0001\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/transacciones-manuales",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "transacciones-manuales"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cierre de caja - Actualizar transaccion manual",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"descripcion\": \"Gasto de caja ajustado\",\r\n    \"monto\": 12.5,\r\n    \"moneda\": \"USD\",\r\n    \"montoSistema\": 12.5,\r\n    \"metodoPago\": \"efectivo\",\r\n    \"categoria\": \"gasto_operativo\",\r\n    \"observaciones\": \"Prueba automatizada actualizada\",\r\n    \"comprobante\": \"PM-0001-A\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/transacciones-manuales/{{transaccion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "transacciones-manuales",
+                "{{transaccion_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cierre de caja - Cerrar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cierreId\": \"{{cierre_id}}\",\r\n    \"fecha\": \"{{cierre_fecha}}\",\r\n    \"efectivo\": {\r\n        \"teoricoFinal\": 107.5,\r\n        \"realFinal\": 107.5,\r\n        \"diferencia\": 0,\r\n        \"detalleReal\": {\r\n            \"usd\": 107.5,\r\n            \"eur\": 0,\r\n            \"ves\": 0\r\n        }\r\n    },\r\n    \"conciliacion\": {\r\n        \"punto\": [],\r\n        \"transferencia\": [],\r\n        \"pagomovil\": [],\r\n        \"zelle\": []\r\n    },\r\n    \"diferenciaTotal\": 0,\r\n    \"estadoConciliacion\": \"cuadrado\",\r\n    \"notasCierre\": \"Cierre validado para Postman\",\r\n    \"opciones\": {\r\n        \"imprimirResumen\": true,\r\n        \"enviarEmail\": false,\r\n        \"adjuntarComprobantes\": true\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/cerrar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "cerrar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cierre de caja - Historial",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/historial?fechaInicio={{cierre_fecha}}&fechaFin={{cierre_fecha}}&sede={{cierre_sede}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "historial"
+              ],
+              "query": [
+                {
+                  "key": "fechaInicio",
+                  "value": "{{cierre_fecha}}"
+                },
+                {
+                  "key": "fechaFin",
+                  "value": "{{cierre_fecha}}"
+                },
+                {
+                  "key": "sede",
+                  "value": "{{cierre_sede}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cierre de caja - Anular",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"motivo\": \"Anulacion de validacion Postman\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/anular/{{cierre_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "anular",
+                "{{cierre_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "event": [
@@ -2652,6 +2955,32 @@
           ""
         ]
       }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3500"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "cierre_sede",
+      "value": "guatire"
+    },
+    {
+      "key": "cierre_fecha",
+      "value": "2030-01-01"
+    },
+    {
+      "key": "cierre_id",
+      "value": ""
+    },
+    {
+      "key": "transaccion_id",
+      "value": ""
     }
   ]
 }

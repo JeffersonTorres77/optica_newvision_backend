@@ -19,6 +19,31 @@ const Empresa = require("../models/Empresa");
 const VentaConsulta = require("../models/VentaConsulta");
 const ConfiguracionService = require("./ConfiguracionService");
 
+const construirDescripcionBancoReceptor = (cuentaReceptora = {}) => {
+    const bancoNombre = cuentaReceptora.bancoNombre || null;
+    const identificadores = [];
+
+    if (cuentaReceptora.telefono) {
+        identificadores.push(`Telf. ${cuentaReceptora.telefono}`);
+    }
+
+    if (cuentaReceptora.cedulaRif) {
+        identificadores.push(`CI. ${cuentaReceptora.cedulaRif}`);
+    }
+
+    const detalleCuenta = cuentaReceptora.descripcionCuenta || cuentaReceptora.titular || null;
+
+    if (bancoNombre && identificadores.length > 0 && detalleCuenta) {
+        return `${bancoNombre} (${identificadores.join(' - ')}) - ${detalleCuenta}`;
+    }
+
+    if (bancoNombre && detalleCuenta) {
+        return `${bancoNombre} - ${detalleCuenta}`;
+    }
+
+    return detalleCuenta || bancoNombre || null;
+};
+
 const VentaService = {
     async get_numero_control(sede_id) {
         const objConf = await Configuracion.findOne({ where: { clave: "numero_control", sede: sede_id } });
@@ -183,6 +208,21 @@ const VentaService = {
         const output = [];
         for (let metodoDePago of metodosPago) {
             const objTasaPago = await Tasa.findOne({ where: { id: metodoDePago.moneda } });
+            const cuentaEmisora = metodoDePago.cuentaEmisora || {};
+            const cuentaReceptora = metodoDePago.cuentaReceptora || {};
+            const esPunto = metodoDePago.tipo === 'punto';
+            const bancoCodigo = esPunto
+                ? (cuentaReceptora.bancoCodigo || cuentaEmisora.bancoCodigo || metodoDePago.bancoCodigo || metodoDePago.bancoReceptorCodigo || null)
+                : (cuentaEmisora.bancoCodigo || metodoDePago.bancoCodigo || null);
+            const bancoNombre = esPunto
+                ? (cuentaReceptora.bancoNombre || cuentaEmisora.bancoNombre || metodoDePago.bancoNombre || metodoDePago.bancoReceptorNombre || null)
+                : (cuentaEmisora.bancoNombre || metodoDePago.bancoNombre || null);
+            const bancoReceptorCodigo = cuentaReceptora.bancoCodigo || metodoDePago.bancoReceptorCodigo || null;
+            const bancoReceptorNombre = cuentaReceptora.bancoNombre || metodoDePago.bancoReceptorNombre || null;
+            const cuentaReceptoraId = cuentaReceptora.id || metodoDePago.cuentaReceptoraId || null;
+            const bancoReceptor = construirDescripcionBancoReceptor(cuentaReceptora)
+                || metodoDePago.bancoReceptor
+                || null;
 
             const monto_moneda_venta = (metodoDePago.montoEnMonedaVenta !== undefined && metodoDePago.montoEnMonedaVenta !== null)
                 ? FormatUtils.float(metodoDePago.montoEnMonedaVenta)
@@ -194,11 +234,12 @@ const VentaService = {
                 moneda_id: objTasaPago.id,
                 monto_moneda_base: monto_moneda_venta,
                 referencia: metodoDePago.referencia,
-                bancoCodigo: metodoDePago.bancoCodigo,
-                bancoNombre: metodoDePago.bancoNombre,
-                bancoReceptorCodigo: metodoDePago.bancoReceptorCodigo,
-                bancoReceptorNombre: metodoDePago.bancoReceptorNombre,
-                bancoReceptor: metodoDePago.bancoReceptor,
+                bancoCodigo,
+                bancoNombre,
+                bancoReceptorCodigo,
+                bancoReceptorNombre,
+                bancoReceptor,
+                cuentaReceptoraId,
                 notaPago: metodoDePago.notaPago,
             });
         }
@@ -300,6 +341,7 @@ const VentaService = {
                 bancoReceptorCodigo: pago.bancoReceptorCodigo,
                 bancoReceptorNombre: pago.bancoReceptorNombre,
                 bancoReceptor: pago.bancoReceptor,
+                cuentaReceptoraId: pago.cuentaReceptoraId,
                 notaPago: pago.notaPago,
                 created_by: venta_completa.created_by
             }, { transaction: t });
@@ -481,6 +523,7 @@ const VentaService = {
                 bancoReceptorCodigo: pago.bancoReceptorCodigo,
                 bancoReceptorNombre: pago.bancoReceptorNombre,
                 bancoReceptor: pago.bancoReceptor,
+                cuentaReceptoraId: pago.cuentaReceptoraId,
                 referencia: pago.referencia,
                 notaPago: pago.notaPago,
             };
@@ -575,6 +618,7 @@ const VentaService = {
                     bancoReceptorCodigo: pago.bancoReceptorCodigo,
                     bancoReceptorNombre: pago.bancoReceptorNombre,
                     bancoReceptor: pago.bancoReceptor,
+                    cuentaReceptoraId: pago.cuentaReceptoraId,
                     referencia: pago.referencia,
                     notaPago: pago.notaPago,
                 });
@@ -594,6 +638,7 @@ const VentaService = {
                     bancoReceptorCodigo: pago.bancoReceptorCodigo,
                     bancoReceptorNombre: pago.bancoReceptorNombre,
                     bancoReceptor: pago.bancoReceptor,
+                    cuentaReceptoraId: pago.cuentaReceptoraId,
                     referencia: pago.referencia,
                     notaPago: pago.notaPago,
                 });

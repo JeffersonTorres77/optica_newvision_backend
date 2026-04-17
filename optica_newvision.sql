@@ -893,6 +893,7 @@ CREATE TABLE `ventas_pagos` (
   `bancoReceptorCodigo` varchar(4) DEFAULT NULL,
   `bancoReceptorNombre` varchar(255) DEFAULT NULL,
   `bancoReceptor` varchar(255) DEFAULT NULL,
+  `cuentaReceptoraId` varchar(255) DEFAULT NULL,
   `notaPago` text DEFAULT NULL,
   `created_by` varchar(20) NOT NULL,
   `created_at` datetime NOT NULL,

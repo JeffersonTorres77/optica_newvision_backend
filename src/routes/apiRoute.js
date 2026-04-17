@@ -17,6 +17,7 @@ const ProductoController = require('../controllers/ProductoController');
 const EnvioCorreo = require('./../config/correo');
 const CatchGeneric = require('../utils/CatchGeneric');
 const VentaController = require('../controllers/VentaController');
+const CierreCajaController = require('../controllers/CierreCajaController');
 const ConfiguracionController = require('../controllers/ConfiguracionController');
 const OrdenTrabajoController = require('../controllers/OrdenTrabajoController');
 const EmpresaController = require('../controllers/EmpresaController');
@@ -112,6 +113,14 @@ router.get('/ventas-get-total', authMiddleware, CatchGeneric(VentaController.get
 router.post('/estadisticas-financieras', authMiddleware, CatchGeneric(VentaController.estadisticas_financieras));
 router.put('/ventas-anular/:venta_key', authMiddleware, CatchGeneric(VentaController.anular));
 router.put('/ventas-abonar/:venta_key', authMiddleware, CatchGeneric(VentaController.abonar));
+
+router.get('/cierre-caja/resumen', authMiddleware, CatchGeneric(CierreCajaController.resumen));
+router.post('/cierre-caja/apertura', authMiddleware, CatchGeneric(CierreCajaController.apertura));
+router.post('/cierre-caja/transacciones-manuales', authMiddleware, CatchGeneric(CierreCajaController.transaccion_manual_add));
+router.put('/cierre-caja/transacciones-manuales/:id', authMiddleware, CatchGeneric(CierreCajaController.transaccion_manual_update));
+router.post('/cierre-caja/cerrar', authMiddleware, CatchGeneric(CierreCajaController.cerrar));
+router.get('/cierre-caja/historial', authMiddleware, CatchGeneric(CierreCajaController.historial));
+router.post('/cierre-caja/anular/:id', authMiddleware, CatchGeneric(CierreCajaController.anular));
 
 router.get('/clientes-get', authMiddleware, CatchGeneric(ClienteController.get));
 router.post('/clientes-add', authMiddleware, CatchGeneric(ClienteController.add));

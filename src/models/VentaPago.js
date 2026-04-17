@@ -56,6 +56,10 @@ const VentaPago = sequelize.define('VentaPago', {
     type: DataTypes.STRING(255),
     allowNull: true
   },
+  cuentaReceptoraId: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
   notaPago: {
     type: DataTypes.TEXT,
     allowNull: true

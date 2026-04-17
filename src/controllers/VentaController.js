@@ -19,6 +19,7 @@ const Sede = require('../models/Sede');
 const VentaConsulta = require('../models/VentaConsulta');
 const ConfiguracionService = require('../services/ConfiguracionService');
 const OrdenTrabajo = require('../models/OrdenTrabajo');
+const CierreCajaService = require('../services/CierreCajaService');
 
 const VentaController = {
     construir_filtros_url: (req) => {
@@ -184,6 +185,14 @@ const VentaController = {
             if (!tiposClienteValidos.includes(cliente.tipoCliente)) {
                 throw { message: `El tipo de cliente '${cliente.tipoCliente}' es invalido. Los valores permitidos son: ${tiposClienteValidos.join(', ')}` };
             }
+        }
+
+        const fechaOperacion = CierreCajaService.normalizarFecha(new Date());
+        await CierreCajaService.validarSinCierresPendientesAnteriores(fechaOperacion, req.sede.id, 'registrar ventas');
+        const cierreCajaActual = await CierreCajaService.obtenerCierrePorFechaSede(fechaOperacion, req.sede.id);
+
+        if (!cierreCajaActual || cierreCajaActual.estado !== 'abierto') {
+            throw { message: 'La caja del día no está iniciada para esta sede. Debes abrir la caja antes de registrar ventas.' };
         }
 
         const objTasa = await VentaService.get_tasa(moneda);
@@ -789,6 +798,7 @@ const VentaController = {
                     bancoReceptorCodigo: pago.bancoReceptorCodigo,
                     bancoReceptorNombre: pago.bancoReceptorNombre,
                     bancoReceptor: pago.bancoReceptor,
+                    cuentaReceptoraId: pago.cuentaReceptoraId,
                     notaPago: pago.notaPago,
                     created_by: req.user.cedula
                 }, { transaction: t });
