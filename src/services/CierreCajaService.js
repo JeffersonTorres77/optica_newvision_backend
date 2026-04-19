@@ -296,9 +296,11 @@ const CierreCajaService = {
           formaPago: ventaFormateada?.formaPago || venta?.forma_pago || 'abono',
           sede: ventaFormateada?.sede || venta?.sede || sedeId,
           tipoVenta: ventaFormateada?.tipoVenta || venta?.tipo_venta || 'solo_productos',
-          tasasActuales: Array.isArray(ventaFormateada?.formaPagoDetalle?.tasasActuales)
-            ? ventaFormateada.formaPagoDetalle.tasasActuales
-            : [],
+            tasasActuales: Array.isArray(abono?.tasasActuales) && abono.tasasActuales.length
+              ? abono.tasasActuales
+              : Array.isArray(ventaFormateada?.formaPagoDetalle?.tasasActuales)
+                ? ventaFormateada.formaPagoDetalle.tasasActuales
+                : [],
           metodosDePago: Array.isArray(abono?.metodosDePago) ? abono.metodosDePago : [],
           cliente: ventaFormateada?.cliente?.informacion || ventaFormateada?.cliente || {},
           asesor: ventaFormateada?.asesor || {},

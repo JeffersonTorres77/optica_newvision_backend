@@ -674,6 +674,9 @@ const VentaService = {
                 montoAbonado,
                 deudaPendiente: FormatUtils.float(objVenta.total - acumulado),
                 observaciones: abono.observaciones,
+                    tasasActuales: Array.isArray(abono.tasas_actuales) && abono.tasas_actuales.length
+                        ? abono.tasas_actuales
+                        : objVenta.tasas_actuales,
                 metodosDePago: metodosDePagoAbono
             };
         });
