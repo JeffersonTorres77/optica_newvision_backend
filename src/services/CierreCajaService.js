@@ -552,6 +552,8 @@ const CierreCajaService = {
       observaciones: cierre.observaciones_apertura,
       notasCierre: cierre.notas_cierre,
       motivoAnulacion: cierre.motivo_anulacion,
+      estadoConciliacion: String(cierre.estado_conciliacion || '').trim() || (Math.abs(Number(cierre.diferencia_total || 0)) > 0.01 ? 'diferencia' : 'cuadrado'),
+      efectivoFinalTeorico: FormatUtils.float(cierre.efectivo_teorico_final || 0),
       efectivoFinalReal: FormatUtils.float(cierre.efectivo_real_final || 0),
       diferencia: FormatUtils.float(cierre.diferencia_total || 0),
       totales: totalesOverride || {
@@ -572,10 +574,12 @@ const CierreCajaService = {
           ves: FormatUtils.float(cierre.efectivo_real_ves || 0)
         },
         ...this.agruparConciliaciones(conciliaciones),
-        notasCierre: cierre.notas_cierre || ''
+        notasCierre: cierre.notas_cierre || '',
+        fechaCierre: cierre.fecha_cierre,
+        usuarioCierre: usuarioCierreNombre,
+        diferenciaTotal: FormatUtils.float(cierre.diferencia_total || 0),
+        estadoConciliacion: output.estadoConciliacion
       };
-      output.efectivoFinalTeorico = FormatUtils.float(cierre.efectivo_teorico_final || 0);
-      output.estadoConciliacion = cierre.estado_conciliacion;
       output.opciones = {
         imprimirResumen: !!cierre.imprimir_resumen,
         enviarEmail: !!cierre.enviar_email,
@@ -872,7 +876,14 @@ const CierreCajaService = {
 
     const output = [];
     for (const cierre of cierres) {
-      output.push(await this.mapCierreOutput(cierre));
+      const transaccionesManuales = await this.obtenerTransaccionesManuales(cierre.id);
+      const conciliaciones = await this.obtenerConciliaciones(cierre.id);
+
+      output.push(await this.mapCierreOutput(cierre, {
+        incluirDetalle: true,
+        transaccionesManuales,
+        conciliaciones
+      }));
     }
 
     return {
