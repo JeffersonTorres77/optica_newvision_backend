@@ -225,6 +225,91 @@ const CierreCajaService = {
     return { ventas, ventasFormateadas: output };
   },
 
+  async obtenerAbonosDelDia(fecha, sedeId) {
+    const { inicio, fin } = this.obtenerRangoDia(fecha);
+    const gruposAbonos = await VentaPagoAgrupado.findAll({
+      where: {
+        created_at: { [Op.between]: [inicio, fin] },
+        numero_pago: { [Op.gte]: 2 }
+      },
+      attributes: ['venta_key']
+    });
+
+    const ventaKeys = Array.from(new Set(
+      gruposAbonos
+        .map((item) => String(item.venta_key || '').trim())
+        .filter(Boolean)
+    ));
+
+    if (!ventaKeys.length) {
+      return [];
+    }
+
+    const ventas = await Venta.findAll({
+      where: {
+        venta_key: { [Op.in]: ventaKeys },
+        sede: sedeId,
+        estatus_venta: { [Op.ne]: 'anulada' }
+      },
+      include: VENTA_INCLUDE,
+      order: [['fecha', 'ASC']]
+    });
+
+    const output = [];
+
+    for (const venta of ventas) {
+      const ventaFormateada = await VentaService.formatear_venta_output(venta);
+      const fechaVenta = new Date(ventaFormateada?.fecha || venta?.fecha);
+      const ventaEsDelDia = !Number.isNaN(fechaVenta.getTime()) && fechaVenta >= inicio && fechaVenta <= fin;
+
+      if (ventaEsDelDia) {
+        continue;
+      }
+
+      const abonos = Array.isArray(ventaFormateada?.formaPagoDetalle?.abonos)
+        ? ventaFormateada.formaPagoDetalle.abonos
+        : [];
+
+      for (const abono of abonos) {
+        const fechaAbono = new Date(abono?.fecha);
+        if (Number.isNaN(fechaAbono.getTime()) || fechaAbono < inicio || fechaAbono > fin) {
+          continue;
+        }
+
+        const grupoAbono = Array.isArray(venta.array_pagos_agrupados)
+          ? venta.array_pagos_agrupados.find((item) => Number(item?.numero_pago) === Number(abono?.numero))
+          : null;
+        const usuarioAbono = grupoAbono?.created_by
+          ? await this.obtenerNombreUsuario(grupoAbono.created_by)
+          : null;
+
+        output.push({
+          id: `ABONO-${ventaFormateada?.key || venta.venta_key}-${abono?.numero || fechaAbono.getTime()}`,
+          ventaKey: ventaFormateada?.key || venta.venta_key,
+          numeroVenta: ventaFormateada?.numero_venta || null,
+          fecha: abono?.fecha,
+          montoAbonado: Number(abono?.montoAbonado || 0),
+          deudaPendiente: Number(abono?.deudaPendiente || 0),
+          observaciones: abono?.observaciones || '',
+          moneda: ventaFormateada?.moneda || venta?.moneda || 'dolar',
+          totalVenta: Number(ventaFormateada?.total || venta?.total || 0),
+          formaPago: ventaFormateada?.formaPago || venta?.forma_pago || 'abono',
+          sede: ventaFormateada?.sede || venta?.sede || sedeId,
+          tipoVenta: ventaFormateada?.tipoVenta || venta?.tipo_venta || 'solo_productos',
+          tasasActuales: Array.isArray(ventaFormateada?.formaPagoDetalle?.tasasActuales)
+            ? ventaFormateada.formaPagoDetalle.tasasActuales
+            : [],
+          metodosDePago: Array.isArray(abono?.metodosDePago) ? abono.metodosDePago : [],
+          cliente: ventaFormateada?.cliente?.informacion || ventaFormateada?.cliente || {},
+          asesor: ventaFormateada?.asesor || {},
+          usuario: usuarioAbono || ventaFormateada?.asesor?.nombre || ventaFormateada?.auditoria?.usuarioCreacion?.nombre || 'Usuario'
+        });
+      }
+    }
+
+    return output.sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
+  },
+
   async obtenerCierrePorFechaSede(fecha, sedeId) {
     return CierreCaja.findOne({ where: { fecha: this.formatearFecha(fecha), sede: sedeId } });
   },
@@ -510,6 +595,7 @@ const CierreCajaService = {
     const tasasActualesPorId = await this.obtenerTasasActualesPorId();
     const tasasCambio = this.construirTasasCambio(monedaPrincipal, tasasActualesPorId);
     const { ventas, ventasFormateadas } = await this.obtenerVentasDelDia(fecha, sedeId);
+    const abonosDelDia = await this.obtenerAbonosDelDia(fecha, sedeId);
     const cierre = await this.obtenerCierrePorFechaSede(fecha, sedeId);
     const bloqueoOperativo = await this.obtenerBloqueoCierrePendienteAnterior(fecha, sedeId, 'operar');
 
@@ -541,6 +627,7 @@ const CierreCajaService = {
       monedaPrincipal: monedaPrincipal === 'bolivar' ? 'VES' : monedaPrincipal.toUpperCase(),
       tasasCambio,
       ventas: ventasFormateadas,
+      abonosDelDia,
       cierreExistente: cierreOutput,
       bloqueoOperativo,
       transaccionesManuales: transaccionesManualesOutput,
