@@ -94,6 +94,64 @@ const ConfiguracionController = {
         });
     },
 
+    correos_notificacion_get: async (req, res) => {
+        const { correo_notificacion_1, correo_notificacion_2 } = await ConfiguracionService.get_correos_notificacion(req.sede.id);
+
+        res.status(200).json({
+            message: 'Correos de notificacion obtenidos correctamente',
+            configuracion: {
+                correo_notificacion_1: correo_notificacion_1.valor,
+                correo_notificacion_2: correo_notificacion_2.valor
+            }
+        });
+    },
+
+    correos_notificacion_update: async (req, res) => {
+        const payload = {};
+
+        if (Object.prototype.hasOwnProperty.call(req.body, 'correo_notificacion_1')) {
+            payload.correo_notificacion_1 = String(req.body.correo_notificacion_1 || '').trim();
+        }
+
+        if (Object.prototype.hasOwnProperty.call(req.body, 'correo_notificacion_2')) {
+            payload.correo_notificacion_2 = String(req.body.correo_notificacion_2 || '').trim();
+        }
+
+        if (!Object.keys(payload).length) {
+            throw { message: 'Debe enviar correo_notificacion_1 o correo_notificacion_2 en el body.' };
+        }
+
+        const t = await sequelize.transaction();
+
+        try {
+            for (const [clave, valor] of Object.entries(payload)) {
+                await ConfiguracionService.upsert_configuracion(
+                    req.sede.id,
+                    clave,
+                    valor,
+                    `Configuracion ${clave} para la sede ${req.sede.id}`,
+                    t
+                );
+            }
+
+            await t.commit();
+        }
+        catch (error) {
+            await t.rollback();
+            throw { message: error.message || error.toString() };
+        }
+
+        const { correo_notificacion_1, correo_notificacion_2 } = await ConfiguracionService.get_correos_notificacion(req.sede.id);
+
+        res.status(200).json({
+            message: 'Correos de notificacion actualizados correctamente',
+            configuracion: {
+                correo_notificacion_1: correo_notificacion_1.valor,
+                correo_notificacion_2: correo_notificacion_2.valor
+            }
+        });
+    },
+
     bancos_receptores_get: async (req, res) => {
         const bancos = await BancoReceptorConfig.findAll({
             where: { sede: req.sede.id },

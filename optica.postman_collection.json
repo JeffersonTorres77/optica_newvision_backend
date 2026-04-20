@@ -374,6 +374,73 @@
           "response": []
         },
         {
+          "name": "Get Correos notificacion",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/correos_notificacion-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "correos_notificacion-get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Correos notificacion",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"correo_notificacion_1\": \"correo1@dominio.com\",\r\n    \"correo_notificacion_2\": \"correo2@dominio.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/correos_notificacion-update",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "correos_notificacion-update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Get Moneda base",
           "request": {
             "auth": {

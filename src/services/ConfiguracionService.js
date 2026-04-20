@@ -4,17 +4,63 @@ const Tasa = require("../models/Tasa");
 const FormatUtils = require("../utils/FormatUtils");
 
 const ConfiguracionService = {
-    get_moneda_base: async function (sede_id) {
-        let moneda_base = await Configuracion.findOne({ where: { sede: sede_id, clave: 'moneda_base' } });
-        if (!moneda_base) {
-            moneda_base = await Configuracion.create({
+    get_or_create_configuracion: async function (sede_id, clave, valor_default = '', descripcion = '') {
+        let configuracion = await Configuracion.findOne({ where: { sede: sede_id, clave } });
+        if (!configuracion) {
+            configuracion = await Configuracion.create({
                 sede: sede_id,
-                clave: 'moneda_base',
-                valor: 'dolar',
-                descripcion: 'Moneda base del sistema para la sede de ${req.sede.nombre}.'
+                clave,
+                valor: valor_default,
+                descripcion
             });
         }
-        return moneda_base;
+        return configuracion;
+    },
+
+    upsert_configuracion: async function (sede_id, clave, valor, descripcion, transaction = undefined) {
+        let configuracion = await Configuracion.findOne({ where: { sede: sede_id, clave } });
+
+        if (!configuracion) {
+            configuracion = await Configuracion.create({
+                sede: sede_id,
+                clave,
+                valor,
+                descripcion
+            }, transaction ? { transaction } : undefined);
+        } else {
+            configuracion.valor = valor;
+            configuracion.descripcion = descripcion;
+            await configuracion.save(transaction ? { transaction } : undefined);
+        }
+
+        return configuracion;
+    },
+
+    get_correos_notificacion: async function (sede_id) {
+        const correo_notificacion_1 = await ConfiguracionService.get_or_create_configuracion(
+            sede_id,
+            'correo_notificacion_1',
+            '',
+            `Correo de notificacion 1 para la sede ${sede_id}`
+        );
+
+        const correo_notificacion_2 = await ConfiguracionService.get_or_create_configuracion(
+            sede_id,
+            'correo_notificacion_2',
+            '',
+            `Correo de notificacion 2 para la sede ${sede_id}`
+        );
+
+        return { correo_notificacion_1, correo_notificacion_2 };
+    },
+
+    get_moneda_base: async function (sede_id) {
+        return await ConfiguracionService.get_or_create_configuracion(
+            sede_id,
+            'moneda_base',
+            'dolar',
+            'Moneda base del sistema.'
+        );
     },
 
     actualizar_monedas_productos: async function (sede_id, objTasa, transaction) {
@@ -33,25 +79,19 @@ const ConfiguracionService = {
     },
 
     get_costos_consultas: async function (sede_id) {
-        let costo_total_consulta = await Configuracion.findOne({ where: { sede: sede_id, clave: 'costo_total_consulta' } });
-        if (!costo_total_consulta) {
-            costo_total_consulta = await Configuracion.create({
-                sede: sede_id,
-                clave: 'costo_total_consulta',
-                valor: '40',
-                descripcion: 'Costo total de las consultas'
-            });
-        }
+        let costo_total_consulta = await ConfiguracionService.get_or_create_configuracion(
+            sede_id,
+            'costo_total_consulta',
+            '40',
+            'Costo total de las consultas'
+        );
 
-        let costo_medico_consulta = await Configuracion.findOne({ where: { sede: sede_id, clave: 'costo_medico_consulta' } });
-        if (!costo_medico_consulta) {
-            costo_medico_consulta = await Configuracion.create({
-                sede: sede_id,
-                clave: 'costo_medico_consulta',
-                valor: '20',
-                descripcion: 'Costo de consulta del medico'
-            });
-        }
+        let costo_medico_consulta = await ConfiguracionService.get_or_create_configuracion(
+            sede_id,
+            'costo_medico_consulta',
+            '20',
+            'Costo de consulta del medico'
+        );
 
         return { costo_total_consulta, costo_medico_consulta };
     }
