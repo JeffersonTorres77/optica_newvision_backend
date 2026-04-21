@@ -2,6 +2,37 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../config/db');
 const Sede = require('./Sede');
 
+function buildJsonColumn(fieldName) {
+    return {
+        type: DataTypes.TEXT('long'),
+        allowNull: true,
+        get() {
+            const valor = this.getDataValue(fieldName);
+            if (!valor) {
+                return null;
+            }
+
+            if (typeof valor === 'object') {
+                return valor;
+            }
+
+            try {
+                return JSON.parse(valor);
+            } catch {
+                return null;
+            }
+        },
+        set(value) {
+            if (value === null || value === undefined) {
+                this.setDataValue(fieldName, null);
+                return;
+            }
+
+            this.setDataValue(fieldName, JSON.stringify(value));
+        }
+    };
+}
+
 const Producto = sequelize.define('Producto', {
     id: {
         type: DataTypes.INTEGER(11),
@@ -97,6 +128,12 @@ const Producto = sequelize.define('Producto', {
         allowNull: true,
         collate: 'utf8mb4_general_ci'
     },
+    cristal_config: buildJsonColumn('cristal_config'),
+    montura_config: buildJsonColumn('montura_config'),
+    lente_contacto_config: buildJsonColumn('lente_contacto_config'),
+    liquido_config: buildJsonColumn('liquido_config'),
+    estuche_config: buildJsonColumn('estuche_config'),
+    accesorio_config: buildJsonColumn('accesorio_config'),
     requiere_formula: {
         type: DataTypes.TINYINT(4),
         allowNull: false,
