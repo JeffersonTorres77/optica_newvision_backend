@@ -211,6 +211,7 @@ const HistorialMedicoController = {
         objHistorial.formula_original_tipo = formulaOriginalMedicoOrigen.tipo || null;
         objHistorial.formula_original_nombre = formulaOriginalMedicoOrigen.nombre || null;
         objHistorial.formula_original_lugar = formulaOriginalMedicoOrigen.lugarConsultorio || null;
+        objHistorial.formula_externa = datosConsulta.formulaExterna;
         // ========================================
         objHistorial.examen_ocular_lensometria = examenOcular.lensometria;
         objHistorial.examen_ocular_refraccion = examenOcular.refraccion;
