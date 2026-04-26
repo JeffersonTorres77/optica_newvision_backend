@@ -19,6 +19,26 @@ const Empresa = require("../models/Empresa");
 const VentaConsulta = require("../models/VentaConsulta");
 const ConfiguracionService = require("./ConfiguracionService");
 
+function normalizarClaveSede(valor) {
+    return `${valor || ''}`.trim().toLowerCase();
+}
+
+function obtenerCantidadProductoSolicitada(producto = {}) {
+    const cantidad = Number(producto.cantidad);
+    return Number.isInteger(cantidad) && cantidad > 0 ? cantidad : NaN;
+}
+
+function compararVentasPorRecencia(actual, siguiente) {
+    const actualTiempo = new Date(actual.fecha || actual.created_at || 0).getTime();
+    const siguienteTiempo = new Date(siguiente.fecha || siguiente.created_at || 0).getTime();
+
+    if (siguienteTiempo !== actualTiempo) {
+        return siguienteTiempo - actualTiempo;
+    }
+
+    return Number(siguiente.id || 0) - Number(actual.id || 0);
+}
+
 const construirDescripcionBancoReceptor = (cuentaReceptora = {}) => {
     const bancoNombre = cuentaReceptora.bancoNombre || null;
     const identificadores = [];
@@ -119,13 +139,54 @@ const VentaService = {
         }
     },
 
-    async validar_historia_medica(historia_id, t = null, venta_key = null, pago_completo = false) {
+    producto_requiere_traslado(sedeVenta, producto = {}) {
+        const sedeVentaNormalizada = normalizarClaveSede(sedeVenta);
+        const sedeProducto = normalizarClaveSede(
+            producto?.sede_id
+            || producto?.sede
+            || producto?.objeto?.sede_id
+            || producto?.objeto?.sede
+            || producto?.datos_producto?.sede_id
+            || producto?.datos_producto?.sede
+        );
+
+        return !!sedeVentaNormalizada && !!sedeProducto && sedeVentaNormalizada !== sedeProducto;
+    },
+
+    venta_tiene_productos_con_traslado(sedeVenta, productos = []) {
+        return (Array.isArray(productos) ? productos : []).some((producto) => {
+            if (producto?.requiere_traslado === true) {
+                return true;
+            }
+
+            return this.producto_requiere_traslado(sedeVenta, producto);
+        });
+    },
+
+    async validar_historia_medica(historia_id, t = null, venta_key = null, pago_completo = false, opciones = {}) {
         if (!historia_id) {
             throw { message: "El ID de la historia médica es obligatorio para este tipo de venta." };
         }
         const objHistorial = await HistorialMedico.findOne({ where: { id: historia_id }, transaction: t });
         if (!objHistorial) {
             throw { message: `La historia médica ID: ${historia_id} no existe.` };
+        }
+
+        const objPacienteHistorial = await Paciente.findOne({
+            where: { pkey: objHistorial.paciente_id },
+            transaction: t
+        });
+
+        if (!objPacienteHistorial) {
+            throw { message: `El paciente asociado a la historia médica ID: ${historia_id} no existe.` };
+        }
+
+        if (opciones?.sede_id && normalizarClaveSede(objPacienteHistorial.sede_id) !== normalizarClaveSede(opciones.sede_id)) {
+            throw { message: 'La historia médica no pertenece a la sede activa de la venta.' };
+        }
+
+        if (opciones?.paciente_key && `${objPacienteHistorial.pkey}` !== `${opciones.paciente_key}`) {
+            throw { message: 'La historia médica no corresponde al paciente seleccionado para la venta.' };
         }
 
         if (venta_key) {
@@ -137,6 +198,58 @@ const VentaService = {
         objHistorial.pago_pendiente = !pago_completo;
 
         await objHistorial.save({ transaction: t });
+        return objHistorial;
+    },
+
+    async recalcular_estado_historia_medica(historia_id, t = null) {
+        if (!historia_id) {
+            return null;
+        }
+
+        const objHistorial = await HistorialMedico.findOne({
+            where: { id: historia_id },
+            transaction: t
+        });
+
+        if (!objHistorial) {
+            return null;
+        }
+
+        const relacionesVenta = await VentaConsulta.findAll({
+            where: { historia_id },
+            transaction: t
+        });
+
+        if (relacionesVenta.length === 0) {
+            objHistorial.venta_key = null;
+            objHistorial.pago_pendiente = true;
+            await objHistorial.save({ transaction: t });
+            return objHistorial;
+        }
+
+        const ventaKeys = Array.from(new Set(
+            relacionesVenta
+                .map((relacion) => `${relacion.venta_key || ''}`.trim())
+                .filter(Boolean)
+        ));
+
+        const ventas = ventaKeys.length > 0
+            ? await Venta.findAll({
+                where: { venta_key: { [Op.in]: ventaKeys } },
+                transaction: t
+            })
+            : [];
+
+        const ventasVigentes = ventas
+            .filter((venta) => venta.estatus_venta !== 'anulada')
+            .sort(compararVentasPorRecencia);
+
+        const ventaActual = ventasVigentes[0] || null;
+
+        objHistorial.venta_key = ventaActual ? ventaActual.venta_key : null;
+        objHistorial.pago_pendiente = ventaActual ? !ventaActual.pago_completo : true;
+        await objHistorial.save({ transaction: t });
+
         return objHistorial;
     },
 
@@ -163,15 +276,35 @@ const VentaService = {
         await syncField("costo_medico_consulta", pagoMedico);
     },
 
-    async add_producto_db(productos_array) {
+    async add_producto_db(productos_array, sedeVenta = null) {
         const output = [];
         for (let producto of productos_array) {
             const id = producto.id || producto.productoId;
+            const cantidad = obtenerCantidadProductoSolicitada(producto);
+
+            if (!Number.isFinite(cantidad)) {
+                throw { message: `La cantidad solicitada para el producto ${id} es invalida.` };
+            }
+
             const objProducto = await Producto.findOne({ where: { id: id } });
             if (!objProducto) {
                 throw { message: `El ID del producto es invalido: ${id}` };
             }
-            output.push({ ...producto, objeto: objProducto });
+
+            if (!objProducto.activo) {
+                throw { message: `El producto '${objProducto.nombre}' no está activo para la venta.` };
+            }
+
+            if (objProducto.stock < cantidad) {
+                throw { message: `Stock insuficiente para '${objProducto.nombre}'. Disponible: ${objProducto.stock}, solicitado: ${cantidad}.` };
+            }
+
+            output.push({
+                ...producto,
+                cantidad,
+                requiere_traslado: this.producto_requiere_traslado(sedeVenta, objProducto),
+                objeto: objProducto
+            });
         }
         return output;
     },
@@ -191,6 +324,7 @@ const VentaService = {
                 cantidad: producto.cantidad,
                 tipo: producto.tipo || null,
                 descripcion: producto.descripcion || null,
+                requiere_traslado: !!producto.requiere_traslado,
                 moneda_producto: objTasaProducto.id,
                 tasa_moneda_producto: FormatUtils.float(objTasaProducto.valor),
                 total_moneda_producto: FormatUtils.float(total_moneda_producto),
@@ -403,8 +537,33 @@ const VentaService = {
 
     async descontar_inventario(t, productos) {
         for (const producto of productos) {
-            producto.objeto.stock -= producto.cantidad;
-            await producto.objeto.save({ transaction: t });
+            const productoId = producto.producto_id || producto.id || producto.productoId;
+            const cantidad = Number(producto.cantidad || 0);
+
+            const objProducto = await Producto.findOne({
+                where: { id: productoId },
+                transaction: t,
+                lock: t.LOCK.UPDATE
+            });
+
+            if (!objProducto) {
+                throw { message: `El ID del producto es invalido: ${productoId}` };
+            }
+
+            if (!objProducto.activo) {
+                throw { message: `El producto '${objProducto.nombre}' no está activo para la venta.` };
+            }
+
+            if (!Number.isInteger(cantidad) || cantidad <= 0) {
+                throw { message: `La cantidad solicitada para el producto '${objProducto.nombre}' es invalida.` };
+            }
+
+            if (objProducto.stock < cantidad) {
+                throw { message: `Stock insuficiente para '${objProducto.nombre}'. Disponible: ${objProducto.stock}, solicitado: ${cantidad}.` };
+            }
+
+            objProducto.stock -= cantidad;
+            await objProducto.save({ transaction: t });
         }
     },
 
@@ -420,7 +579,11 @@ const VentaService = {
 
     async anular_descontada_inventario(t, array_productos) {
         for (let producto of array_productos) {
-            const objProducto = await Producto.findOne({ where: { id: producto.producto_id } });
+            const objProducto = await Producto.findOne({
+                where: { id: producto.producto_id },
+                transaction: t,
+                lock: t.LOCK.UPDATE
+            });
             if (!objProducto) {
                 throw { message: `El ID del producto es invalido: ${producto.producto_id}` };
             }

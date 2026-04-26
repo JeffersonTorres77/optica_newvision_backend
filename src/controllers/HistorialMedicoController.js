@@ -1,7 +1,71 @@
 const HistorialMedico = require('../models/HistorialMedico');
 const Paciente = require('../models/Paciente');
 const Usuario = require('../models/Usuario');
+const { Op } = require('sequelize');
+const Venta = require('../models/Venta');
+const VentaConsulta = require('../models/VentaConsulta');
 const VerificationUtils = require('../utils/VerificationUtils');
+
+function ordenarVentasPorRecencia(actual, siguiente) {
+    const actualTiempo = new Date(actual.fecha || actual.created_at || 0).getTime();
+    const siguienteTiempo = new Date(siguiente.fecha || siguiente.created_at || 0).getTime();
+
+    if (siguienteTiempo !== actualTiempo) {
+        return siguienteTiempo - actualTiempo;
+    }
+
+    return Number(siguiente.id || 0) - Number(actual.id || 0);
+}
+
+function formatearNumeroVenta(numeroControl) {
+    const numero = Number(numeroControl || 0);
+
+    if (!Number.isFinite(numero) || numero <= 0) {
+        return null;
+    }
+
+    return `V-${String(numero).padStart(6, '0')}`;
+}
+
+async function obtenerTrazabilidadVentaHistorial(historiaId) {
+    const ventasConsulta = await VentaConsulta.findAll({ where: { historia_id: historiaId } });
+
+    if (ventasConsulta.length === 0) {
+        return {
+            ventaActiva: null,
+            ventasRelacionadas: []
+        };
+    }
+
+    const ventaKeys = Array.from(new Set(
+        ventasConsulta
+            .map((ventaConsulta) => `${ventaConsulta.venta_key || ''}`.trim())
+            .filter(Boolean)
+    ));
+
+    const ventas = ventaKeys.length > 0
+        ? await Venta.findAll({ where: { venta_key: { [Op.in]: ventaKeys } } })
+        : [];
+
+    const ventasRelacionadas = ventas
+        .sort(ordenarVentasPorRecencia)
+        .map((venta) => ({
+            ventaKey: venta.venta_key,
+            numeroControl: venta.numero_control,
+            numeroVenta: formatearNumeroVenta(venta.numero_control),
+            numero_venta: formatearNumeroVenta(venta.numero_control),
+            estadoVenta: venta.estatus_venta,
+            estadoPago: venta.estatus_pago,
+            pagoCompleto: !!venta.pago_completo,
+            fecha: venta.fecha,
+            anulada: venta.estatus_venta === 'anulada'
+        }));
+
+    return {
+        ventaActiva: ventasRelacionadas.find((venta) => !venta.anulada) || null,
+        ventasRelacionadas
+    };
+}
 
 const HistorialMedicoController = {
     add: async (req, res) => {
@@ -108,6 +172,7 @@ const HistorialMedicoController = {
             nHistoria: historial.numero,
             pacienteId: historial.paciente_id,
             ventaKey: historial.venta_key,
+            trazabilidadVenta: await obtenerTrazabilidadVentaHistorial(historial.id),
 
             datosConsulta: {
                 pagoPendiente: historial.pago_pendiente,
@@ -264,6 +329,7 @@ const HistorialMedicoController = {
             nHistoria: historial.numero,
             pacienteId: historial.paciente_id,
             ventaKey: historial.venta_key,
+            trazabilidadVenta: await obtenerTrazabilidadVentaHistorial(historial.id),
 
             datosConsulta: {
                 pagoPendiente: historial.pago_pendiente,
@@ -377,6 +443,7 @@ const HistorialMedicoController = {
                 ventaKey: historial.venta_key,
                 pagoPendiente: historial.pago_pendiente,
                 sedeId: historial.paciente ? historial.paciente.sede_id : null,
+                trazabilidadVenta: await obtenerTrazabilidadVentaHistorial(historial.id),
 
                 datosConsulta: {
                     motivo: historial.motivo_consulta,
@@ -482,6 +549,7 @@ const HistorialMedicoController = {
                 nHistoria: historial.numero,
                 pacienteId: historial.paciente_id,
                 ventaKey: historial.venta_key,
+                trazabilidadVenta: await obtenerTrazabilidadVentaHistorial(historial.id),
 
                 datosConsulta: {
                     pagoPendiente: historial.pago_pendiente,

@@ -19,7 +19,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"sede\": \"guatire\",\r\n    \"cedula\": \"25409904\",\r\n    \"password\": \"11554570\"\r\n}",
+              "raw": "{\r\n    \"sede\": \"guatire\",\r\n    \"cedula\": \"24367965\",\r\n    \"password\": \"123456\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1385,16 +1385,20 @@
       "name": "Productos",
       "item": [
         {
-          "name": "Get",
+          "name": "Get - Listado",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/api/producto-get",
               "host": [
@@ -1409,16 +1413,49 @@
           "response": []
         },
         {
+          "name": "Get - Por ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/producto-get/{{producto_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "producto-get",
+                "{{producto_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Get categorias",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTc5NDA1MDAsImV4cCI6MTc1ODAyNjkwMH0.zwZuwFu9P1qCzEUrhMN24A16eeS9i12Im7MlwZIQEk4",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/api/categorias-get",
               "host": [
@@ -1434,93 +1471,74 @@
         },
         {
           "name": "Add",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
-                "type": "text"
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data && data.producto && data.producto.id) {",
+                  "  pm.collectionVariables.set('producto_id', String(data.producto.id));",
+                  "}"
+                ],
+                "type": "text/javascript"
               }
-            ],
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "nombre",
-                  "value": "Filtro/Aditivos - Luz azul",
-                  "type": "text"
-                },
-                {
-                  "key": "marca",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "color",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "material",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "proveedor",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "categoria",
-                  "value": "Filtro/Aditivos",
-                  "type": "text"
-                },
-                {
-                  "key": "modelo",
-                  "value": "Luz azul",
-                  "type": "text"
-                },
-                {
                   "key": "stock",
-                  "value": "5",
+                  "value": "3",
                   "type": "text"
                 },
                 {
                   "key": "precio",
-                  "value": "15",
+                  "value": "25",
                   "type": "text"
                 },
                 {
                   "key": "aplicaIva",
-                  "value": "0",
-                  "type": "text"
-                },
-                {
-                  "key": "requiere_formula",
                   "value": "false",
                   "type": "text"
                 },
                 {
-                  "key": "requiere_item_padre",
+                  "key": "requiere_formula",
                   "value": "true",
                   "type": "text"
                 },
                 {
-                  "key": "moneda",
-                  "value": "euro",
-                  "description": "Ya no es necesaria",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
-                  "key": "activo",
-                  "value": "1",
+                  "key": "requiere_item_padre",
+                  "value": "false",
                   "type": "text"
                 },
                 {
-                  "key": "descripcion",
-                  "value": "Filtro adicional para protección frente a pantallas.",
+                  "key": "activo",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "costoLaboratorio",
+                  "value": "12.5",
+                  "type": "text"
+                },
+                {
+                  "key": "cristalConfig",
+                  "value": "{\"categoria\":\"Cristales\",\"marca\":\"Hoya\",\"tipoCristal\":\"Monofocal visión sencilla\",\"presentacion\":\"Stock\",\"modelo\":\"Monofocal visión sencilla\",\"material\":\"CR-39\",\"color\":null,\"proveedor\":\"Laboratorio QA\",\"tratamientos\":[\"Antirreflejo\"],\"rangoFormula\":\"Esf. +4.00 a -6.00\",\"materialOtro\":\"\",\"descripcion\":\"Producto QA para validar CRUD de cristales desde Postman.\"}",
                   "type": "text"
                 },
                 {
@@ -1547,65 +1565,34 @@
         {
           "name": "Update",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "nombre",
-                  "value": "Cristales - Monofocal visión sencilla",
-                  "type": "text"
-                },
-                {
-                  "key": "marca",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "color",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "material",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "proveedor",
-                  "value": "Laboratorio principal",
-                  "type": "text"
-                },
-                {
-                  "key": "categoria",
-                  "value": "Cristales",
-                  "type": "text"
-                },
-                {
-                  "key": "modelo",
-                  "value": "Monofocal visión sencilla",
-                  "type": "text"
-                },
-                {
                   "key": "stock",
-                  "value": "5",
+                  "value": "4",
                   "type": "text"
                 },
                 {
                   "key": "precio",
-                  "value": "12",
+                  "value": "31",
                   "type": "text"
                 },
                 {
                   "key": "aplicaIva",
-                  "value": "0",
+                  "value": "false",
                   "type": "text"
                 },
                 {
@@ -1619,39 +1606,37 @@
                   "type": "text"
                 },
                 {
-                  "key": "moneda",
-                  "value": "euro",
-                  "description": "Ya no es necesaria",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
                   "key": "activo",
                   "value": "true",
                   "type": "text"
                 },
                 {
-                  "key": "descripcion",
-                  "value": "Cristal monofocal actualizado con proveedor principal.",
+                  "key": "costoLaboratorio",
+                  "value": "15.75",
+                  "type": "text"
+                },
+                {
+                  "key": "cristalConfig",
+                  "value": "{\"categoria\":\"Cristales\",\"marca\":\"Essilor\",\"tipoCristal\":\"Monofocal visión sencilla\",\"presentacion\":\"Semi-terminado\",\"modelo\":\"Monofocal visión sencilla\",\"material\":\"Policarbonato\",\"color\":null,\"proveedor\":\"Laboratorio QA 2\",\"tratamientos\":[\"Antirreflejo\",\"Filtro azul\"],\"rangoFormula\":\"Esf. +6.00 a -8.00\",\"materialOtro\":\"\",\"descripcion\":\"Producto QA actualizado desde Postman.\"}",
                   "type": "text"
                 },
                 {
                   "key": "imagen",
                   "type": "file",
-                  "src": "/C:/Users/Personal/OneDrive/ImÃ¡genes/2-25632_m.jpg",
+                  "src": "/C:/Users/Personal/OneDrive/Imágenes/2-25632_m.jpg",
                   "disabled": true
                 }
               ]
             },
             "url": {
-              "raw": "{{base_url}}/api/producto-update/9",
+              "raw": "{{base_url}}/api/producto-update/{{producto_id}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
                 "producto-update",
-                "9"
+                "{{producto_id}}"
               ]
             }
           },
@@ -1660,23 +1645,27 @@
         {
           "name": "Delete",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTcxOTQxMDcsImV4cCI6MTc1NzI4MDUwN30.iyeNnGw0EX7_h09FPyEXMLoBEuwdDa2mM9KrhEAsB40",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
-              "raw": "{{base_url}}/api/producto-delete/1",
+              "raw": "{{base_url}}/api/producto-delete/{{producto_id}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
                 "producto-delete",
-                "1"
+                "{{producto_id}}"
               ]
             }
           },
@@ -1690,7 +1679,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjI5Njg3NDgsImV4cCI6MTc2MzA1NTE0OH0.SUZlV7Ui-JQyWa_nnF1WZPFOvGvSY6C4WSovDET34Ng",
+                  "value": "{{token}}",
                   "type": "string"
                 }
               ]
@@ -1698,14 +1687,14 @@
             "method": "PUT",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/producto-remove-image/5",
+              "raw": "{{base_url}}/api/producto-remove-image/{{producto_id}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
                 "producto-remove-image",
-                "5"
+                "{{producto_id}}"
               ]
             }
           },
@@ -3031,6 +3020,10 @@
     },
     {
       "key": "token",
+      "value": ""
+    },
+    {
+      "key": "producto_id",
       "value": ""
     },
     {
