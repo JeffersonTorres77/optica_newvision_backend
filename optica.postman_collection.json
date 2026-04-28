@@ -3012,6 +3012,211 @@
         ]
       }
     }
+  ,
+    {
+      "name": "Presupuestos",
+      "item": [
+        {
+          "name": "Presupuestos - Listar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/presupuestos-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "presupuestos-get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Presupuestos - Obtener por ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/presupuestos-get/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "presupuestos-get",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Presupuestos - Crear",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"cliente\": {\r\n    \"tipoPersona\": \"natural\",\r\n    \"cedula\": \"24367965\",\r\n    \"nombreCompleto\": \"Ruben Dario Martinez Castro\",\r\n    \"telefono\": \"04123920817\",\r\n    \"email\": \"rubemm@gmail.com\",\r\n    \"direccion\": \"Guatire, Miranda\"\r\n  },\r\n  \"fechaCreacion\": \"2026-04-27T10:00:00.000Z\",\r\n  \"fechaVencimiento\": \"2026-05-04T10:00:00.000Z\",\r\n  \"diasVencimiento\": 7,\r\n  \"vendedor\": \"Ruben Martinez\",\r\n  \"observaciones\": \"Paciente solicita comparar monturas con dos progresivos.\",\r\n  \"estado\": \"vigente\",\r\n  \"ivaPorcentaje\": 16,\r\n  \"formulaExterna\": {\r\n    \"activa\": true,\r\n    \"refraccionFinal\": {\r\n      \"od\": {\r\n        \"esfera\": \"+0.25\",\r\n        \"cilindro\": \"-0.50\",\r\n        \"eje\": \"4\",\r\n        \"adicion\": \"+1.25\",\r\n        \"alt\": \"10\",\r\n        \"dp\": \"10\"\r\n      },\r\n      \"oi\": {\r\n        \"esfera\": \"+0.25\",\r\n        \"cilindro\": \"-0.25\",\r\n        \"eje\": \"3\",\r\n        \"adicion\": \"+1.25\",\r\n        \"alt\": \"20\",\r\n        \"dp\": \"20\"\r\n      }\r\n    }\r\n  },\r\n  \"opcionPrincipalId\": \"opcion-2\",\r\n  \"opciones\": [\r\n    {\r\n      \"id\": \"opcion-1\",\r\n      \"nombre\": \"Opcion 1\",\r\n      \"observaciones\": \"Montura demo con progresivo digital intermedio.\",\r\n      \"esPrincipal\": false,\r\n      \"subtotal\": 93.1,\r\n      \"descuentoTotal\": 0,\r\n      \"iva\": 14.9,\r\n      \"total\": 108,\r\n      \"productos\": [\r\n        {\r\n          \"productoId\": 40,\r\n          \"codigo\": \"PR-000040\",\r\n          \"descripcion\": \"Progresivo digital intermedio CR-39\",\r\n          \"precioUnitario\": 43.1,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 43.1,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        },\r\n        {\r\n          \"productoId\": 36,\r\n          \"codigo\": \"PR-000036\",\r\n          \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n          \"precioUnitario\": 50,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 50,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"id\": \"opcion-2\",\r\n      \"nombre\": \"Opcion 2\",\r\n      \"observaciones\": \"Mantiene la montura y cambia a progresivo premium.\",\r\n      \"esPrincipal\": true,\r\n      \"subtotal\": 150,\r\n      \"descuentoTotal\": 0,\r\n      \"iva\": 24,\r\n      \"total\": 174,\r\n      \"productos\": [\r\n        {\r\n          \"productoId\": 48,\r\n          \"codigo\": \"PR-000048\",\r\n          \"descripcion\": \"Progresivo premium\",\r\n          \"precioUnitario\": 100,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 100,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        },\r\n        {\r\n          \"productoId\": 36,\r\n          \"codigo\": \"PR-000036\",\r\n          \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n          \"precioUnitario\": 50,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 50,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"productos\": [\r\n    {\r\n      \"productoId\": 48,\r\n      \"codigo\": \"PR-000048\",\r\n      \"descripcion\": \"Progresivo premium\",\r\n      \"precioUnitario\": 100,\r\n      \"cantidad\": 1,\r\n      \"descuentoPorcentaje\": 0,\r\n      \"moneda\": \"USD\",\r\n      \"precioOriginal\": 100,\r\n      \"monedaOriginal\": \"USD\",\r\n      \"tasaConversion\": 1\r\n    },\r\n    {\r\n      \"productoId\": 36,\r\n      \"codigo\": \"PR-000036\",\r\n      \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n      \"precioUnitario\": 50,\r\n      \"cantidad\": 1,\r\n      \"descuentoPorcentaje\": 0,\r\n      \"moneda\": \"USD\",\r\n      \"precioOriginal\": 50,\r\n      \"monedaOriginal\": \"USD\",\r\n      \"tasaConversion\": 1\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/presupuestos-add",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "presupuestos-add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Presupuestos - Actualizar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"cliente\": {\r\n    \"tipoPersona\": \"natural\",\r\n    \"cedula\": \"24367965\",\r\n    \"nombreCompleto\": \"Ruben Dario Martinez Castro\",\r\n    \"telefono\": \"04123920817\",\r\n    \"email\": \"rubemm@gmail.com\",\r\n    \"direccion\": \"Guatire, Miranda\"\r\n  },\r\n  \"fechaCreacion\": \"2026-04-27T10:00:00.000Z\",\r\n  \"fechaVencimiento\": \"2026-05-07T10:00:00.000Z\",\r\n  \"diasVencimiento\": 10,\r\n  \"vendedor\": \"Ruben Martinez\",\r\n  \"observaciones\": \"Se ajusta la opcion principal y se conserva comparativo para el paciente.\",\r\n  \"estado\": \"vigente\",\r\n  \"ivaPorcentaje\": 16,\r\n  \"formulaExterna\": {\r\n    \"activa\": true,\r\n    \"refraccionFinal\": {\r\n      \"od\": {\r\n        \"esfera\": \"+0.25\",\r\n        \"cilindro\": \"-0.50\",\r\n        \"eje\": \"4\",\r\n        \"adicion\": \"+1.25\",\r\n        \"alt\": \"10\",\r\n        \"dp\": \"10\"\r\n      },\r\n      \"oi\": {\r\n        \"esfera\": \"+0.25\",\r\n        \"cilindro\": \"-0.25\",\r\n        \"eje\": \"3\",\r\n        \"adicion\": \"+1.25\",\r\n        \"alt\": \"20\",\r\n        \"dp\": \"20\"\r\n      }\r\n    }\r\n  },\r\n  \"opcionPrincipalId\": \"opcion-3\",\r\n  \"opciones\": [\r\n    {\r\n      \"id\": \"opcion-1\",\r\n      \"nombre\": \"Opcion 1\",\r\n      \"observaciones\": \"Opcion conservadora.\",\r\n      \"esPrincipal\": false,\r\n      \"subtotal\": 93.1,\r\n      \"descuentoTotal\": 0,\r\n      \"iva\": 14.9,\r\n      \"total\": 108,\r\n      \"productos\": [\r\n        {\r\n          \"productoId\": 40,\r\n          \"codigo\": \"PR-000040\",\r\n          \"descripcion\": \"Progresivo digital intermedio CR-39\",\r\n          \"precioUnitario\": 43.1,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 43.1,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        },\r\n        {\r\n          \"productoId\": 36,\r\n          \"codigo\": \"PR-000036\",\r\n          \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n          \"precioUnitario\": 50,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 50,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"id\": \"opcion-2\",\r\n      \"nombre\": \"Opcion 2\",\r\n      \"observaciones\": \"Se mantiene como alternativa intermedia.\",\r\n      \"esPrincipal\": false,\r\n      \"subtotal\": 150,\r\n      \"descuentoTotal\": 0,\r\n      \"iva\": 24,\r\n      \"total\": 174,\r\n      \"productos\": [\r\n        {\r\n          \"productoId\": 48,\r\n          \"codigo\": \"PR-000048\",\r\n          \"descripcion\": \"Progresivo premium\",\r\n          \"precioUnitario\": 100,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 100,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        },\r\n        {\r\n          \"productoId\": 36,\r\n          \"codigo\": \"PR-000036\",\r\n          \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n          \"precioUnitario\": 50,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 50,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"id\": \"opcion-3\",\r\n      \"nombre\": \"Opcion 3\",\r\n      \"observaciones\": \"Nueva opcion principal con descuento promocional.\",\r\n      \"esPrincipal\": true,\r\n      \"subtotal\": 145,\r\n      \"descuentoTotal\": 5,\r\n      \"iva\": 22.4,\r\n      \"total\": 162.4,\r\n      \"productos\": [\r\n        {\r\n          \"productoId\": 48,\r\n          \"codigo\": \"PR-000048\",\r\n          \"descripcion\": \"Progresivo premium\",\r\n          \"precioUnitario\": 100,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 5,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 100,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        },\r\n        {\r\n          \"productoId\": 36,\r\n          \"codigo\": \"PR-000036\",\r\n          \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n          \"precioUnitario\": 50,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 50,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"productos\": [\r\n    {\r\n      \"productoId\": 48,\r\n      \"codigo\": \"PR-000048\",\r\n      \"descripcion\": \"Progresivo premium\",\r\n      \"precioUnitario\": 100,\r\n      \"cantidad\": 1,\r\n      \"descuentoPorcentaje\": 5,\r\n      \"moneda\": \"USD\",\r\n      \"precioOriginal\": 100,\r\n      \"monedaOriginal\": \"USD\",\r\n      \"tasaConversion\": 1\r\n    },\r\n    {\r\n      \"productoId\": 36,\r\n      \"codigo\": \"PR-000036\",\r\n      \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n      \"precioUnitario\": 50,\r\n      \"cantidad\": 1,\r\n      \"descuentoPorcentaje\": 0,\r\n      \"moneda\": \"USD\",\r\n      \"precioOriginal\": 50,\r\n      \"monedaOriginal\": \"USD\",\r\n      \"tasaConversion\": 1\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/presupuestos-update/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "presupuestos-update",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Presupuestos - Renovar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"dias\": 7\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/presupuestos-renovar/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "presupuestos-renovar",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Presupuestos - Eliminar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/presupuestos-delete/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "presupuestos-delete",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
   ],
   "variable": [
     {

@@ -21,6 +21,7 @@ const CierreCajaController = require('../controllers/CierreCajaController');
 const ConfiguracionController = require('../controllers/ConfiguracionController');
 const OrdenTrabajoController = require('../controllers/OrdenTrabajoController');
 const EmpresaController = require('../controllers/EmpresaController');
+const PresupuestoController = require('../controllers/PresupuestoController');
 
 const router = express.Router();
 
@@ -128,6 +129,21 @@ router.get('/clientes-get', authMiddleware, CatchGeneric(ClienteController.get))
 router.post('/clientes-add', authMiddleware, CatchGeneric(ClienteController.add));
 router.put('/clientes-update/:cedula', authMiddleware, CatchGeneric(ClienteController.update));
 router.delete('/clientes-delete/:cedula', authMiddleware, CatchGeneric(ClienteController.delete));
+
+router.get('/presupuestos-get/:id?', authMiddleware, CatchGeneric(PresupuestoController.get));
+router.post('/presupuestos-add', authMiddleware, CatchGeneric(PresupuestoController.add));
+router.put('/presupuestos-update/:id', authMiddleware, CatchGeneric(PresupuestoController.update));
+router.delete('/presupuestos-delete/:id', authMiddleware, CatchGeneric(PresupuestoController.delete));
+router.put('/presupuestos-renovar/:id', authMiddleware, CatchGeneric(PresupuestoController.renovar));
+router.post('/presupuestos-auto-archivar', authMiddleware, CatchGeneric(PresupuestoController.auto_archivar));
+
+router.get('/presupuestos', authMiddleware, CatchGeneric(PresupuestoController.get));
+router.get('/presupuestos/:id', authMiddleware, CatchGeneric(PresupuestoController.get));
+router.post('/presupuestos', authMiddleware, CatchGeneric(PresupuestoController.add));
+router.put('/presupuestos/:id', authMiddleware, CatchGeneric(PresupuestoController.update));
+router.delete('/presupuestos/:id', authMiddleware, CatchGeneric(PresupuestoController.delete));
+router.put('/presupuestos/:id/renovar', authMiddleware, CatchGeneric(PresupuestoController.renovar));
+router.post('/presupuestos/auto-archivar', authMiddleware, CatchGeneric(PresupuestoController.auto_archivar));
 
 router.get('/orden-trabajo-get', authMiddleware, CatchGeneric(OrdenTrabajoController.get));
 router.put('/orden-trabajo-change-status', authMiddleware, CatchGeneric(OrdenTrabajoController.change_status));
