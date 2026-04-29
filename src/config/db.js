@@ -46,6 +46,34 @@ async function ensurePresupuestoOptionColumns() {
         allowNull: true
       });
     }
+
+    if (!tableDefinition.historia_medica_id) {
+      await queryInterface.addColumn('presupuestos', 'historia_medica_id', {
+        type: DataTypes.STRING(100),
+        allowNull: true
+      });
+    }
+
+    if (!tableDefinition.historia_numero) {
+      await queryInterface.addColumn('presupuestos', 'historia_numero', {
+        type: DataTypes.STRING(100),
+        allowNull: true
+      });
+    }
+
+    if (!tableDefinition.paciente_key_origen) {
+      await queryInterface.addColumn('presupuestos', 'paciente_key_origen', {
+        type: DataTypes.STRING(100),
+        allowNull: true
+      });
+    }
+
+    if (!tableDefinition.paciente_id_origen) {
+      await queryInterface.addColumn('presupuestos', 'paciente_id_origen', {
+        type: DataTypes.STRING(100),
+        allowNull: true
+      });
+    }
   } catch (error) {
     console.error('❌ Error asegurando columnas de opciones de presupuesto:', error);
     throw error;

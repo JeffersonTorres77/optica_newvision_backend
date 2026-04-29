@@ -379,6 +379,40 @@ function normalizarAccesorioConfig(config, legacy = {}) {
     };
 }
 
+function construirNombrePorCategoria(categoria, config) {
+    switch (normalizarCategoriaProducto(categoria)) {
+        case 'Cristales':
+            return construirNombreCristal(config);
+        case 'Monturas':
+            return construirNombreMontura(config);
+        case 'Lentes de contacto':
+            return construirNombreLenteContacto(config);
+        case 'Líquidos':
+            return construirNombreLiquido(config);
+        case 'Estuches':
+            return construirNombreEstuche(config);
+        case 'Accesorios':
+            return construirNombreAccesorio(config);
+        default:
+            return '';
+    }
+}
+
+function asegurarNombreEnConfig(categoria, config, nombrePreferido) {
+    if (!config) {
+        return config;
+    }
+
+    const nombre = normalizarTexto(nombrePreferido)
+        || normalizarTexto(config?.nombre)
+        || construirNombrePorCategoria(categoria, config);
+
+    return {
+        ...config,
+        nombre
+    };
+}
+
 function resolverPersistenciaPorCategoria(categoria, body) {
     const cristalConfigBody = parseJsonObjectFlexible(body.cristalConfig);
     const monturaConfigBody = parseJsonObjectFlexible(body.monturaConfig);
@@ -423,105 +457,111 @@ function resolverPersistenciaPorCategoria(categoria, body) {
                     ...descripcionLegacy.crystalConfig
                 }
             ));
-            const nombreCristal = normalizarTexto(body.nombre) || construirNombreCristal(cristalConfig);
+            const nombreCristal = normalizarTexto(cristalConfigBody?.nombre ?? cristalConfig?.nombre ?? body.nombre) || construirNombreCristal(cristalConfig);
             const descripcionCristal = normalizarTextoNullable(body.descripcion || cristalConfig?.descripcion)
                 || construirDescripcionCristal(cristalConfig);
+            const cristalConfigPersistido = asegurarNombreEnConfig('Cristales', cristalConfig, nombreCristal);
 
             return {
                 ...basePersistencia,
                 nombre: nombreCristal,
-                marca: normalizarTexto(cristalConfig?.marca ?? body.marca),
+                marca: normalizarTexto(cristalConfigPersistido?.marca ?? body.marca),
                 color: null,
-                material: normalizarTexto(cristalConfig?.material),
-                proveedor: normalizarTextoNullable(cristalConfig?.proveedor),
-                modelo: normalizarTextoNullable(cristalConfig?.tipoCristal),
+                material: normalizarTexto(cristalConfigPersistido?.material),
+                proveedor: normalizarTextoNullable(cristalConfigPersistido?.proveedor),
+                modelo: normalizarTextoNullable(cristalConfigPersistido?.tipoCristal),
                 descripcion: descripcionCristal,
-                cristal_config: cristalConfig
+                cristal_config: cristalConfigPersistido
             };
         }
         case 'Monturas': {
             const monturaConfig = limpiarConfig(normalizarMonturaConfig(monturaConfigBody, legacyBase));
-            const nombreMontura = normalizarTexto(body.nombre) || construirNombreMontura(monturaConfig);
+            const nombreMontura = normalizarTexto(monturaConfigBody?.nombre ?? monturaConfig?.nombre ?? body.nombre) || construirNombreMontura(monturaConfig);
             const descripcionMontura = normalizarTextoNullable(body.descripcion || monturaConfig?.descripcion)
                 || construirDescripcionMontura(monturaConfig);
+            const monturaConfigPersistido = asegurarNombreEnConfig('Monturas', monturaConfig, nombreMontura);
             return {
                 ...basePersistencia,
                 nombre: nombreMontura,
-                marca: normalizarTexto(monturaConfig?.marca),
-                color: normalizarTextoNullable(monturaConfig?.color),
-                material: normalizarTexto(monturaConfig?.material),
-                proveedor: normalizarTextoNullable(monturaConfig?.proveedor),
-                modelo: normalizarTextoNullable(monturaConfig?.modelo),
+                marca: normalizarTexto(monturaConfigPersistido?.marca),
+                color: normalizarTextoNullable(monturaConfigPersistido?.color),
+                material: normalizarTexto(monturaConfigPersistido?.material),
+                proveedor: normalizarTextoNullable(monturaConfigPersistido?.proveedor),
+                modelo: normalizarTextoNullable(monturaConfigPersistido?.modelo),
                 descripcion: descripcionMontura,
-                montura_config: monturaConfig
+                montura_config: monturaConfigPersistido
             };
         }
         case 'Lentes de contacto': {
             const lenteContactoConfig = limpiarConfig(normalizarLenteContactoConfig(lenteContactoConfigBody, legacyBase));
-            const nombreLenteContacto = normalizarTexto(body.nombre) || construirNombreLenteContacto(lenteContactoConfig);
+            const nombreLenteContacto = normalizarTexto(lenteContactoConfigBody?.nombre ?? lenteContactoConfig?.nombre ?? body.nombre) || construirNombreLenteContacto(lenteContactoConfig);
             const descripcionLenteContacto = normalizarTextoNullable(body.descripcion || lenteContactoConfig?.descripcion)
                 || construirDescripcionLenteContacto(lenteContactoConfig);
+            const lenteContactoConfigPersistido = asegurarNombreEnConfig('Lentes de contacto', lenteContactoConfig, nombreLenteContacto);
             return {
                 ...basePersistencia,
                 nombre: nombreLenteContacto,
-                marca: normalizarTexto(lenteContactoConfig?.marca),
-                color: normalizarTextoNullable(lenteContactoConfig?.color),
-                material: normalizarTexto(lenteContactoConfig?.material),
-                proveedor: normalizarTextoNullable(lenteContactoConfig?.proveedor),
-                modelo: normalizarTextoNullable(lenteContactoConfig?.tipoLenteContacto),
+                marca: normalizarTexto(lenteContactoConfigPersistido?.marca),
+                color: normalizarTextoNullable(lenteContactoConfigPersistido?.color),
+                material: normalizarTexto(lenteContactoConfigPersistido?.material),
+                proveedor: normalizarTextoNullable(lenteContactoConfigPersistido?.proveedor),
+                modelo: normalizarTextoNullable(lenteContactoConfigPersistido?.tipoLenteContacto),
                 descripcion: descripcionLenteContacto,
-                lente_contacto_config: lenteContactoConfig
+                lente_contacto_config: lenteContactoConfigPersistido
             };
         }
         case 'Líquidos': {
             const liquidoConfig = limpiarConfig(normalizarLiquidoConfig(liquidoConfigBody, legacyBase));
-            const nombreLiquido = normalizarTexto(body.nombre) || construirNombreLiquido(liquidoConfig);
+            const nombreLiquido = normalizarTexto(liquidoConfigBody?.nombre ?? liquidoConfig?.nombre ?? body.nombre) || construirNombreLiquido(liquidoConfig);
             const descripcionLiquido = normalizarTextoNullable(body.descripcion || liquidoConfig?.descripcion)
                 || construirDescripcionLiquido(liquidoConfig);
+            const liquidoConfigPersistido = asegurarNombreEnConfig('Líquidos', liquidoConfig, nombreLiquido);
             return {
                 ...basePersistencia,
                 nombre: nombreLiquido,
-                marca: normalizarTexto(liquidoConfig?.marca),
+                marca: normalizarTexto(liquidoConfigPersistido?.marca),
                 color: null,
                 material: '',
-                proveedor: normalizarTextoNullable(liquidoConfig?.proveedor),
-                modelo: normalizarTextoNullable(liquidoConfig?.modelo),
+                proveedor: normalizarTextoNullable(liquidoConfigPersistido?.proveedor),
+                modelo: normalizarTextoNullable(liquidoConfigPersistido?.modelo),
                 descripcion: descripcionLiquido,
-                liquido_config: liquidoConfig
+                liquido_config: liquidoConfigPersistido
             };
         }
         case 'Estuches': {
             const estucheConfig = limpiarConfig(normalizarEstucheConfig(estucheConfigBody, legacyBase));
-            const nombreEstuche = normalizarTexto(body.nombre) || construirNombreEstuche(estucheConfig);
+            const nombreEstuche = normalizarTexto(estucheConfigBody?.nombre ?? estucheConfig?.nombre ?? body.nombre) || construirNombreEstuche(estucheConfig);
             const descripcionEstuche = normalizarTextoNullable(body.descripcion || estucheConfig?.descripcion)
                 || construirDescripcionEstuche(estucheConfig);
+            const estucheConfigPersistido = asegurarNombreEnConfig('Estuches', estucheConfig, nombreEstuche);
             return {
                 ...basePersistencia,
                 nombre: nombreEstuche,
-                marca: normalizarTexto(estucheConfig?.marca),
+                marca: normalizarTexto(estucheConfigPersistido?.marca),
                 color: null,
-                material: normalizarTexto(estucheConfig?.material),
-                proveedor: normalizarTextoNullable(estucheConfig?.proveedor),
-                modelo: normalizarTextoNullable(estucheConfig?.modelo),
+                material: normalizarTexto(estucheConfigPersistido?.material),
+                proveedor: normalizarTextoNullable(estucheConfigPersistido?.proveedor),
+                modelo: normalizarTextoNullable(estucheConfigPersistido?.modelo),
                 descripcion: descripcionEstuche,
-                estuche_config: estucheConfig
+                estuche_config: estucheConfigPersistido
             };
         }
         case 'Accesorios': {
             const accesorioConfig = limpiarConfig(normalizarAccesorioConfig(accesorioConfigBody, legacyBase));
-            const nombreAccesorio = normalizarTexto(body.nombre) || construirNombreAccesorio(accesorioConfig);
+            const nombreAccesorio = normalizarTexto(accesorioConfigBody?.nombre ?? accesorioConfig?.nombre ?? body.nombre) || construirNombreAccesorio(accesorioConfig);
             const descripcionAccesorio = normalizarTextoNullable(body.descripcion || accesorioConfig?.descripcion)
                 || construirDescripcionAccesorio(accesorioConfig);
+            const accesorioConfigPersistido = asegurarNombreEnConfig('Accesorios', accesorioConfig, nombreAccesorio);
             return {
                 ...basePersistencia,
                 nombre: nombreAccesorio,
-                marca: normalizarTexto(accesorioConfig?.marca),
-                color: normalizarTextoNullable(accesorioConfig?.color),
-                material: normalizarTexto(accesorioConfig?.material),
-                proveedor: normalizarTextoNullable(accesorioConfig?.proveedor),
-                modelo: normalizarTextoNullable(accesorioConfig?.modelo),
+                marca: normalizarTexto(accesorioConfigPersistido?.marca),
+                color: normalizarTextoNullable(accesorioConfigPersistido?.color),
+                material: normalizarTexto(accesorioConfigPersistido?.material),
+                proveedor: normalizarTextoNullable(accesorioConfigPersistido?.proveedor),
+                modelo: normalizarTextoNullable(accesorioConfigPersistido?.modelo),
                 descripcion: descripcionAccesorio,
-                accesorio_config: accesorioConfig
+                accesorio_config: accesorioConfigPersistido
             };
         }
         default:
@@ -567,35 +607,36 @@ function construirBloquesConfigProducto(producto) {
                 marca: producto?.cristal_config?.marca ?? descripcionLegacy?.crystalConfig?.marca ?? '',
                 presentacion: producto?.cristal_config?.presentacion ?? descripcionLegacy?.crystalConfig?.presentacion ?? producto.marca
             };
+            const cristalConfig = limpiarConfig(normalizarCristalConfig(
+                producto.cristal_config ?? descripcionLegacy.crystalConfig,
+                {
+                    ...legacyCristal,
+                    ...descripcionLegacy.crystalConfig
+                }
+            ));
             return {
-                cristalConfig: limpiarConfig(normalizarCristalConfig(
-                    producto.cristal_config ?? descripcionLegacy.crystalConfig,
-                    {
-                        ...legacyCristal,
-                        ...descripcionLegacy.crystalConfig
-                    }
-                ))
+                cristalConfig: asegurarNombreEnConfig('Cristales', cristalConfig, producto?.nombre)
             };
         }
         case 'Monturas':
             return {
-                monturaConfig: limpiarConfig(normalizarMonturaConfig(producto.montura_config, legacyBase))
+                monturaConfig: asegurarNombreEnConfig('Monturas', limpiarConfig(normalizarMonturaConfig(producto.montura_config, legacyBase)), producto?.nombre)
             };
         case 'Lentes de contacto':
             return {
-                lenteContactoConfig: limpiarConfig(normalizarLenteContactoConfig(producto.lente_contacto_config, legacyBase))
+                lenteContactoConfig: asegurarNombreEnConfig('Lentes de contacto', limpiarConfig(normalizarLenteContactoConfig(producto.lente_contacto_config, legacyBase)), producto?.nombre)
             };
         case 'Líquidos':
             return {
-                liquidoConfig: limpiarConfig(normalizarLiquidoConfig(producto.liquido_config, legacyBase))
+                liquidoConfig: asegurarNombreEnConfig('Líquidos', limpiarConfig(normalizarLiquidoConfig(producto.liquido_config, legacyBase)), producto?.nombre)
             };
         case 'Estuches':
             return {
-                estucheConfig: limpiarConfig(normalizarEstucheConfig(producto.estuche_config, legacyBase))
+                estucheConfig: asegurarNombreEnConfig('Estuches', limpiarConfig(normalizarEstucheConfig(producto.estuche_config, legacyBase)), producto?.nombre)
             };
         case 'Accesorios':
             return {
-                accesorioConfig: limpiarConfig(normalizarAccesorioConfig(producto.accesorio_config, legacyBase))
+                accesorioConfig: asegurarNombreEnConfig('Accesorios', limpiarConfig(normalizarAccesorioConfig(producto.accesorio_config, legacyBase)), producto?.nombre)
             };
         default:
             return {};
@@ -608,7 +649,7 @@ function construirProductoOutput(producto, imagenUrl) {
     const bloquesConfig = construirBloquesConfigProducto(producto);
 
     if (categoriaNormalizada === 'Cristales') {
-        const cristalConfig = bloquesConfig.cristalConfig || {};
+        const cristalConfig = asegurarNombreEnConfig('Cristales', bloquesConfig.cristalConfig || {}, producto?.nombre) || {};
         const descripcionCristal = normalizarTexto(cristalConfig.descripcion)
             || normalizarTexto(descripcionLegacy.descripcionUsuario)
             || construirDescripcionCristal(cristalConfig);
@@ -630,6 +671,7 @@ function construirProductoOutput(producto, imagenUrl) {
             requiere_formula: producto.requiere_formula,
             cristalConfig: {
                 categoria: 'Cristales',
+                nombre: normalizarTextoNullable(cristalConfig.nombre),
                 marca: normalizarTextoNullable(cristalConfig.marca),
                 tipoCristal: normalizarTextoNullable(cristalConfig.tipoCristal ?? cristalConfig.modelo),
                 presentacion: normalizarTextoNullable(cristalConfig.presentacion),
@@ -664,11 +706,12 @@ function construirProductoOutput(producto, imagenUrl) {
 
     switch (categoriaNormalizada) {
         case 'Monturas': {
-            const monturaConfig = bloquesConfig.monturaConfig || {};
+            const monturaConfig = asegurarNombreEnConfig('Monturas', bloquesConfig.monturaConfig || {}, producto?.nombre) || {};
             return {
                 ...baseOutput,
                 monturaConfig: {
                     categoria: 'Monturas',
+                    nombre: normalizarTextoNullable(monturaConfig.nombre),
                     marca: normalizarTextoNullable(monturaConfig.marca),
                     modelo: normalizarTextoNullable(monturaConfig.modelo),
                     color: normalizarTextoNullable(monturaConfig.color),
@@ -679,11 +722,12 @@ function construirProductoOutput(producto, imagenUrl) {
             };
         }
         case 'Lentes de contacto': {
-            const lenteContactoConfig = bloquesConfig.lenteContactoConfig || {};
+            const lenteContactoConfig = asegurarNombreEnConfig('Lentes de contacto', bloquesConfig.lenteContactoConfig || {}, producto?.nombre) || {};
             return {
                 ...baseOutput,
                 lenteContactoConfig: {
                     categoria: 'Lentes de contacto',
+                    nombre: normalizarTextoNullable(lenteContactoConfig.nombre),
                     marca: normalizarTextoNullable(lenteContactoConfig.marca),
                     tipoLenteContacto: normalizarTextoNullable(lenteContactoConfig.tipoLenteContacto ?? lenteContactoConfig.modelo),
                     modelo: normalizarTextoNullable(lenteContactoConfig.modelo ?? lenteContactoConfig.tipoLenteContacto),
@@ -696,11 +740,12 @@ function construirProductoOutput(producto, imagenUrl) {
             };
         }
         case 'Líquidos': {
-            const liquidoConfig = bloquesConfig.liquidoConfig || {};
+            const liquidoConfig = asegurarNombreEnConfig('Líquidos', bloquesConfig.liquidoConfig || {}, producto?.nombre) || {};
             return {
                 ...baseOutput,
                 liquidoConfig: {
                     categoria: 'Líquidos',
+                    nombre: normalizarTextoNullable(liquidoConfig.nombre),
                     marca: normalizarTextoNullable(liquidoConfig.marca),
                     modelo: normalizarTextoNullable(liquidoConfig.modelo),
                     proveedor: normalizarTextoNullable(liquidoConfig.proveedor),
@@ -709,11 +754,12 @@ function construirProductoOutput(producto, imagenUrl) {
             };
         }
         case 'Estuches': {
-            const estucheConfig = bloquesConfig.estucheConfig || {};
+            const estucheConfig = asegurarNombreEnConfig('Estuches', bloquesConfig.estucheConfig || {}, producto?.nombre) || {};
             return {
                 ...baseOutput,
                 estucheConfig: {
                     categoria: 'Estuches',
+                    nombre: normalizarTextoNullable(estucheConfig.nombre),
                     marca: normalizarTextoNullable(estucheConfig.marca),
                     modelo: normalizarTextoNullable(estucheConfig.modelo),
                     material: normalizarTextoNullable(estucheConfig.material),
@@ -723,11 +769,12 @@ function construirProductoOutput(producto, imagenUrl) {
             };
         }
         case 'Accesorios': {
-            const accesorioConfig = bloquesConfig.accesorioConfig || {};
+            const accesorioConfig = asegurarNombreEnConfig('Accesorios', bloquesConfig.accesorioConfig || {}, producto?.nombre) || {};
             return {
                 ...baseOutput,
                 accesorioConfig: {
                     categoria: 'Accesorios',
+                    nombre: normalizarTextoNullable(accesorioConfig.nombre),
                     marca: normalizarTextoNullable(accesorioConfig.marca),
                     modelo: normalizarTextoNullable(accesorioConfig.modelo),
                     color: normalizarTextoNullable(accesorioConfig.color),
@@ -1066,10 +1113,11 @@ const ProductoController = {
 
         let productos_output = [];
         for (let producto of productos_db) {
+            const productoPlano = typeof producto?.get === 'function' ? producto.get({ plain: true }) : producto;
             const existe_imagen = (producto.imagen_url !== null && limpiarYValidarRuta(producto.imagen_url));
             const ruta_imagen = (existe_imagen) ? (producto.imagen_url) : ("/public/images/product-generic-image.jpg?t=" + Date.now());
 
-            productos_output.push(construirProductoOutput(producto, ruta_imagen));
+            productos_output.push(construirProductoOutput(productoPlano, ruta_imagen));
         }
 
         res.status(200).json({ message: 'ok', iva: IVA_PORCENTAJE, productos: productos_output });
