@@ -93,7 +93,9 @@ router.get('/tasas-history/:id/:fecha_inicio?/:fecha_final?', authMiddleware, Ca
 router.put('/tasas-rastreo-automatico/:id', authMiddleware, CatchGeneric(TasasController.rastreo_automatico));
 
 router.get('/paciente-get/:id?', authMiddleware, CatchGeneric(PacienteController.get));
+router.get('/paciente-buscar/', authMiddleware, CatchGeneric(PacienteController.buscarCoincidencias));
 router.post('/paciente-add/', authMiddleware, CatchGeneric(PacienteController.add));
+router.post('/paciente-enlazar/:id', authMiddleware, CatchGeneric(PacienteController.enlazarASedeActual));
 router.put('/paciente-update/:id?', authMiddleware, CatchGeneric(PacienteController.update));
 router.delete('/paciente-delete/:id?', authMiddleware, CatchGeneric(PacienteController.delete));
 

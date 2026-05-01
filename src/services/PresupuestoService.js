@@ -1008,13 +1008,30 @@ async function resolverClienteReferencia(cliente, sedeId, transaction) {
     return null;
   }
 
-  return Cliente.findOne({
+  let clienteReferencia = await Cliente.findOne({
     where: {
-      sede_id: sedeId,
       cedula: cliente.cedula
     },
     transaction
   });
+
+  if (clienteReferencia) {
+    clienteReferencia.nombre = cliente.nombre;
+    clienteReferencia.telefono = cliente.telefono;
+    clienteReferencia.email = cliente.email;
+    await clienteReferencia.save({ transaction });
+    return clienteReferencia;
+  }
+
+  clienteReferencia = await Cliente.create({
+    sede_id: sedeId,
+    cedula: cliente.cedula,
+    nombre: cliente.nombre,
+    telefono: cliente.telefono,
+    email: cliente.email
+  }, { transaction });
+
+  return clienteReferencia;
 }
 
 async function resolverAsesor(asesorId, transaction) {
@@ -1045,8 +1062,7 @@ async function normalizarItemsInput(itemsInput, sedeId, moneda, transaction) {
   const productos = productoIds.length
     ? await Producto.findAll({
         where: {
-          id: { [Op.in]: productoIds },
-          sede_id: sedeId
+          id: { [Op.in]: productoIds }
         },
         transaction
       })
@@ -1059,7 +1075,7 @@ async function normalizarItemsInput(itemsInput, sedeId, moneda, transaction) {
     const producto = productoId !== null ? productosMap.get(productoId) : null;
 
     if (productoId !== null && !producto) {
-      throw { message: `El producto ${productoId} no existe en la sede activa.` };
+      throw { message: `El producto ${productoId} no existe.` };
     }
 
     const descripcion = normalizarTexto(item?.descripcion)

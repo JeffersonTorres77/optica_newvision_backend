@@ -33,6 +33,11 @@ const HistorialMedico = sequelize.define('HistorialMedico', {
     type: DataTypes.DATEONLY,
     allowNull: false,
   },
+  sede_id: {
+    type: DataTypes.STRING(50),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
   paciente_id: {
     type: DataTypes.STRING(70),
     allowNull: false,
