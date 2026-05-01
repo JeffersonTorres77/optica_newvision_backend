@@ -13,6 +13,22 @@ const HistorialMedico = sequelize.define('HistorialMedico', {
     allowNull: false,
     collate: 'utf8mb4_general_ci'
   },
+  venta_key: {
+    type: DataTypes.STRING(100),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
+  pago_pendiente: {
+    type: DataTypes.TINYINT(4),
+    allowNull: false,
+    defaultValue: 1,
+    get() {
+      return this.getDataValue('pago_pendiente') === 1;
+    },
+    set(value) {
+      this.setDataValue('pago_pendiente', value ? 1 : 0);
+    }
+  },
   fecha: {
     type: DataTypes.DATEONLY,
     allowNull: false,
@@ -40,15 +56,61 @@ const HistorialMedico = sequelize.define('HistorialMedico', {
     allowNull: true,
     collate: 'utf8mb4_general_ci'
   },
+  tipo_lentes_contacto: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
   ultima_graduacion: {
     type: DataTypes.DATE,
     allowNull: true,
     collate: 'utf8mb4_general_ci'
   },
-  medico: {
+  especialista_tipo: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
+  especialista_cedula: {
+    type: DataTypes.STRING(25),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
+  especialista_externo_nombre: {
     type: DataTypes.STRING(255),
     allowNull: true,
     collate: 'utf8mb4_general_ci'
+  },
+  especialista_externo_lugar: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
+  formula_original_tipo: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
+  formula_original_nombre: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
+  formula_original_lugar: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+    collate: 'utf8mb4_general_ci'
+  },
+  formula_externa: {
+    type: DataTypes.TINYINT(4),
+    allowNull: false,
+    defaultValue: 0,
+    get() {
+      return this.getDataValue('formula_externa') === 1;
+    },
+    set(value) {
+      this.setDataValue('formula_externa', value ? 1 : 0);
+    }
   },
   // ========================================
   examen_ocular_lensometria: {
@@ -145,49 +207,49 @@ HistorialMedico.belongsTo(Paciente, {
 });
 
 function getArray(fieldName) {
-    return function() {
-      const raw = this.getDataValue(fieldName);
-      if(raw == null || raw == "") {
-        return [];
-      } else {
-        return raw.split('|');
-      }
+  return function () {
+    const raw = this.getDataValue(fieldName);
+    if (raw == null || raw == "") {
+      return [];
+    } else {
+      return raw.split('|');
     }
+  }
 }
 
 function setArray(fieldName) {
-    return function(value) {
-        if (value !== null && !Array.isArray(value)) {
-            throw new Error(`${fieldName} debe ser un arreglo.`);
-        }
-        if(value == [] || value == null) {
-            this.setDataValue(fieldName, "");
-        } else {
-            this.setDataValue(fieldName, value.join('|'));
-        }
+  return function (value) {
+    if (value !== null && !Array.isArray(value)) {
+      throw new Error(`${fieldName} debe ser un arreglo.`);
     }
+    if (value == [] || value == null) {
+      this.setDataValue(fieldName, "");
+    } else {
+      this.setDataValue(fieldName, value.join('|'));
+    }
+  }
 }
 
 function getJson(fieldName) {
-    return function() {
-        const raw = this.getDataValue(fieldName);
+  return function () {
+    const raw = this.getDataValue(fieldName);
 
-        try {
-            return JSON.parse(raw);
-        } catch (e) {
-            return [];
-        }
+    try {
+      return JSON.parse(raw);
+    } catch (e) {
+      return [];
     }
+  }
 }
 
 function setJson(fieldName) {
-    return function(value) {
-        if(typeof value !== 'object' || value === null || Array.isArray(value) === false && Object.prototype.toString.call(value) !== '[object Object]') {
-            throw new Error(`El campo '${fieldName}' debe ser un array o un objeto válido.`);
-        }
-
-        this.setDataValue(fieldName, JSON.stringify(value));
+  return function (value) {
+    if (typeof value !== 'object' || value === null || Array.isArray(value) === false && Object.prototype.toString.call(value) !== '[object Object]') {
+      throw new Error(`El campo '${fieldName}' debe ser un array o un objeto válido.`);
     }
+
+    this.setDataValue(fieldName, JSON.stringify(value));
+  }
 }
 
 module.exports = HistorialMedico;

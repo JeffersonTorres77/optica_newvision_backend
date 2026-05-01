@@ -5,6 +5,10 @@ const VentaProducto = require('./VentaProducto');
 const VentaCashea = require('./VentaCashea');
 const VentaCasheaCuota = require('./VentaCasheaCuota');
 const Usuario = require('./Usuario');
+const VentaPagoAgrupado = require('./VentaPagoAgrupado');
+const JsonUtil = require('../utils/JsonUtil');
+const VentaConsulta = require('./VentaConsulta');
+const HistorialMedico = require('./HistorialMedico');
 
 const Venta = sequelize.define('Venta', {
   id: {
@@ -23,6 +27,10 @@ const Venta = sequelize.define('Venta', {
   },
   sede: {
     type: DataTypes.STRING(50),
+    allowNull: false
+  },
+  tipo_venta: {
+    type: DataTypes.STRING(30),
     allowNull: false
   },
   paciente_key: {
@@ -53,13 +61,39 @@ const Venta = sequelize.define('Venta', {
     type: DataTypes.STRING(255),
     allowNull: true
   },
+  empresa_rif: {
+    type: DataTypes.STRING(20),
+    allowNull: true
+  },
+  empresa_nombre: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  empresa_telefono: {
+    type: DataTypes.STRING(20),
+    allowNull: true
+  },
+  empresa_correo: {
+    type: DataTypes.STRING(200),
+    allowNull: true
+  },
+  empresa_direccion: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
   moneda: {
     type: DataTypes.STRING(70),
     allowNull: false
   },
-  tasa_moneda: {
-    type: DataTypes.FLOAT,
-    allowNull: false
+  tasas_actuales: {
+    type: DataTypes.JSON,
+    allowNull: false,
+    get() {
+      return JsonUtil.get(this, 'tasas_actuales');
+    },
+    set(value) {
+      JsonUtil.set(this, 'tasas_actuales', value);
+    }
   },
   forma_pago: {
     type: DataTypes.STRING(255),
@@ -103,7 +137,11 @@ const Venta = sequelize.define('Venta', {
   },
   asesor_id: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true
+  },
+  especialista_cedula: {
+    type: DataTypes.STRING(20),
+    allowNull: true
   },
   estatus_venta: {
     type: DataTypes.STRING(50),
@@ -138,6 +176,18 @@ Venta.hasOne(VentaCashea, {
   as: 'datos_cashea'
 });
 
+Venta.hasOne(VentaConsulta, {
+  foreignKey: 'venta_key',
+  sourceKey: 'venta_key',
+  as: 'venta_consulta'
+});
+
+Venta.hasOne(HistorialMedico, {
+  foreignKey: 'venta_key',
+  sourceKey: 'venta_key',
+  as: 'historia_medica'
+});
+
 Venta.hasMany(VentaCasheaCuota, {
   foreignKey: 'venta_key',
   sourceKey: 'venta_key',
@@ -148,6 +198,12 @@ Venta.hasMany(VentaPago, {
   foreignKey: 'venta_key',
   sourceKey: 'venta_key',
   as: 'array_pagos'
+});
+
+Venta.hasMany(VentaPagoAgrupado, {
+  foreignKey: 'venta_key',
+  sourceKey: 'venta_key',
+  as: 'array_pagos_agrupados'
 });
 
 Venta.hasMany(VentaProducto, {
@@ -168,4 +224,18 @@ Venta.belongsTo(Usuario, {
   as: 'asesor_user'
 });
 
+Venta.belongsTo(Usuario, {
+  foreignKey: 'especialista_cedula',
+  targetKey: 'cedula',
+  as: 'especialista_user'
+});
+
 module.exports = Venta;
+
+// Declarar relaciones circulares al final para evitar errores de inicialización
+const OrdenTrabajo = require('./OrdenTrabajo');
+Venta.hasOne(OrdenTrabajo, {
+  foreignKey: 'venta_key',
+  sourceKey: 'venta_key',
+  as: 'datos_orden_trabajo'
+});

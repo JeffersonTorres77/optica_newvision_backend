@@ -22,7 +22,7 @@ const Configuracion = sequelize.define('Configuracion', {
     },
     descripcion: {
         type: DataTypes.TEXT,
-        allowNull: true
+        allowNull: false
     }
 }, {
     tableName: 'configuraciones',

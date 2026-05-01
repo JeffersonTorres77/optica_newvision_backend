@@ -12,6 +12,10 @@ const VentaPago = sequelize.define('VentaPago', {
     type: DataTypes.STRING(100),
     allowNull: false
   },
+  numero_pago: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
   tipo: {
     type: DataTypes.STRING(100),
     allowNull: false
@@ -22,10 +26,6 @@ const VentaPago = sequelize.define('VentaPago', {
   },
   moneda_id: {
     type: DataTypes.STRING(20),
-    allowNull: false
-  },
-  tasa_moneda: {
-    type: DataTypes.FLOAT,
     allowNull: false
   },
   monto_moneda_base: {
@@ -42,6 +42,26 @@ const VentaPago = sequelize.define('VentaPago', {
   },
   bancoNombre: {
     type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  bancoReceptorCodigo: {
+    type: DataTypes.STRING(4),
+    allowNull: true
+  },
+  bancoReceptorNombre: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  bancoReceptor: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  cuentaReceptoraId: {
+    type: DataTypes.STRING(255),
+    allowNull: true
+  },
+  notaPago: {
+    type: DataTypes.TEXT,
     allowNull: true
   },
   created_by: {

@@ -1,1844 +1,3053 @@
 {
-	"info": {
-		"_postman_id": "dc33d7f1-5701-4a56-88b6-24e177d8ab80",
-		"name": "optica",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "13401550"
-	},
-	"item": [
-		{
-			"name": "pre-login",
-			"item": [
-				{
-					"name": "Login",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"sede\": \"guarenas\",\r\n    \"cedula\": \"25409904\",\r\n    \"password\": \"11554570\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/auth/login",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Cambio clave pre login",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"jeffersonjtorresu@gmail.com\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/auth/forgot-password",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"forgot-password"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Mi cuenta",
-			"item": [
-				{
-					"name": "Mi Cuenta - Modificar datos",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDkyMjM2NjEsImV4cCI6MTc0OTMxMDA2MX0.dFa5UE_hCVBPspNCdfjNSvZr-fg0CuJyRxXEjiYjjRA",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"correo\": \"jeffersonjtorresu@gmail.com\",\r\n    \"nombre\": \"Jefferson Torres\",\r\n    \"telefono\": \"04128977574\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/account/edit-profile",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"account",
-								"edit-profile"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Mi Cuenta - Cambiar clave - Enviar OTP",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMxMjYzMTYsImV4cCI6MTc2MzIxMjcxNn0.cqUUoKiAYEWbB41-yfJJNtogCBJCr7HC_lpL17TrfZI",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/account/change-password--send-otp",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"account",
-								"change-password--send-otp"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Mi Cuenta - Cambiar clave - Verificar OTP",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMxMjU5NjksImV4cCI6MTc2MzIxMjM2OX0.yb4lHUhj-MkX6VM9Lg-8s4Yh2OiDDhE-NEjTI2NEOvE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"otp\": \"887011\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/account/change-password--verify-otp",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"account",
-								"change-password--verify-otp"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Mi Cuenta - Cambiar clave - Cambiar clave",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMxMjU5NjksImV4cCI6MTc2MzIxMjM2OX0.yb4lHUhj-MkX6VM9Lg-8s4Yh2OiDDhE-NEjTI2NEOvE",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"otp\": \"887011\",\r\n    \"newPassword\": \"11554570\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/account/change-password--change-password",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"account",
-								"change-password--change-password"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Mi Cuenta - Cargar imagen",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMwNDU1OTAsImV4cCI6MTc2MzEzMTk5MH0.8ks-Y9zAKJVuKy2k1UixslzMm1LV3HaBvsR6YEJ6Oh4",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "imagen",
-									"description": "[type: File]",
-									"type": "file",
-									"src": "/C:/Users/Personal/OneDrive/Imágenes/1.png"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/account/upload-profile-image",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"account",
-								"upload-profile-image"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Mi Cuenta - Eliminar imagen",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMwNDU1OTAsImV4cCI6MTc2MzEzMTk5MH0.8ks-Y9zAKJVuKy2k1UixslzMm1LV3HaBvsR6YEJ6Oh4",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/account/remove-profile-image",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"account",
-								"remove-profile-image"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Configuraciones",
-			"item": [
-				{
-					"name": "Get Moneda base",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseURL}}/api/configuracion/moneda_base-get",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"configuracion",
-								"moneda_base-get"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Moneda base",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"monedaBase\": \"bolivar\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/configuracion/moneda_base-update",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"configuracion",
-								"moneda_base-update"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Usuarios",
-			"item": [
-				{
-					"name": "Usuarios - Get",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTM2Mjg2ODYsImV4cCI6MTc1MzcxNTA4Nn0.m3tCEhVkmXafTyohLpH4O5qEgmvradmbpnWOgvQAl1c",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/get-usuarios",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"get-usuarios"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Usuarios - Get - cedula",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDk4NjQxNTcsImV4cCI6MTc0OTk1MDU1N30.q1atvd47kFOOzct2GFeErSa5OxoZGLr7vUmZcE6dG7s",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/get-usuarios/25409904",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"get-usuarios",
-								"25409904"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Usuarios - Add",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTM2Mjg2ODYsImV4cCI6MTc1MzcxNTA4Nn0.m3tCEhVkmXafTyohLpH4O5qEgmvradmbpnWOgvQAl1c",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "// Registro completo\r\n{\r\n    \"rolId\": \"asesor-optico\",\r\n    \"cargoId\": \"asesor-optico-1\",\r\n    \"cedula\": \"11554570\",\r\n    \"nombre\": \"Heriberto Torres\",\r\n    \"email\": \"heriberto@gmail.com\",\r\n    \"phone\": \"04241738615\",\r\n    \"fechaRegistro\": \"1996-06-11\"\r\n}\r\n\r\n// Registro simple\r\n// {\r\n//     \"rolId\": \"asesor-optico\",\r\n//     \"cargoId\": \"asesor-optico-1\",\r\n//     \"representativeId\": \"11554570\",\r\n//     \"representativeName\": \"\",\r\n//     \"representativeEmail\": \"\",\r\n//     \"representativePhone\": \"\",\r\n//     \"representativeDate\": \"\"\r\n// }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/add-usuarios",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"add-usuarios"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Usuarios - Update",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDk4NjQxNTcsImV4cCI6MTc0OTk1MDU1N30.q1atvd47kFOOzct2GFeErSa5OxoZGLr7vUmZcE6dG7s",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"rolId\": \"admin\",\r\n    \"cargoId\": \"gerente\",\r\n    \"cedula\": \"25409904\",\r\n    \"nombre\": \"Jefferson Torres\",\r\n    \"email\": \"jeffersonjtorresu@gmail.com\",\r\n    \"phone\": \"04128977574\",\r\n    \"fechaRegistro\": \"1996-06-11\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/update-usuarios/25409904",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"update-usuarios",
-								"25409904"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Usuarios - Delete",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTM2Mjg2ODYsImV4cCI6MTc1MzcxNTA4Nn0.m3tCEhVkmXafTyohLpH4O5qEgmvradmbpnWOgvQAl1c",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/delete-usuarios/11554570",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"delete-usuarios",
-								"11554570"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Usuarios - Activar",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTAzODA5NTUsImV4cCI6MTc1MDQ2NzM1NX0.bg3ujC8FCcTxJWDEpeDQpmxheqBK1Ii17VNQJSjPXtU",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"estatus\": true\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/activar-usuarios/11554570",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"activar-usuarios",
-								"11554570"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Cargos",
-			"item": [
-				{
-					"name": "Cargos - Get",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDk4NjQxNTcsImV4cCI6MTc0OTk1MDU1N30.q1atvd47kFOOzct2GFeErSa5OxoZGLr7vUmZcE6dG7s",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/cargos-get",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"cargos-get"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Cargos - Get - id",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDkyMzY3MzAsImV4cCI6MTc0OTMyMzEzMH0.u7oU7l0J3aVxntT7_UhZDjcsGNBZRqrmRnjaPPvN_jI",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/cargos-get/adminsitrador",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"cargos-get",
-								"adminsitrador"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Roles",
-			"item": [
-				{
-					"name": "Roles - Get",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDk4NjQxNTcsImV4cCI6MTc0OTk1MDU1N30.q1atvd47kFOOzct2GFeErSa5OxoZGLr7vUmZcE6dG7s",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/roles-get",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"roles-get"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Roles - Get - id",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDkyMzY3MzAsImV4cCI6MTc0OTMyMzEzMH0.u7oU7l0J3aVxntT7_UhZDjcsGNBZRqrmRnjaPPvN_jI",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/roles-get/admin",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"roles-get",
-								"admin"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Tasas",
-			"item": [
-				{
-					"name": "Tasas - Get",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTE3NjQ5MjYsImV4cCI6MTc1MTg1MTMyNn0.4I9bCSkIbSOMxPdNYzs7N6-mARwgaUBYNFePwSAGWMM",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/tasas/",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"tasas",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Tasas - get tasas bcv",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDk4NjQxNTcsImV4cCI6MTc0OTk1MDU1N30.q1atvd47kFOOzct2GFeErSa5OxoZGLr7vUmZcE6dG7s",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/get-tasa-bcv/",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"get-tasa-bcv",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Tasas - Get - ID",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDk4NjQxNTcsImV4cCI6MTc0OTk1MDU1N30.q1atvd47kFOOzct2GFeErSa5OxoZGLr7vUmZcE6dG7s",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/tasas/dolar",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"tasas",
-								"dolar"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Tasas - Actualizar",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTE3NjQ5MjYsImV4cCI6MTc1MTg1MTMyNn0.4I9bCSkIbSOMxPdNYzs7N6-mARwgaUBYNFePwSAGWMM",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"valor\": 120\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/tasas-update/euro",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"tasas-update",
-								"euro"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Tasas - Actualizar con BCV",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTM1NTU2MzIsImV4cCI6MTc1MzY0MjAzMn0.ME93WQeOnB5CvkB6wCdV4BVQX4e0GcrSQl1LSyZSgcc",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/tasas-update-with-bcv",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"tasas-update-with-bcv"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Tasas - Actualizar con BCV - ID",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTM1NTU2MzIsImV4cCI6MTc1MzY0MjAzMn0.ME93WQeOnB5CvkB6wCdV4BVQX4e0GcrSQl1LSyZSgcc",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"rolId\": \"admin\",\r\n    \"cargoId\": \"gerente\",\r\n    \"representativeId\": \"25409904\",\r\n    \"representativeName\": \"Jefferson Torres\",\r\n    \"representativeEmail\": \"jeffersonjtorresu@gmail.com\",\r\n    \"representativePhone\": \"04128977574\",\r\n    \"representativeDate\": \"1996-06-11\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/tasas-update-with-bcv/euro",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"tasas-update-with-bcv",
-								"euro"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Tasas - Get History",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTEzMTI3OTMsImV4cCI6MTc1MTM5OTE5M30.OHTJJ4aT3FIZyM85lBgCHLmVuvj34jRkiG6av-qKz38",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/tasas-history/euro",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"tasas-history",
-								"euro"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Tasas - Rastreo automatico",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTE3NjQ5MjYsImV4cCI6MTc1MTg1MTMyNn0.4I9bCSkIbSOMxPdNYzs7N6-mARwgaUBYNFePwSAGWMM",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"rastrear_auto\": true\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/tasas-rastreo-automatico/euro",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"tasas-rastreo-automatico",
-								"euro"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Pacientes",
-			"item": [
-				{
-					"name": "Pacientes - Get",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTY2NTY1NTEsImV4cCI6MTc1Njc0Mjk1MX0.iwn4zgRsvOt56tGqi0YynWvW0Ve0Q41fNfIqIebBzpE",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/paciente-get/",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"paciente-get",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Pacientes - Get con ID",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTY0NTk5NDEsImV4cCI6MTc1NjU0NjM0MX0.MLdTduWPJh81vOS1_v1wvWNjvkq4CJwK9WYcxWEcV78",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/paciente-get/guarenas-25409904",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"paciente-get",
-								"guarenas-25409904"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Pacientes - Add",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTY2NTY1NTEsImV4cCI6MTc1Njc0Mjk1MX0.iwn4zgRsvOt56tGqi0YynWvW0Ve0Q41fNfIqIebBzpE",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"informacionPersonal\": {\r\n        \"esMenorSinCedula\": true, // true - false - null\r\n        \"nombreCompleto\": \"Ruben Martinez\",\r\n        \"cedula\": \"25409904\",\r\n        \"telefono\": \"04123920817\",\r\n        \"email\": \"rubemm18@gmail.com\",\r\n        \"fechaNacimiento\": \"2025-07-01\",\r\n        \"ocupacion\": \"fgdfgdf\",\r\n        \"genero\": \"m\",\r\n        \"direccion\": \"Las rosas, conj res, country villas\"\r\n    },\r\n    \"redesSociales\": [\r\n        {\r\n            \"platform\": \"Instagram\",\r\n            \"username\": \"asdadasda\"\r\n        }\r\n    ],\r\n    \"historiaClinica\": {\r\n        \"usuarioLentes\": \"Sí\",\r\n        \"fotofobia\": \"No\",\r\n        \"usoDispositivo\": \"Si, 3 a 6 horas\",\r\n        \"traumatismoOcular\": \"No\",\r\n        \"traumatismoOcularDescripcion\": null,\r\n        \"cirugiaOcular\": \"Sí\",\r\n        \"cirugiaOcularDescripcion\": \"catarata\",\r\n        \"alergicoA\": null,\r\n        \"antecedentesPersonales\": null,\r\n        \"antecedentesFamiliares\": [\r\n            \"Diabetes\"\r\n        ],\r\n        \"patologias\": [\r\n            \"Astigmatismo\",\r\n            \"Miopía\"\r\n        ],\r\n        \"patologiaOcular\": null\r\n    }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/paciente-add",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"paciente-add"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Pacientes - Update",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTY0NTk5NDEsImV4cCI6MTc1NjU0NjM0MX0.MLdTduWPJh81vOS1_v1wvWNjvkq4CJwK9WYcxWEcV78",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"informacionPersonal\": {\r\n        \"esMenorSinCedula\": true, // true - false - null\r\n        \"nombreCompleto\": \"Jefferson Torres\",\r\n        \"cedula\": \"25409904\",\r\n        \"telefono\": \"04241738615\",\r\n        \"email\": \"jefersonugas@gmail.com\",\r\n        \"fechaNacimiento\": \"1996-06-11\",\r\n        \"ocupacion\": \"Ingeniero de Sistemas\",\r\n        \"genero\": \"m\",\r\n        \"direccion\": \"Guatire, Castillejo, en una casa.\"\r\n    },\r\n    \"redesSociales\": [\r\n        {\r\n            \"platform\": \"Facebook\",\r\n            \"username\": \"maria.gonzalez\"\r\n        },\r\n        {\r\n            \"platform\": \"Instagram\",\r\n            \"username\": \"@maria.g\"\r\n        }\r\n    ],\r\n    \"historiaClinica\": {\r\n        \"usuarioLentes\": \"Si\",\r\n        \"fotofobia\": null,\r\n        \"usoDispositivo\": \"Si, 3 a 6 horas\",\r\n        \"traumatismoOcular\": null,\r\n        \"traumatismoOcularDescripcion\": null,\r\n        \"cirugiaOcular\": null,\r\n        \"cirugiaOcularDescripcion\": null,\r\n        \"alergicoA\": null,\r\n        \"antecedentesPersonales\": [],\r\n        \"antecedentesFamiliares\": [],\r\n        \"patologias\": [\"a\", \"b\", \"c\"],\r\n        \"patologiaOcular\": []\r\n    }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/paciente-update/a1ce1e1fb5b77d7aff14e2847501b859",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"paciente-update",
-								"a1ce1e1fb5b77d7aff14e2847501b859"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Pacientes - Delete",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTE4MjQ0ODksImV4cCI6MTc1MTkxMDg4OX0.mSiWLvQ1MEdL7UT39euFECXLFx_W0U5-hIUhbvyie0Q",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/paciente-delete/guarenas-25409904",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"paciente-delete",
-								"guarenas-25409904"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Historial Medico",
-			"item": [
-				{
-					"name": "Historial Medico - Get",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTY3NDM5NzcsImV4cCI6MTc1NjgzMDM3N30.c1WSYN7oi86Qe0tgyVriuqAK97v-LUBZzJOeVusATtQ",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/historial-medico-all/",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"historial-medico-all",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Historial Medico - Get con ID",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTQwNjA4MTYsImV4cCI6MTc1NDE0NzIxNn0.Tkqiiwcl7f6M17JiJ5PBgVVuHNdCgizoMbDz5r9XiHg",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/historial-medico-all/H-20250801-001",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"historial-medico-all",
-								"H-20250801-001"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Historial Medico - Get Paciente",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTQxMTEwMzEsImV4cCI6MTc1NDE5NzQzMX0.cJ5hzM-u6Jg66tvLRMQuphlmgXD7qF6l7Z-uOjGr-_o",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/historial-medico-paciente/guarenas-25409904",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"historial-medico-paciente",
-								"guarenas-25409904"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Historial Medico - Add",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTQwNjA4MTYsImV4cCI6MTc1NDE0NzIxNn0.Tkqiiwcl7f6M17JiJ5PBgVVuHNdCgizoMbDz5r9XiHg",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"pacienteId\": \"guarenas-25409904\",\r\n\r\n  \"datosConsulta\": {\r\n    \"motivo\": [\"Fatiga visual\", \"Dificultad visual cerca\"],\r\n    \"otroMotivo\": \"\",\r\n    \"tipoCristalActual\": \"Alguno\",\r\n    \"fechaUltimaGraduacion\": \"2025-08-10\",\r\n    \"medico\": \"Dr. José Martínez\"\r\n  },\r\n\r\n  \"examenOcular\": {\r\n    \"lensometria\": {\r\n      \"esf_od\": \"+1.00\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"av_lejos_od\": \"20/30\",\r\n      \"av_cerca_od\": \"J3\",\r\n      \"av_lejos_bi\": \"20/25\",\r\n      \"av_bi\": \"J2\",\r\n      \"esf_oi\": \"+1.25\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"av_lejos_oi\": \"20/30\",\r\n      \"av_cerca_oi\": \"J3\",\r\n      \"av_cerca_bi\": \"J2\"\r\n    },\r\n    \"refraccion\": {\r\n      \"esf_od\": \"+1.25\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"avccl_od\": \"20/25\",\r\n      \"avccc_od\": \"J2\",\r\n      \"avccl_bi\": \"20/20\",\r\n      \"avccc_bi\": \"J1\",\r\n      \"esf_oi\": \"+1.50\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"avccl_oi\": \"20/25\",\r\n      \"avccc_oi\": \"J2\"\r\n    },\r\n    \"refraccionFinal\": {\r\n      \"esf_od\": \"+1.25\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"alt_od\": \"3\",\r\n      \"dp_od\": \"64\",\r\n      \"esf_oi\": \"+1.50\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"alt_oi\": \"3\",\r\n      \"dp_oi\": \"64\"\r\n    },\r\n    \"avsc_avae_otros\": {\r\n      \"avsc_od\": \"20/25\",\r\n      \"avae_od\": \"J2\",\r\n      \"otros_od\": \"\",\r\n      \"avsc_oi\": \"20/25\",\r\n      \"avae_oi\": \"J2\",\r\n      \"otros_oi\": \"\",\r\n      \"avsc_bi\": \"20/20\"\r\n    }\r\n  },\r\n\r\n  \"diagnosticoTratamiento\": {\r\n    \"diagnostico\": \"Presbicia con astigmatismo leve\",\r\n    \"tratamiento\": \"Uso de lentes progresivos digitales\"\r\n  },\r\n\r\n  \"recomendaciones\": [\r\n    {\r\n      \"cristal\": [\"Progresivo digital intermedio\"],\r\n      \"material\": [\"POLICARBONATO\", \"FOTOCROMATICO_BLUE_BLOCK\", \"Trivex\"],\r\n      \"montura\": \"Acetato\",\r\n      \"cristalSugerido\": \"Progresivo digital amplio\",\r\n      \"observaciones\": \"Se recomienda uso en ambientes con luz artificial prolongada\"\r\n    }\r\n  ],\r\n\r\n  \"conformidad\": {\r\n    \"notaConformidad\": \"PACIENTE CONFORME CON LA EXPLICACION REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.\"\r\n  }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/historial-medico-add",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"historial-medico-add"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Historial Medico - Update",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTQwNjA4MTYsImV4cCI6MTc1NDE0NzIxNn0.Tkqiiwcl7f6M17JiJ5PBgVVuHNdCgizoMbDz5r9XiHg",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"datosConsulta\": {\r\n    \"motivo\": [\"asdadasd\", \"Dificultad visual cerca\"],\r\n    \"otroMotivo\": \"\",\r\n    \"tipoCristalActual\": \"Alguno\",\r\n    \"fechaUltimaGraduacion\": \"2025-08-10\",\r\n    \"medico\": \"Dr. José Martínez\",\r\n  },\r\n\r\n  \"examenOcular\": {\r\n    \"lensometria\": {\r\n      \"esf_od\": \"+1.00\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"av_lejos_od\": \"20/30\",\r\n      \"av_cerca_od\": \"J3\",\r\n      \"av_lejos_bi\": \"20/25\",\r\n      \"av_bi\": \"J2\",\r\n      \"esf_oi\": \"+1.25\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"av_lejos_oi\": \"20/30\",\r\n      \"av_cerca_oi\": \"J3\",\r\n      \"av_cerca_bi\": \"J2\"\r\n    },\r\n    \"refraccion\": {\r\n      \"esf_od\": \"+1.25\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"avccl_od\": \"20/25\",\r\n      \"avccc_od\": \"J2\",\r\n      \"avccl_bi\": \"20/20\",\r\n      \"avccc_bi\": \"J1\",\r\n      \"esf_oi\": \"+1.50\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"avccl_oi\": \"20/25\",\r\n      \"avccc_oi\": \"J2\"\r\n    },\r\n    \"refraccionFinal\": {\r\n      \"esf_od\": \"+1.25\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"alt_od\": \"3\",\r\n      \"dp_od\": \"64\",\r\n      \"esf_oi\": \"+1.50\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"alt_oi\": \"3\",\r\n      \"dp_oi\": \"64\"\r\n    },\r\n    \"avsc_avae_otros\": {\r\n      \"avsc_od\": \"20/25\",\r\n      \"avae_od\": \"J2\",\r\n      \"otros_od\": \"\",\r\n      \"avsc_oi\": \"20/25\",\r\n      \"avae_oi\": \"J2\",\r\n      \"otros_oi\": \"\",\r\n      \"avsc_bi\": \"20/20\"\r\n    }\r\n  },\r\n\r\n  \"diagnosticoTratamiento\": {\r\n    \"diagnostico\": \"Presbicia con astigmatismo leve\",\r\n    \"tratamiento\": \"Uso de lentes progresivos digitales\"\r\n  },\r\n\r\n  \"recomendaciones\": [\r\n    {\r\n      \"cristal\": [\"Progresivo digital intermedio\"],\r\n      \"material\": [\"POLICARBONATO\", \"FOTOCROMATICO_BLUE_BLOCK\", \"Trivex\"],\r\n      \"montura\": \"Acetato\",\r\n      \"cristalSugerido\": \"Progresivo digital amplio\",\r\n      \"observaciones\": \"Se recomienda uso en ambientes con luz artificial prolongada\"\r\n    }\r\n  ],\r\n\r\n  \"conformidad\": {\r\n    \"notaConformidad\": \"PACIENTE CONFORME CON LA EXPLICACION REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.\",\r\n  }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/historial-medico-update/H-20250801-001",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"historial-medico-update",
-								"H-20250801-001"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Historial Medico - Delete",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTQwNjA4MTYsImV4cCI6MTc1NDE0NzIxNn0.Tkqiiwcl7f6M17JiJ5PBgVVuHNdCgizoMbDz5r9XiHg",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/historial-medico-delete/H-20250801-001",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"historial-medico-delete",
-								"H-20250801-001"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Productos",
-			"item": [
-				{
-					"name": "Get",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/producto-get",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"producto-get"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get categorias",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTc5NDA1MDAsImV4cCI6MTc1ODAyNjkwMH0.zwZuwFu9P1qCzEUrhMN24A16eeS9i12Im7MlwZIQEk4",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/categorias-get",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"categorias-get"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "nombre",
-									"value": "Producto 6",
-									"type": "text"
-								},
-								{
-									"key": "marca",
-									"value": "Marca Generica 1",
-									"type": "text"
-								},
-								{
-									"key": "color",
-									"value": "Azul",
-									"type": "text"
-								},
-								{
-									"key": "material",
-									"value": "Plastico",
-									"type": "text"
-								},
-								{
-									"key": "proveedor",
-									"value": "Pepsi",
-									"type": "text"
-								},
-								{
-									"key": "categoria",
-									"value": "Lentes",
-									"type": "text"
-								},
-								{
-									"key": "modelo",
-									"value": "Modelo de prueba",
-									"type": "text"
-								},
-								{
-									"key": "stock",
-									"value": "5",
-									"type": "text"
-								},
-								{
-									"key": "precio",
-									"value": "5",
-									"type": "text"
-								},
-								{
-									"key": "aplicaIva",
-									"value": "0",
-									"type": "text"
-								},
-								{
-									"key": "moneda",
-									"value": "euro",
-									"description": "Ya no es necesaria",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "activo",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "descripcion",
-									"value": "Descripcion generica de muestra",
-									"type": "text"
-								},
-								{
-									"key": "imagen",
-									"type": "file",
-									"src": [],
-									"disabled": true
-								}
-							]
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/producto-add",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"producto-add"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "nombre",
-									"value": "Producto Chevere 6",
-									"type": "text"
-								},
-								{
-									"key": "marca",
-									"value": "Marca Generica 1",
-									"type": "text"
-								},
-								{
-									"key": "color",
-									"value": "Azul",
-									"type": "text"
-								},
-								{
-									"key": "material",
-									"value": "Plastico",
-									"type": "text"
-								},
-								{
-									"key": "proveedor",
-									"value": "Pepsi",
-									"type": "text"
-								},
-								{
-									"key": "categoria",
-									"value": "Lentes",
-									"type": "text"
-								},
-								{
-									"key": "modelo",
-									"value": "Modelo de prueba",
-									"type": "text"
-								},
-								{
-									"key": "stock",
-									"value": "5",
-									"type": "text"
-								},
-								{
-									"key": "precio",
-									"value": "10",
-									"type": "text"
-								},
-								{
-									"key": "aplicaIva",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "moneda",
-									"value": "euro",
-									"description": "Ya no es necesaria",
-									"type": "text",
-									"disabled": true
-								},
-								{
-									"key": "activo",
-									"value": "true",
-									"type": "text"
-								},
-								{
-									"key": "descripcion",
-									"value": "Descripcion generica de muestra",
-									"type": "text"
-								},
-								{
-									"key": "imagen",
-									"type": "file",
-									"src": "/C:/Users/Personal/OneDrive/Imágenes/2-25632_m.jpg",
-									"disabled": true
-								}
-							]
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/producto-update/9",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"producto-update",
-								"9"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTcxOTQxMDcsImV4cCI6MTc1NzI4MDUwN30.iyeNnGw0EX7_h09FPyEXMLoBEuwdDa2mM9KrhEAsB40",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{baseURL}}/api/producto-delete/1",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"producto-delete",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "remove-image",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjI5Njg3NDgsImV4cCI6MTc2MzA1NTE0OH0.SUZlV7Ui-JQyWa_nnF1WZPFOvGvSY6C4WSovDET34Ng",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"url": {
-							"raw": "{{baseURL}}/api/producto-remove-image/5",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"producto-remove-image",
-								"5"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Ventas",
-			"item": [
-				{
-					"name": "Get",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjQ0Mzk5MTIsImV4cCI6MTc2NDUyNjMxMn0.tUOzCDpqlLhs03gCfARUhgvfaUI8LY3FuBdWB_I_SvA",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseURL}}/api/ventas-get",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"ventas-get"
-							],
-							"query": [
-								{
-									"key": "busquedaGeneral",
-									"value": "V-000042",
-									"description": "Busca en cedula, nombre y numero de venta o recibo\n\nR-00015\nRuben\n25409904\n",
-									"disabled": true
-								},
-								{
-									"key": "fechaDesde",
-									"value": "2025-11-28",
-									"description": "Fecha desde",
-									"disabled": true
-								},
-								{
-									"key": "fechaHasta",
-									"value": "2025-11-29",
-									"description": "Fecha hasta",
-									"disabled": true
-								},
-								{
-									"key": "asesor",
-									"value": "27",
-									"description": "Asesor id (usuario)",
-									"disabled": true
-								},
-								{
-									"key": "especialista",
-									"value": "47",
-									"description": "No se",
-									"disabled": true
-								},
-								{
-									"key": "estado",
-									"value": "completada",
-									"description": "Estado de la venta",
-									"disabled": true
-								},
-								{
-									"key": "formaPago",
-									"value": "cashea",
-									"description": "Forma de pago",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get total",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjQ0Mzk5MTIsImV4cCI6MTc2NDUyNjMxMn0.tUOzCDpqlLhs03gCfARUhgvfaUI8LY3FuBdWB_I_SvA",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{baseURL}}/api/ventas-get-total",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"ventas-get-total"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjQ0Mzk5MTIsImV4cCI6MTc2NDUyNjMxMn0.tUOzCDpqlLhs03gCfARUhgvfaUI8LY3FuBdWB_I_SvA",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n   \"venta\":{\r\n      \"fecha\":\"2025-11-21T02:17:31.703Z\",\r\n      \"estado\":\"completada\",\r\n      \"formaPago\":\"cashea\",\r\n      \"moneda\":\"dolar\",\r\n      \"observaciones\":null,\r\n      \"impuesto\":16\r\n   },\r\n   \"totales\":{\r\n      \"subtotal\":713.36,\r\n      \"descuento\":71.336,\r\n      \"iva\":94.93,\r\n      \"total\":642.02,\r\n      \"totalPagado\":513.61\r\n   },\r\n   \"cliente\":{\r\n      \"tipo\":\"paciente\", //(Cuando es tipo paciente, debes buscar por cedula la ultima historia medica y retornarla en el api del get)\r\n      \"informacion\":{\r\n         \"tipoPersona\":\"natural\",\r\n         \"nombreCompleto\":\"Jesus Martinez\",\r\n         \"cedula\":\"267758784\",\r\n         \"telefono\":\"04142134565\",\r\n         \"email\":\"jesusmc@gmail.com\"\r\n      }\r\n   },\r\n   \"asesor\":{\r\n      \"id\":4\r\n   },\r\n   \"productos\":[\r\n      {\r\n         \"productoId\":\"5\",\r\n         \"cantidad\":1,\r\n         \"moneda\":\"euro\"\r\n      },\r\n      {\r\n         \"productoId\":\"6\",\r\n         \"cantidad\":1,\r\n         \"moneda\":\"euro\"\r\n      }\r\n   ],\r\n   \"metodosPago\":[\r\n      {\r\n         \"tipo\":\"efectivo\",\r\n         \"monto\":500,\r\n         \"moneda\":\"dolar\",\r\n         \"referencia\":null,\r\n         \"bancoCodigo\":null,\r\n         \"bancoNombre\":null\r\n      },\r\n      {\r\n         \"tipo\":\"debito\",\r\n         \"monto\":3287.88,\r\n         \"moneda\":\"bolivar\",\r\n         \"referencia\":null,\r\n         \"bancoCodigo\":null,\r\n         \"bancoNombre\":null\r\n      }\r\n   ],\r\n   \"formaPago\":{\r\n      \"tipo\":\"cashea\",\r\n      \"nivel\":\"nivel3\",\r\n      \"montoTotal\":642.02,\r\n      \"montoInicial\":256.81,\r\n      \"cantidadCuotas\":\"6\",\r\n      \"montoPorCuota\":64.2,\r\n      \"cuotasAdelantadas\":4,\r\n      \"montoAdelantado\":256.8,\r\n      \"totalPagadoAhora\":513.61,\r\n      \"deudaPendiente\":128.40999999999997,\r\n      \"cuotas\":[\r\n         {\r\n            \"numero\":1,\r\n            \"fecha\":\"jue, 04 de diciembre de 2025\",\r\n            \"monto\":64.2,\r\n            \"pagada\":false,\r\n            \"seleccionada\":true\r\n         },\r\n         {\r\n            \"numero\":2,\r\n            \"fecha\":\"jue, 18 de diciembre de 2025\",\r\n            \"monto\":64.2,\r\n            \"pagada\":false,\r\n            \"seleccionada\":true\r\n         },\r\n         {\r\n            \"numero\":3,\r\n            \"fecha\":\"jue, 01 de enero de 2026\",\r\n            \"monto\":64.2,\r\n            \"pagada\":false,\r\n            \"seleccionada\":true\r\n         },\r\n         {\r\n            \"numero\":4,\r\n            \"fecha\":\"jue, 15 de enero de 2026\",\r\n            \"monto\":64.2,\r\n            \"pagada\":false,\r\n            \"seleccionada\":true\r\n         },\r\n         {\r\n            \"numero\":5,\r\n            \"fecha\":\"jue, 29 de enero de 2026\",\r\n            \"monto\":64.2,\r\n            \"pagada\":false,\r\n            \"seleccionada\":false\r\n         },\r\n         {\r\n            \"numero\":6,\r\n            \"fecha\":\"jue, 12 de febrero de 2026\",\r\n            \"monto\":64.2,\r\n            \"pagada\":false,\r\n            \"seleccionada\":false\r\n         }\r\n      ]\r\n   },\r\n   \"auditoria\":{\r\n      \"usuarioCreacion\":5,\r\n      \"fechaCreacion\":\"2025-11-21T02:17:31.703Z\"\r\n   }\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/ventas-add",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"ventas-add"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Anular",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjM5Mjg3OTgsImV4cCI6MTc2NDAxNTE5OH0.u69d1h5j2WvXDBuypMlsdmuI2gWhvLj-ch19sT_IDUU",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"motivo_cancelacion\": \"Prueba de sistema\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/ventas-anular/587e0345-769f-41c1-83ae-26cc0d98e19c",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"ventas-anular",
-								"587e0345-769f-41c1-83ae-26cc0d98e19c"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Abonar",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjM5Mjg3OTgsImV4cCI6MTc2NDAxNTE5OH0.u69d1h5j2WvXDBuypMlsdmuI2gWhvLj-ch19sT_IDUU",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"tipo\":\"efectivo\",\r\n    \"monto\":6.2,\r\n    \"moneda\":\"euro\",\r\n    \"referencia\":null,\r\n    \"bancoCodigo\":null,\r\n    \"bancoNombre\":null\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/api/ventas-abonar/ec1a0e90-70f1-4de0-b089-0fb3ff6a6c2d",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"api",
-								"ventas-abonar",
-								"ec1a0e90-70f1-4de0-b089-0fb3ff6a6c2d"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Obtener datos de la sesion",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTE4MjQ0ODksImV4cCI6MTc1MTkxMDg4OX0.mSiWLvQ1MEdL7UT39euFECXLFx_W0U5-hIUhbvyie0Q",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{baseURL}}/api/auth/get_data",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"api",
-						"auth",
-						"get_data"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Sedes - Get",
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseURL}}/api/sedes-get",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"api",
-						"sedes-get"
-					]
-				}
-			},
-			"response": []
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"requests": {},
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"requests": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "baseURL",
-			"value": "http://localhost:3000"
-		},
-		{
-			"key": "baseURL2",
-			"value": ""
-		},
-		{
-			"key": "baseURL3",
-			"value": ""
-		}
-	]
+  "info": {
+    "_postman_id": "a8a7c13d-ed37-4c8a-a8b6-1cf844e2b9d3",
+    "name": "optica",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "13401550"
+  },
+  "item": [
+    {
+      "name": "pre-login",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"sede\": \"guatire\",\r\n    \"cedula\": \"25409904\",\r\n    \"password\": \"11554570\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cambio clave pre login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"jeffersonjtorresu@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/forgot-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Mi cuenta",
+      "item": [
+        {
+          "name": "Mi Cuenta - Modificar datos",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDkyMjM2NjEsImV4cCI6MTc0OTMxMDA2MX0.dFa5UE_hCVBPspNCdfjNSvZr-fg0CuJyRxXEjiYjjRA",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"correo\": \"jeffersonjtorresu@gmail.com\",\r\n    \"nombre\": \"Jefferson Torres\",\r\n    \"telefono\": \"04128977574\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/account/edit-profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "account",
+                "edit-profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mi Cuenta - Cambiar clave - Enviar OTP",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMxMjYzMTYsImV4cCI6MTc2MzIxMjcxNn0.cqUUoKiAYEWbB41-yfJJNtogCBJCr7HC_lpL17TrfZI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/account/change-password--send-otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "account",
+                "change-password--send-otp"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mi Cuenta - Cambiar clave - Verificar OTP",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMxMjU5NjksImV4cCI6MTc2MzIxMjM2OX0.yb4lHUhj-MkX6VM9Lg-8s4Yh2OiDDhE-NEjTI2NEOvE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"otp\": \"887011\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/account/change-password--verify-otp",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "account",
+                "change-password--verify-otp"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mi Cuenta - Cambiar clave - Cambiar clave",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMxMjU5NjksImV4cCI6MTc2MzIxMjM2OX0.yb4lHUhj-MkX6VM9Lg-8s4Yh2OiDDhE-NEjTI2NEOvE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"otp\": \"887011\",\r\n    \"newPassword\": \"11554570\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/account/change-password--change-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "account",
+                "change-password--change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mi Cuenta - Cargar imagen",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMwNDU1OTAsImV4cCI6MTc2MzEzMTk5MH0.8ks-Y9zAKJVuKy2k1UixslzMm1LV3HaBvsR6YEJ6Oh4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "imagen",
+                  "description": "[type: File]",
+                  "type": "file",
+                  "src": "/C:/Users/Personal/OneDrive/ImÃ¡genes/1.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/account/upload-profile-image",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "account",
+                "upload-profile-image"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mi Cuenta - Eliminar imagen",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMwNDU1OTAsImV4cCI6MTc2MzEzMTk5MH0.8ks-Y9zAKJVuKy2k1UixslzMm1LV3HaBvsR6YEJ6Oh4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/account/remove-profile-image",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "account",
+                "remove-profile-image"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Configuraciones",
+      "item": [
+        {
+          "name": "Get",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Costo Consultas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/costoConsultas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "costoConsultas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Correos notificacion",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/correos_notificacion-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "correos_notificacion-get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Correos notificacion",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"correo_notificacion_1\": \"correo1@dominio.com\",\r\n    \"correo_notificacion_2\": \"correo2@dominio.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/correos_notificacion-update",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "correos_notificacion-update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Moneda base",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/moneda_base-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "moneda_base-get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Moneda base",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"monedaBase\": \"bolivar\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/moneda_base-update",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "moneda_base-update"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "Usuarios - Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTM2Mjg2ODYsImV4cCI6MTc1MzcxNTA4Nn0.m3tCEhVkmXafTyohLpH4O5qEgmvradmbpnWOgvQAl1c",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/get-usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "get-usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuarios - Get - cedula",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDk4NjQxNTcsImV4cCI6MTc0OTk1MDU1N30.q1atvd47kFOOzct2GFeErSa5OxoZGLr7vUmZcE6dG7s",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/get-usuarios/25409904",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "get-usuarios",
+                "25409904"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuarios - Add",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTM2Mjg2ODYsImV4cCI6MTc1MzcxNTA4Nn0.m3tCEhVkmXafTyohLpH4O5qEgmvradmbpnWOgvQAl1c",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "// Registro completo\r\n{\r\n    \"rolId\": \"asesor-optico\",\r\n    \"cargoId\": \"asesor-optico-1\",\r\n    \"cedula\": \"11554570\",\r\n    \"nombre\": \"Heriberto Torres\",\r\n    \"email\": \"heriberto@gmail.com\",\r\n    \"phone\": \"04241738615\",\r\n    \"fechaRegistro\": \"1996-06-11\"\r\n}\r\n\r\n// Registro simple\r\n// {\r\n//     \"rolId\": \"asesor-optico\",\r\n//     \"cargoId\": \"asesor-optico-1\",\r\n//     \"representativeId\": \"11554570\",\r\n//     \"representativeName\": \"\",\r\n//     \"representativeEmail\": \"\",\r\n//     \"representativePhone\": \"\",\r\n//     \"representativeDate\": \"\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/add-usuarios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "add-usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuarios - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDk4NjQxNTcsImV4cCI6MTc0OTk1MDU1N30.q1atvd47kFOOzct2GFeErSa5OxoZGLr7vUmZcE6dG7s",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"rolId\": \"admin\",\r\n    \"cargoId\": \"gerente\",\r\n    \"cedula\": \"25409904\",\r\n    \"nombre\": \"Jefferson Torres\",\r\n    \"email\": \"jeffersonjtorresu@gmail.com\",\r\n    \"phone\": \"04128977574\",\r\n    \"fechaRegistro\": \"1996-06-11\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/update-usuarios/25409904",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "update-usuarios",
+                "25409904"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuarios - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTM2Mjg2ODYsImV4cCI6MTc1MzcxNTA4Nn0.m3tCEhVkmXafTyohLpH4O5qEgmvradmbpnWOgvQAl1c",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/delete-usuarios/11554570",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "delete-usuarios",
+                "11554570"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Usuarios - Activar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTAzODA5NTUsImV4cCI6MTc1MDQ2NzM1NX0.bg3ujC8FCcTxJWDEpeDQpmxheqBK1Ii17VNQJSjPXtU",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"estatus\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/activar-usuarios/11554570",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "activar-usuarios",
+                "11554570"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cargos",
+      "item": [
+        {
+          "name": "Cargos - Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDk4NjQxNTcsImV4cCI6MTc0OTk1MDU1N30.q1atvd47kFOOzct2GFeErSa5OxoZGLr7vUmZcE6dG7s",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cargos-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cargos-get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cargos - Get - id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDkyMzY3MzAsImV4cCI6MTc0OTMyMzEzMH0.u7oU7l0J3aVxntT7_UhZDjcsGNBZRqrmRnjaPPvN_jI",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/cargos-get/adminsitrador",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cargos-get",
+                "adminsitrador"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Roles",
+      "item": [
+        {
+          "name": "Roles - Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDk4NjQxNTcsImV4cCI6MTc0OTk1MDU1N30.q1atvd47kFOOzct2GFeErSa5OxoZGLr7vUmZcE6dG7s",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/roles-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles-get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Roles - Get - id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDkyMzY3MzAsImV4cCI6MTc0OTMyMzEzMH0.u7oU7l0J3aVxntT7_UhZDjcsGNBZRqrmRnjaPPvN_jI",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/roles-get/admin",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "roles-get",
+                "admin"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tasas",
+      "item": [
+        {
+          "name": "Tasas - Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTE3NjQ5MjYsImV4cCI6MTc1MTg1MTMyNn0.4I9bCSkIbSOMxPdNYzs7N6-mARwgaUBYNFePwSAGWMM",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tasas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tasas",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tasas - get tasas bcv",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDk4NjQxNTcsImV4cCI6MTc0OTk1MDU1N30.q1atvd47kFOOzct2GFeErSa5OxoZGLr7vUmZcE6dG7s",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/get-tasa-bcv/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "get-tasa-bcv",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tasas - Get - ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NDk4NjQxNTcsImV4cCI6MTc0OTk1MDU1N30.q1atvd47kFOOzct2GFeErSa5OxoZGLr7vUmZcE6dG7s",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tasas/dolar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tasas",
+                "dolar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tasas - Actualizar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTE3NjQ5MjYsImV4cCI6MTc1MTg1MTMyNn0.4I9bCSkIbSOMxPdNYzs7N6-mARwgaUBYNFePwSAGWMM",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"valor\": 120\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tasas-update/euro",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tasas-update",
+                "euro"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tasas - Actualizar con BCV",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTM1NTU2MzIsImV4cCI6MTc1MzY0MjAzMn0.ME93WQeOnB5CvkB6wCdV4BVQX4e0GcrSQl1LSyZSgcc",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tasas-update-with-bcv",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tasas-update-with-bcv"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tasas - Actualizar con BCV - ID",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTM1NTU2MzIsImV4cCI6MTc1MzY0MjAzMn0.ME93WQeOnB5CvkB6wCdV4BVQX4e0GcrSQl1LSyZSgcc",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"rolId\": \"admin\",\r\n    \"cargoId\": \"gerente\",\r\n    \"representativeId\": \"25409904\",\r\n    \"representativeName\": \"Jefferson Torres\",\r\n    \"representativeEmail\": \"jeffersonjtorresu@gmail.com\",\r\n    \"representativePhone\": \"04128977574\",\r\n    \"representativeDate\": \"1996-06-11\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tasas-update-with-bcv/euro",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tasas-update-with-bcv",
+                "euro"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tasas - Get History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTEzMTI3OTMsImV4cCI6MTc1MTM5OTE5M30.OHTJJ4aT3FIZyM85lBgCHLmVuvj34jRkiG6av-qKz38",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tasas-history/euro",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tasas-history",
+                "euro"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Tasas - Rastreo automatico",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTE3NjQ5MjYsImV4cCI6MTc1MTg1MTMyNn0.4I9bCSkIbSOMxPdNYzs7N6-mARwgaUBYNFePwSAGWMM",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"rastrear_auto\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tasas-rastreo-automatico/euro",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "tasas-rastreo-automatico",
+                "euro"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pacientes",
+      "item": [
+        {
+          "name": "Pacientes - Get",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/paciente-get/d3d9446802a44259755d38e6d163e820",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "paciente-get",
+                "d3d9446802a44259755d38e6d163e820"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pacientes - Get con ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjY1MjUyOTksImV4cCI6MTc2NjYxMTY5OX0.Q4lBb3NxIrub9I0x7JuEmkXBbOdz1roTkJJyshlIjjU",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTY0NTk5NDEsImV4cCI6MTc1NjU0NjM0MX0.MLdTduWPJh81vOS1_v1wvWNjvkq4CJwK9WYcxWEcV78",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/paciente-get/d3d9446802a44259755d38e6d163e820",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "paciente-get",
+                "d3d9446802a44259755d38e6d163e820"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pacientes - Add",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"informacionPersonal\": {\r\n        \"esMenorSinCedula\": null,\r\n        \"nombreCompleto\": \"Blanca Castro\",\r\n        \"cedula\": \"14569321\",\r\n        \"telefono\": \"04123920817\",\r\n        \"email\": \"rubemm18@gmail.com\",\r\n        \"fechaNacimiento\": \"1928-06-07\",\r\n        \"ocupacion\": \"Maestra\",\r\n        \"genero\": \"f\",\r\n        \"direccion\": \"Castillejo\"\r\n    },\r\n    \"redesSociales\": [],\r\n    \"informacionEmpresa\": null,\r\n    \"historiaClinica\": {\r\n        \"usuarioLentes\": \"SÃ­\",\r\n        \"fotofobia\": \"No\",\r\n        \"usoDispositivo\": \"SÃ­, 3 a 6 horas\",\r\n        \"traumatismoOcular\": \"SÃ­\",\r\n        \"traumatismoOcularDescripcion\": \"golpe en ojo izquierdo por caida\",\r\n        \"cirugiaOcular\": \"No\",\r\n        \"cirugiaOcularDescripcion\": \"\",\r\n        \"alergicoA\": \"Polvo, tierra\",\r\n        \"antecedentesPersonales\": [\r\n            \"Diabetes\",\r\n            \"HipertensiÃ³n\",\r\n            \"Traumatismo ocular\",\r\n            \"Orzuelos\"\r\n        ],\r\n        \"antecedentesFamiliares\": [\r\n            \"Diabetes\",\r\n            \"HipertensiÃ³n\"\r\n        ],\r\n        \"patologias\": \"Problemas renales\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/paciente-add",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "paciente-add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pacientes - Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"informacionPersonal\": {\r\n        \"esMenorSinCedula\": true, // true - false - null\r\n        \"nombreCompleto\": \"Jefferson Torres\",\r\n        \"cedula\": \"25409904\",\r\n        \"telefono\": \"04241738615\",\r\n        \"email\": \"jefersonugas@gmail.com\",\r\n        \"fechaNacimiento\": \"1996-06-11\",\r\n        \"ocupacion\": \"Ingeniero de Sistemas\",\r\n        \"genero\": \"m\",\r\n        \"direccion\": \"Guatire, Castillejo, en una casa.\"\r\n    },\r\n    \"redesSociales\": [\r\n        {\r\n            \"platform\": \"Facebook\",\r\n            \"username\": \"maria.gonzalez\"\r\n        },\r\n        {\r\n            \"platform\": \"Instagram\",\r\n            \"username\": \"@maria.g\"\r\n        }\r\n    ],\r\n    \"historiaClinica\": {\r\n        \"usuarioLentes\": \"Si\",\r\n        \"fotofobia\": null,\r\n        \"usoDispositivo\": \"Si, 3 a 6 horas\",\r\n        \"traumatismoOcular\": null,\r\n        \"traumatismoOcularDescripcion\": null,\r\n        \"cirugiaOcular\": null,\r\n        \"cirugiaOcularDescripcion\": null,\r\n        \"alergicoA\": null,\r\n        \"antecedentesPersonales\": [],\r\n        \"antecedentesFamiliares\": [],\r\n        \"patologias\": [\"a\", \"b\", \"c\"],\r\n        \"patologiaOcular\": []\r\n    },\r\n    \"informacionEmpresa\": {\r\n        \"empresaRif\": \"254099046\",\r\n        \"empresaNombre\": \"Empresa de Prueba\",\r\n        \"empresaTelefono\": null,\r\n        \"empresaCorreo\": null,\r\n        \"empresaDireccion\": null\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/paciente-update/d3d9446802a44259755d38e6d163e820",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "paciente-update",
+                "d3d9446802a44259755d38e6d163e820"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pacientes - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTE4MjQ0ODksImV4cCI6MTc1MTkxMDg4OX0.mSiWLvQ1MEdL7UT39euFECXLFx_W0U5-hIUhbvyie0Q",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/paciente-delete/guarenas-25409904",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "paciente-delete",
+                "guarenas-25409904"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Historial Medico",
+      "item": [
+        {
+          "name": "Historial Medico - Get",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTY3NDM5NzcsImV4cCI6MTc1NjgzMDM3N30.c1WSYN7oi86Qe0tgyVriuqAK97v-LUBZzJOeVusATtQ",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/historial-medico-all/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "historial-medico-all",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Historial Medico - Get con ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTQwNjA4MTYsImV4cCI6MTc1NDE0NzIxNn0.Tkqiiwcl7f6M17JiJ5PBgVVuHNdCgizoMbDz5r9XiHg",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/historial-medico-all/H-20250801-001",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "historial-medico-all",
+                "H-20250801-001"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Historial Medico - Get Paciente",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTQxMTEwMzEsImV4cCI6MTc1NDE5NzQzMX0.cJ5hzM-u6Jg66tvLRMQuphlmgXD7qF6l7Z-uOjGr-_o",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/historial-medico-paciente/guarenas-25409904",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "historial-medico-paciente",
+                "guarenas-25409904"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Historial Medico - Add",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTQwNjA4MTYsImV4cCI6MTc1NDE0NzIxNn0.Tkqiiwcl7f6M17JiJ5PBgVVuHNdCgizoMbDz5r9XiHg",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"pacienteId\": \"c16a5320fa475530d9583c34fd356ef5\",\r\n    \"datosConsulta\": {\r\n        \"motivo\": [\r\n            \"Otro\"\r\n        ],\r\n        \"otroMotivo\": \"test\",\r\n        \"tipoCristalActual\": \"LENTES_CONTACTO\",\r\n        \"tipoLentesContacto\": \"TORICOS\",\r\n        \"fechaUltimaGraduacion\": \"2023-02-14\",\r\n        \"medico\": \"8759927\"\r\n    },\r\n    \"examenOcular\": {\r\n        \"lensometria\": {\r\n            \"esf_od\": {\r\n                \"value\": \"+0.50\",\r\n                \"label\": \"+0.50\"\r\n            },\r\n            \"cil_od\": \"-0.50\",\r\n            \"eje_od\": 3,\r\n            \"add_od\": \"+1.25\",\r\n            \"av_lejos_od\": \"20/30\",\r\n            \"av_cerca_od\": \"J3\",\r\n            \"av_lejos_bi\": \"20/30\",\r\n            \"esf_oi\": \"+0.50\",\r\n            \"cil_oi\": \"-0.50\",\r\n            \"eje_oi\": 3,\r\n            \"add_oi\": \"+1.25\",\r\n            \"av_lejos_oi\": \"20/30\",\r\n            \"av_cerca_oi\": \"J3\",\r\n            \"av_cerca_bi\": \"J3\"\r\n        },\r\n        \"refraccion\": {\r\n            \"esf_od\": \"+0.50\",\r\n            \"cil_od\": \"-0.50\",\r\n            \"eje_od\": 3,\r\n            \"add_od\": \"+1.25\",\r\n            \"avccl_od\": \"20/30\",\r\n            \"avccc_od\": \"J3\",\r\n            \"avccl_bi\": \"20/30\",\r\n            \"avccc_bi\": \"J3\",\r\n            \"esf_oi\": \"+0.50\",\r\n            \"cil_oi\": \"-0.50\",\r\n            \"eje_oi\": 3,\r\n            \"add_oi\": \"+1.25\",\r\n            \"avccl_oi\": \"20/30\",\r\n            \"avccc_oi\": \"J3\"\r\n        },\r\n        \"refraccionFinal\": {\r\n            \"esf_od\": \"+0.50\",\r\n            \"cil_od\": \"-0.50\",\r\n            \"eje_od\": 3,\r\n            \"add_od\": \"+1.25\",\r\n            \"alt_od\": \"2\",\r\n            \"dp_od\": \"12\",\r\n            \"esf_oi\": \"+0.50\",\r\n            \"cil_oi\": \"-0.50\",\r\n            \"eje_oi\": 3,\r\n            \"add_oi\": \"+1.25\",\r\n            \"alt_oi\": \"2\",\r\n            \"dp_oi\": \"12\"\r\n        },\r\n        \"avsc_avae_otros\": {\r\n            \"avsc_lejos_od\": \"20/30\",\r\n            \"avsc_cerca_od\": \"J3\",\r\n            \"avae_od\": \"20/30\",\r\n            \"otros_od\": \"test\",\r\n            \"avsc_lejos_oi\": \"20/30\",\r\n            \"avsc_cerca_oi\": \"J3\",\r\n            \"avae_oi\": \"J3\",\r\n            \"otros_oi\": \"test\"\r\n        }\r\n    },\r\n    \"diagnosticoTratamiento\": {\r\n        \"diagnostico\": \"rar\",\r\n        \"tratamiento\": \"test\"\r\n    },\r\n    \"recomendaciones\": [\r\n        {\r\n            \"cristal\": \"Progresivo convencional\",\r\n            \"material\": [\r\n                \"POLICARBONATO\"\r\n            ],\r\n            \"montura\": \"test\",\r\n            \"observaciones\": \"test\",\r\n            \"tipoLentesContacto\": \"\",\r\n            \"medidaHorizontal\": 2,\r\n            \"medidaVertical\": 4,\r\n            \"medidaDiagonal\": 7,\r\n            \"medidaPuente\": 5\r\n        },\r\n        {\r\n            \"cristal\": \"Monofocal visiÃ³n sencilla\",\r\n            \"material\": [\r\n                \"CR39\"\r\n            ],\r\n            \"montura\": \"test\",\r\n            \"observaciones\": \"test\",\r\n            \"tipoLentesContacto\": \"\",\r\n            \"medidaHorizontal\": \"\",\r\n            \"medidaVertical\": \"\",\r\n            \"medidaDiagonal\": \"\",\r\n            \"medidaPuente\": \"\"\r\n        }\r\n    ],\r\n    \"conformidad\": {\r\n        \"notaConformidad\": \"PACIENTE CONFORME CON LA EXPLICACION  REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.\"\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/historial-medico-add",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "historial-medico-add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Historial Medico - Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTQwNjA4MTYsImV4cCI6MTc1NDE0NzIxNn0.Tkqiiwcl7f6M17JiJ5PBgVVuHNdCgizoMbDz5r9XiHg",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"datosConsulta\": {\r\n    \"motivo\": [\"asdadasd\", \"Dificultad visual cerca\"],\r\n    \"otroMotivo\": \"\",\r\n    \"tipoCristalActual\": \"Alguno\",\r\n    \"fechaUltimaGraduacion\": \"2025-08-10\",\r\n    \"medico\": \"Dr. JosÃ© MartÃ­nez\",\r\n  },\r\n\r\n  \"examenOcular\": {\r\n    \"lensometria\": {\r\n      \"esf_od\": \"+1.00\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"av_lejos_od\": \"20/30\",\r\n      \"av_cerca_od\": \"J3\",\r\n      \"av_lejos_bi\": \"20/25\",\r\n      \"av_bi\": \"J2\",\r\n      \"esf_oi\": \"+1.25\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"av_lejos_oi\": \"20/30\",\r\n      \"av_cerca_oi\": \"J3\",\r\n      \"av_cerca_bi\": \"J2\"\r\n    },\r\n    \"refraccion\": {\r\n      \"esf_od\": \"+1.25\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"avccl_od\": \"20/25\",\r\n      \"avccc_od\": \"J2\",\r\n      \"avccl_bi\": \"20/20\",\r\n      \"avccc_bi\": \"J1\",\r\n      \"esf_oi\": \"+1.50\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"avccl_oi\": \"20/25\",\r\n      \"avccc_oi\": \"J2\"\r\n    },\r\n    \"refraccionFinal\": {\r\n      \"esf_od\": \"+1.25\",\r\n      \"cil_od\": \"-0.50\",\r\n      \"eje_od\": \"90\",\r\n      \"add_od\": \"+2.00\",\r\n      \"alt_od\": \"3\",\r\n      \"dp_od\": \"64\",\r\n      \"esf_oi\": \"+1.50\",\r\n      \"cil_oi\": \"-0.75\",\r\n      \"eje_oi\": \"180\",\r\n      \"add_oi\": \"+2.00\",\r\n      \"alt_oi\": \"3\",\r\n      \"dp_oi\": \"64\"\r\n    },\r\n    \"avsc_avae_otros\": {\r\n      \"avsc_od\": \"20/25\",\r\n      \"avae_od\": \"J2\",\r\n      \"otros_od\": \"\",\r\n      \"avsc_oi\": \"20/25\",\r\n      \"avae_oi\": \"J2\",\r\n      \"otros_oi\": \"\",\r\n      \"avsc_bi\": \"20/20\"\r\n    }\r\n  },\r\n\r\n  \"diagnosticoTratamiento\": {\r\n    \"diagnostico\": \"Presbicia con astigmatismo leve\",\r\n    \"tratamiento\": \"Uso de lentes progresivos digitales\"\r\n  },\r\n\r\n  \"recomendaciones\": [\r\n    {\r\n      \"cristal\": [\"Progresivo digital intermedio\"],\r\n      \"material\": [\"POLICARBONATO\", \"FOTOCROMATICO_BLUE_BLOCK\", \"Trivex\"],\r\n      \"montura\": \"Acetato\",\r\n      \"cristalSugerido\": \"Progresivo digital amplio\",\r\n      \"observaciones\": \"Se recomienda uso en ambientes con luz artificial prolongada\"\r\n    }\r\n  ],\r\n\r\n  \"conformidad\": {\r\n    \"notaConformidad\": \"PACIENTE CONFORME CON LA EXPLICACION REALIZADA POR EL ASESOR SOBRE LAS VENTAJAS Y DESVENTAJAS DE LOS DIFERENTES TIPOS DE CRISTALES Y MATERIAL DE MONTURA, NO SE ACEPTARAN MODIFICACIONES LUEGO DE HABER RECIBIDO LA INFORMACION Y FIRMADA LA HISTORIA POR EL PACIENTE.\",\r\n  }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/historial-medico-update/H-20250801-001",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "historial-medico-update",
+                "H-20250801-001"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Historial Medico - Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTQwNjA4MTYsImV4cCI6MTc1NDE0NzIxNn0.Tkqiiwcl7f6M17JiJ5PBgVVuHNdCgizoMbDz5r9XiHg",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/historial-medico-delete/H-20250801-001",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "historial-medico-delete",
+                "H-20250801-001"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Productos",
+      "item": [
+        {
+          "name": "Get",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/producto-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "producto-get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get categorias",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTc5NDA1MDAsImV4cCI6MTc1ODAyNjkwMH0.zwZuwFu9P1qCzEUrhMN24A16eeS9i12Im7MlwZIQEk4",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/categorias-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "categorias-get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "nombre",
+                  "value": "Filtro/Aditivos - Luz azul",
+                  "type": "text"
+                },
+                {
+                  "key": "marca",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "color",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "material",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "proveedor",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "categoria",
+                  "value": "Filtro/Aditivos",
+                  "type": "text"
+                },
+                {
+                  "key": "modelo",
+                  "value": "Luz azul",
+                  "type": "text"
+                },
+                {
+                  "key": "stock",
+                  "value": "5",
+                  "type": "text"
+                },
+                {
+                  "key": "precio",
+                  "value": "15",
+                  "type": "text"
+                },
+                {
+                  "key": "aplicaIva",
+                  "value": "0",
+                  "type": "text"
+                },
+                {
+                  "key": "requiere_formula",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "requiere_item_padre",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "moneda",
+                  "value": "euro",
+                  "description": "Ya no es necesaria",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "activo",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "descripcion",
+                  "value": "Filtro adicional para protección frente a pantallas.",
+                  "type": "text"
+                },
+                {
+                  "key": "imagen",
+                  "type": "file",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/producto-add",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "producto-add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "nombre",
+                  "value": "Cristales - Monofocal visión sencilla",
+                  "type": "text"
+                },
+                {
+                  "key": "marca",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "color",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "material",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "proveedor",
+                  "value": "Laboratorio principal",
+                  "type": "text"
+                },
+                {
+                  "key": "categoria",
+                  "value": "Cristales",
+                  "type": "text"
+                },
+                {
+                  "key": "modelo",
+                  "value": "Monofocal visión sencilla",
+                  "type": "text"
+                },
+                {
+                  "key": "stock",
+                  "value": "5",
+                  "type": "text"
+                },
+                {
+                  "key": "precio",
+                  "value": "12",
+                  "type": "text"
+                },
+                {
+                  "key": "aplicaIva",
+                  "value": "0",
+                  "type": "text"
+                },
+                {
+                  "key": "requiere_formula",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "requiere_item_padre",
+                  "value": "false",
+                  "type": "text"
+                },
+                {
+                  "key": "moneda",
+                  "value": "euro",
+                  "description": "Ya no es necesaria",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "activo",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "descripcion",
+                  "value": "Cristal monofocal actualizado con proveedor principal.",
+                  "type": "text"
+                },
+                {
+                  "key": "imagen",
+                  "type": "file",
+                  "src": "/C:/Users/Personal/OneDrive/ImÃ¡genes/2-25632_m.jpg",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/producto-update/9",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "producto-update",
+                "9"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTcxOTQxMDcsImV4cCI6MTc1NzI4MDUwN30.iyeNnGw0EX7_h09FPyEXMLoBEuwdDa2mM9KrhEAsB40",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/producto-delete/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "producto-delete",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "remove-image",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjI5Njg3NDgsImV4cCI6MTc2MzA1NTE0OH0.SUZlV7Ui-JQyWa_nnF1WZPFOvGvSY6C4WSovDET34Ng",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/producto-remove-image/5",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "producto-remove-image",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ventas",
+      "item": [
+        {
+          "name": "Get",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/ventas-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "ventas-get"
+              ],
+              "query": [
+                {
+                  "key": "fechaDesde",
+                  "value": "2025-11-28",
+                  "description": "Fecha desde",
+                  "disabled": true
+                },
+                {
+                  "key": "fechaHasta",
+                  "value": "2025-11-29",
+                  "description": "Fecha hasta",
+                  "disabled": true
+                },
+                {
+                  "key": "asesor",
+                  "value": "27",
+                  "description": "Asesor id (usuario)",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "completada",
+                  "description": "Estado de la venta",
+                  "disabled": true
+                },
+                {
+                  "key": "formaPago",
+                  "value": "cashea",
+                  "description": "Forma de pago",
+                  "disabled": true
+                },
+                {
+                  "key": "busquedaGeneral",
+                  "value": "V-000200",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get total",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg0ODE4MDIsImV4cCI6MTc2ODU2ODIwMn0.-Gr9C9l-1oXs5RbGyCBcW-qvdubzk8WMGbzt1JDbabA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/ventas-get-total",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "ventas-get-total"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzA0Nzc0NjIsImV4cCI6MTc3MDU2Mzg2Mn0.OVwOSgjf8BfIJkBGbbSe9PB9Cu9EFkrb0jObMGeRdic",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "//crear venta - solo productos\r\n// Nota: para metodos con cuenta receptora enviar cuentaReceptora.id.\r\n{\r\n    \"tipoVenta\": \"solo_productos\",\r\n    \"moneda\": \"dolar\",\r\n    \"sede\": \"guatire\",\r\n    \"total\": 55.67,\r\n    \"descuento\": 10,\r\n    \"impuesto\": 16,\r\n    \"formaPago\": \"contado\",\r\n    \"metodosDePago\": [\r\n        {\r\n            \"tipo\": \"efectivo\",\r\n            \"monto\": 55.67,\r\n            \"moneda\": \"dolar\"\r\n        }\r\n    ],\r\n    \"formaPagoDetalle\": {\r\n        \"tipo\": \"contado\",\r\n        \"montoTotal\": 55.67184,\r\n        \"totalPagado\": 55.67\r\n    },\r\n    \"cliente\": {\r\n        \"tipoCliente\": \"cliente_general\",\r\n        \"tipoPersona\": \"natural\",\r\n        \"nombre\": \"Ruben dario Martinez castro\",\r\n        \"cedula\": \"24367965\",\r\n        \"telefono\": \"04123920817\",\r\n        \"email\": \"rubemm@gmail.com\"\r\n    },\r\n    \"especialista\": null,\r\n    \"ordenTrabajo\": false,\r\n    \"asesor\": {\r\n        \"id\": 5\r\n    },\r\n    \"auditoria\": {\r\n        \"usuarioCreacion\": 5,\r\n        \"fechaCreacion\": \"2026-03-15T17:11:32.398Z\"\r\n    },\r\n    \"productos\": [\r\n        {\r\n            \"id\": \"17\",\r\n            \"nombre\": \"Lentes de prueba\",\r\n            \"codigo\": \"PR-000017\",\r\n            \"precio\": 31.86,\r\n            \"precioConIva\": 31.86,\r\n            \"moneda\": \"dolar\",\r\n            \"cantidad\": 1,\r\n            \"aplicaIva\": false,\r\n            \"stock\": 26,\r\n            \"tipo\": \"PRODUCTO\",\r\n            \"descripcion\": \"Test\"\r\n        },\r\n        {\r\n            \"id\": \"28\",\r\n            \"nombre\": \"Montura\",\r\n            \"codigo\": \"PR-000028\",\r\n            \"precio\": 25.86,\r\n            \"precioConIva\": 30,\r\n            \"moneda\": \"dolar\",\r\n            \"cantidad\": 1,\r\n            \"aplicaIva\": true,\r\n            \"stock\": 10,\r\n            \"tipo\": \"PRODUCTO\",\r\n            \"descripcion\": \"Montura premium de marca Palazzo\"\r\n        }\r\n    ]\r\n}\r\n\r\n// ejemplo metodo con cuenta receptora\r\n// {\r\n//     \"tipo\": \"pagomovil\",\r\n//     \"monto\": 2000,\r\n//     \"referencia\": \"12121212\",\r\n//     \"moneda\": \"bolivar\",\r\n//     \"cuentaEmisora\": {\r\n//         \"bancoCodigo\": \"0102\",\r\n//         \"bancoNombre\": \"Banco de Venezuela\"\r\n//     },\r\n//     \"cuentaReceptora\": {\r\n//         \"id\": \"pagomovil-guatire-provincial-personal\",\r\n//         \"bancoCodigo\": \"0108\",\r\n//         \"bancoNombre\": \"Banco Provincial\",\r\n//         \"titular\": \"Ruben Martinez\",\r\n//         \"cedulaRif\": \"24367965\",\r\n//         \"telefono\": \"0412392081\",\r\n//         \"descripcionCuenta\": \"Cuenta personal de Ruben\"\r\n//     }\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/ventas-add",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "ventas-add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Anular",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjQ4Njk3NzksImV4cCI6MTc2NDk1NjE3OX0.661FhheGsISKsNNi57AcbB8owESJfVYb7dFX3rWKkwo",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"motivo_cancelacion\": \"Prueba de sistema\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/ventas-anular/b9627580-abb8-4474-b449-ed976ca4ecf1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "ventas-anular",
+                "b9627580-abb8-4474-b449-ed976ca4ecf1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Abonar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjYxNDExMjksImV4cCI6MTc2NjIyNzUyOX0.wjw1CnzxbNgPTDAHXm2u8YWegkygQQoGr1SHehNRlSk",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// Para metodos con cuenta receptora enviar cuentaReceptora.id\r\n{\r\n    \"montoAbonado\": 10,\r\n    \"monedaVenta\": \"dolar\",\r\n    \"metodosPago\": [\r\n        {\r\n            \"tipo\": \"efectivo\",\r\n            \"monto\": 1.2,\r\n            \"moneda\": \"euro\",\r\n            \"montoMonedaSistema\": 10\r\n        }\r\n    ],\r\n    \"observaciones\": \"Prueba de sistema\",\r\n    \"totalMetodosMonedaSistema\": 10\r\n}\r\n\r\n// ejemplo abono con cuenta receptora\r\n// {\r\n//     \"montoAbonado\": 75,\r\n//     \"monedaVenta\": \"dolar\",\r\n//     \"metodosPago\": [\r\n//         {\r\n//             \"tipo\": \"zelle\",\r\n//             \"monto\": 75,\r\n//             \"moneda\": \"dolar\",\r\n//             \"referencia\": \"ZELLE-4455\",\r\n//             \"cuentaReceptora\": {\r\n//                 \"id\": \"zelle-guatire-bofa-ruben\",\r\n//                 \"bancoCodigo\": \"BOFAUS3N\",\r\n//                 \"bancoNombre\": \"Bank of America (BOFA)\",\r\n//                 \"titular\": \"Ruben Perez\",\r\n//                 \"cedulaRif\": \"V-12345678\",\r\n//                 \"correo\": \"ruben.perez@email.com\",\r\n//                 \"descripcionCuenta\": \"Cuenta personal de Ruben\"\r\n//             }\r\n//         }\r\n//     ],\r\n//     \"observaciones\": \"Abono por Zelle\",\r\n//     \"totalMetodosMonedaSistema\": 75\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/ventas-abonar/bed7a6ac-de4d-412e-a0a5-e6f8618dcff0",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "ventas-abonar",
+                "bed7a6ac-de4d-412e-a0a5-e6f8618dcff0"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "Add",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjUyMzI4NTQsImV4cCI6MTc2NTMxOTI1NH0.U3tkcPnbGK--SeINNfdtRMKaAB9ME-o91AQRQ_zuq0o",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cedula\": \"123123123\",\r\n    \"nombre\": \"Jefferson JTU\",\r\n    \"telefono\": \"\",\r\n    \"email\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/clientes-add",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clientes-add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjkwODM3MDcsImV4cCI6MTc2OTE3MDEwN30.E8Mz0U3gjikNEqd5_K-dYuvoMf3U_BkFB7CCpNowUII",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/clientes-get?cedula=25409904",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clientes-get"
+              ],
+              "query": [
+                {
+                  "key": "cedula",
+                  "value": "25409904"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjUyMzI4NTQsImV4cCI6MTc2NTMxOTI1NH0.U3tkcPnbGK--SeINNfdtRMKaAB9ME-o91AQRQ_zuq0o",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\": \"JJTU\",\r\n    \"telefono\": \"04241738615\",\r\n    \"email\": \"jefersonugas@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/clientes-update/123123123",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clientes-update",
+                "123123123"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjUyMzI4NTQsImV4cCI6MTc2NTMxOTI1NH0.U3tkcPnbGK--SeINNfdtRMKaAB9ME-o91AQRQ_zuq0o",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/clientes-delete/123123123",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "clientes-delete",
+                "123123123"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ordenes de Trabajo",
+      "item": [
+        {
+          "name": "Get",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orden-trabajo-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orden-trabajo-get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar Estado",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjgwNzgxNDQsImV4cCI6MTc2ODE2NDU0NH0.-HCSx8asTPPIiXb2fnxun9UenwvA6jZF3di9K6Sn_E4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"orden_numero\": \"OT-GUARENAS-2025-001\",\r\n    \"estado\": \"entregado\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orden-trabajo-change-status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orden-trabajo-change-status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar fecha entrega estimada",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njc4MTYxOTYsImV4cCI6MTc2NzkwMjU5Nn0.WzT3K0xmomb5tDhP5w8z6tRnKJ0SQqQIFOa0u9mjGY0",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"orden_numero\": \"OT-GUARENAS-2025-001\",\r\n    \"fecha_entrega_estimada\": \"2026-01-10\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orden-trabajo-update-fecha-entrega-estimada",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orden-trabajo-update-fecha-entrega-estimada"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar progreso",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjgwNzgxNDQsImV4cCI6MTc2ODE2NDU0NH0.-HCSx8asTPPIiXb2fnxun9UenwvA6jZF3di9K6Sn_E4",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"orden_numero\": \"OT-GUARENAS-2025-001\",\r\n    \"progreso\": 25\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orden-trabajo-update-process",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orden-trabajo-update-process"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar estado a todos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwODY2MDAsImV4cCI6MTc2NzE3MzAwMH0.rlSHcUsVYN87k2X-r0onHOHKh9Yjfi9jE32aH2NRwfI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"estado_actual\": \"proceso_laboratorio\",\r\n    \"estado_nuevo\": \"en_tienda\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orden-trabajo-change-status-all",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orden-trabajo-change-status-all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Archivar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwODY2MDAsImV4cCI6MTc2NzE3MzAwMH0.rlSHcUsVYN87k2X-r0onHOHKh9Yjfi9jE32aH2NRwfI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"orden_numero\": \"OT-GUARENAS-2025-011\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orden-trabajo-archive",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orden-trabajo-archive"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Desarchivar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjcwODY2MDAsImV4cCI6MTc2NzE3MzAwMH0.rlSHcUsVYN87k2X-r0onHOHKh9Yjfi9jE32aH2NRwfI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"orden_numero\": \"OT-GUARENAS-2025-011\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orden-trabajo-unarchive",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orden-trabajo-unarchive"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modificar dias para archivar orden",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc2ODA4MjUzOSwiZXhwIjoxNzY4MTY4OTM5fQ.CCbjOk4nQO7zi3XQuDNvTCdavzEWFGCx-p9L7oDtFYQ",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"dias\": 10\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orden-trabajo-update-days-to-archive",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "orden-trabajo-update-days-to-archive"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Empresas",
+      "item": [
+        {
+          "name": "Empresas - Get",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3Njg2MDA5NzYsImV4cCI6MTc2ODY4NzM3Nn0.YM5t1ekd-EDTCOL7kbmEde4j7f75Ib0-BCxmDmgVUjw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/empresas-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "empresas-get"
+              ],
+              "query": [
+                {
+                  "key": "rif",
+                  "value": "254099046",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sede",
+                  "value": "guarenas",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bancos y metodos",
+      "item": [
+        {
+          "name": "Bancos Receptores - Get",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/bancos_receptores-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "bancos_receptores-get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Bancos Receptores - Save",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"codigo\": \"CITIUS33\",\r\n  \"nombre\": \"Citibank N.A.\",\r\n  \"scope\": \"international\",\r\n  \"activo\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/bancos_receptores-save",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "bancos_receptores-save"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Bancos Receptores - Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nombre\": \"Bank of America (BOFA)\",\r\n  \"scope\": \"international\",\r\n  \"activo\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/bancos_receptores-update/BOFAUS3N",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "bancos_receptores-update",
+                "BOFAUS3N"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Metodos Pago Config - Get",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/metodos_pago_config-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "metodos_pago_config-get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Metodos Pago Config - Save",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"key\": \"binance\",\r\n  \"label\": \"Binance\",\r\n  \"description\": \"RecepciÃ³n de pagos digitales con wallet operativa y titular configurado.\",\r\n  \"enabled\": true,\r\n  \"currency\": \"USDT\",\r\n  \"requiresReceiverAccount\": true,\r\n  \"isCustom\": false,\r\n  \"accounts\": [\r\n    {\r\n      \"id\": \"binance-1\",\r\n      \"bank\": \"\",\r\n      \"bankCode\": \"\",\r\n      \"ownerName\": \"Ruben Martinez\",\r\n      \"ownerId\": \"\",\r\n      \"phone\": \"\",\r\n      \"email\": \"\",\r\n      \"walletAddress\": \"TRX-TN8J8A2EXAMPLEWALLET001\",\r\n      \"accountDescription\": \"Wallet principal para cobros por Binance Pay\"\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/metodos_pago_config-save",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "metodos_pago_config-save"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Metodos Pago Config - Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"label\": \"Pago MÃ³vil\",\r\n  \"description\": \"Pago mÃ³vil interbancario con selecciÃ³n de banco receptor.\",\r\n  \"enabled\": false,\r\n  \"currency\": \"VES\",\r\n  \"requiresReceiverAccount\": true,\r\n  \"isCustom\": false,\r\n  \"accounts\": [\r\n    {\r\n      \"id\": \"pm-1\",\r\n      \"bank\": \"Banco Provincial\",\r\n      \"bankCode\": \"0108\",\r\n      \"ownerName\": \"Ruben Martinez\",\r\n      \"ownerId\": \"24367965\",\r\n      \"phone\": \"04123920817\",\r\n      \"email\": \"\",\r\n      \"walletAddress\": \"\",\r\n      \"accountDescription\": \"Cuenta personal de Ruben\"\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/metodos_pago_config-update/pago_movil",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "metodos_pago_config-update",
+                "pago_movil"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Obtener datos de la sesion",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTE4MjQ0ODksImV4cCI6MTc1MTkxMDg4OX0.mSiWLvQ1MEdL7UT39euFECXLFx_W0U5-hIUhbvyie0Q",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/auth/get_data",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "auth",
+            "get_data"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Sedes - Get",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/sedes-get",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "sedes-get"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Cierre de caja",
+      "item": [
+        {
+          "name": "Cierre de caja - Resumen",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/resumen?fecha={{cierre_fecha}}&sede={{cierre_sede}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "resumen"
+              ],
+              "query": [
+                {
+                  "key": "fecha",
+                  "value": "{{cierre_fecha}}"
+                },
+                {
+                  "key": "sede",
+                  "value": "{{cierre_sede}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cierre de caja - Apertura",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data && data.cierre && data.cierre.id) pm.collectionVariables.set('cierre_id', data.cierre.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"fecha\": \"{{cierre_fecha}}\",\r\n    \"sede\": \"{{cierre_sede}}\",\r\n    \"efectivoInicial\": {\r\n        \"totalSistema\": 120,\r\n        \"detalle\": {\r\n            \"Bs\": 0,\r\n            \"USD\": 120,\r\n            \"EUR\": 0\r\n        }\r\n    },\r\n    \"tasasCambio\": {\r\n        \"dolar\": 1,\r\n        \"euro\": 0.91,\r\n        \"bolivar\": 36.75\r\n    },\r\n    \"observaciones\": \"Apertura validada para Postman\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/apertura",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "apertura"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cierre de caja - Crear transaccion manual",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data && data.transaccion && data.transaccion.id) pm.collectionVariables.set('transaccion_id', data.transaccion.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cierreId\": \"{{cierre_id}}\",\r\n    \"fecha\": \"{{cierre_fecha}}T10:30:00.000Z\",\r\n    \"tipo\": \"egreso\",\r\n    \"descripcion\": \"Gasto de caja de prueba\",\r\n    \"monto\": 10,\r\n    \"moneda\": \"USD\",\r\n    \"montoSistema\": 10,\r\n    \"metodoPago\": \"efectivo\",\r\n    \"categoria\": \"gasto_operativo\",\r\n    \"observaciones\": \"Prueba automatizada\",\r\n    \"comprobante\": \"PM-0001\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/transacciones-manuales",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "transacciones-manuales"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cierre de caja - Actualizar transaccion manual",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"descripcion\": \"Gasto de caja ajustado\",\r\n    \"monto\": 12.5,\r\n    \"moneda\": \"USD\",\r\n    \"montoSistema\": 12.5,\r\n    \"metodoPago\": \"efectivo\",\r\n    \"categoria\": \"gasto_operativo\",\r\n    \"observaciones\": \"Prueba automatizada actualizada\",\r\n    \"comprobante\": \"PM-0001-A\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/transacciones-manuales/{{transaccion_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "transacciones-manuales",
+                "{{transaccion_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cierre de caja - Cerrar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"cierreId\": \"{{cierre_id}}\",\r\n    \"fecha\": \"{{cierre_fecha}}\",\r\n    \"efectivo\": {\r\n        \"teoricoFinal\": 107.5,\r\n        \"realFinal\": 107.5,\r\n        \"diferencia\": 0,\r\n        \"detalleReal\": {\r\n            \"usd\": 107.5,\r\n            \"eur\": 0,\r\n            \"ves\": 0\r\n        }\r\n    },\r\n    \"conciliacion\": {\r\n        \"punto\": [],\r\n        \"transferencia\": [],\r\n        \"pagomovil\": [],\r\n        \"zelle\": []\r\n    },\r\n    \"diferenciaTotal\": 0,\r\n    \"estadoConciliacion\": \"cuadrado\",\r\n    \"notasCierre\": \"Cierre validado para Postman\",\r\n    \"opciones\": {\r\n        \"imprimirResumen\": true,\r\n        \"enviarEmail\": false,\r\n        \"adjuntarComprobantes\": true\r\n    }\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/cerrar",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "cerrar"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cierre de caja - Historial",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/historial?fechaInicio={{cierre_fecha}}&fechaFin={{cierre_fecha}}&sede={{cierre_sede}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "historial"
+              ],
+              "query": [
+                {
+                  "key": "fechaInicio",
+                  "value": "{{cierre_fecha}}"
+                },
+                {
+                  "key": "fechaFin",
+                  "value": "{{cierre_fecha}}"
+                },
+                {
+                  "key": "sede",
+                  "value": "{{cierre_sede}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cierre de caja - Anular",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"motivo\": \"Anulacion de validacion Postman\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/cierre-caja/anular/{{cierre_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "cierre-caja",
+                "anular",
+                "{{cierre_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3500"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "cierre_sede",
+      "value": "guatire"
+    },
+    {
+      "key": "cierre_fecha",
+      "value": "2030-01-01"
+    },
+    {
+      "key": "cierre_id",
+      "value": ""
+    },
+    {
+      "key": "transaccion_id",
+      "value": ""
+    }
+  ]
 }

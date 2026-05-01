@@ -12,6 +12,7 @@ const sequelize = new Sequelize({
     connectTimeout: 60000,
     decimalNumbers: true,
   },
+  timezone: '-04:00',
   logging: console.log
 });
 
