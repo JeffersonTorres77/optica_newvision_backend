@@ -51,14 +51,26 @@ const ConfiguracionService = {
             `Correo de notificacion 2 para la sede ${sede_id}`
         );
 
-        const correo_notificacion_destino = await ConfiguracionService.get_or_create_configuracion(
+        const correo_activo_1 = await ConfiguracionService.get_or_create_configuracion(
             sede_id,
-            'correo_notificacion_destino',
-            'principal',
-            `Destino de correo de notificacion para la sede ${sede_id}`
+            'correo_activo_1',
+            '1',
+            `Indicador de activacion del correo de notificacion 1 para la sede ${sede_id}`
         );
 
-        return { correo_notificacion_1, correo_notificacion_2, correo_notificacion_destino };
+        const correo_activo_2 = await ConfiguracionService.get_or_create_configuracion(
+            sede_id,
+            'correo_activo_2',
+            '1',
+            `Indicador de activacion del correo de notificacion 2 para la sede ${sede_id}`
+        );
+
+        return {
+            correo_notificacion_1,
+            correo_notificacion_2,
+            correo_activo_1,
+            correo_activo_2
+        };
     },
 
     get_moneda_base: async function (sede_id) {
