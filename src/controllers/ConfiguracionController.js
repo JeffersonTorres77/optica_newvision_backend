@@ -40,23 +40,6 @@ function map_metodo_output(metodo) {
     };
 }
 
-const DESTINOS_CORREO_NOTIFICACION = new Set(['principal', 'secundario', 'ambos']);
-
-function normalizar_destino_correo_notificacion(destino, correoSecundario = '') {
-    const valor = `${destino || ''}`.trim().toLowerCase();
-    const correoSecundarioNormalizado = `${correoSecundario || ''}`.trim();
-
-    if (!DESTINOS_CORREO_NOTIFICACION.has(valor)) {
-        return 'principal';
-    }
-
-    if (!correoSecundarioNormalizado && valor !== 'principal') {
-        return 'principal';
-    }
-
-    return valor;
-}
-
 const ConfiguracionController = {
     get: async (req, res) => {
         const array_configuracion = await Configuracion.findAll({ where: { sede: req.sede.id } });
@@ -115,20 +98,17 @@ const ConfiguracionController = {
         const {
             correo_notificacion_1,
             correo_notificacion_2,
-            correo_notificacion_destino
+            correo_activo_1,
+            correo_activo_2
         } = await ConfiguracionService.get_correos_notificacion(req.sede.id);
-
-        const destino = normalizar_destino_correo_notificacion(
-            correo_notificacion_destino?.valor,
-            correo_notificacion_2?.valor
-        );
 
         res.status(200).json({
             message: 'Correos de notificacion obtenidos correctamente',
             configuracion: {
                 correo_notificacion_1: correo_notificacion_1.valor,
                 correo_notificacion_2: correo_notificacion_2.valor,
-                correo_notificacion_destino: destino
+                correo_activo_1: correo_activo_1?.valor || '1',
+                correo_activo_2: correo_activo_2?.valor || '1'
             }
         });
     },
@@ -138,7 +118,8 @@ const ConfiguracionController = {
         const payload = {};
         let correoNotificacion1 = `${configuracionActual.correo_notificacion_1?.valor || ''}`.trim();
         let correoNotificacion2 = `${configuracionActual.correo_notificacion_2?.valor || ''}`.trim();
-        let destinoCorreo = `${configuracionActual.correo_notificacion_destino?.valor || 'principal'}`.trim().toLowerCase();
+        let correoActivo1 = `${configuracionActual.correo_activo_1?.valor || '1'}`.trim();
+        let correoActivo2 = `${configuracionActual.correo_activo_2?.valor || '1'}`.trim();
 
         if (Object.prototype.hasOwnProperty.call(req.body, 'correo_notificacion_1')) {
             correoNotificacion1 = String(req.body.correo_notificacion_1 || '').trim();
@@ -150,22 +131,18 @@ const ConfiguracionController = {
             payload.correo_notificacion_2 = correoNotificacion2;
         }
 
-        if (Object.prototype.hasOwnProperty.call(req.body, 'correo_notificacion_destino')) {
-            destinoCorreo = String(req.body.correo_notificacion_destino || '').trim().toLowerCase();
+        if (Object.prototype.hasOwnProperty.call(req.body, 'correo_activo_1')) {
+            correoActivo1 = String(req.body.correo_activo_1 || '1').trim();
+            payload.correo_activo_1 = correoActivo1;
         }
 
-        const destinoNormalizado = normalizar_destino_correo_notificacion(destinoCorreo, correoNotificacion2);
-
-        if (
-            Object.prototype.hasOwnProperty.call(req.body, 'correo_notificacion_destino') ||
-            Object.prototype.hasOwnProperty.call(req.body, 'correo_notificacion_2') ||
-            destinoNormalizado !== `${configuracionActual.correo_notificacion_destino?.valor || 'principal'}`.trim().toLowerCase()
-        ) {
-            payload.correo_notificacion_destino = destinoNormalizado;
+        if (Object.prototype.hasOwnProperty.call(req.body, 'correo_activo_2')) {
+            correoActivo2 = String(req.body.correo_activo_2 || '1').trim();
+            payload.correo_activo_2 = correoActivo2;
         }
 
         if (!Object.keys(payload).length) {
-            throw { message: 'Debe enviar correo_notificacion_1, correo_notificacion_2 o correo_notificacion_destino en el body.' };
+            throw { message: 'Debe enviar correo_notificacion_1, correo_notificacion_2, correo_activo_1 o correo_activo_2 en el body.' };
         }
 
         const t = await sequelize.transaction();
@@ -191,20 +168,17 @@ const ConfiguracionController = {
         const {
             correo_notificacion_1,
             correo_notificacion_2,
-            correo_notificacion_destino
+            correo_activo_1,
+            correo_activo_2
         } = await ConfiguracionService.get_correos_notificacion(req.sede.id);
-
-        const destino = normalizar_destino_correo_notificacion(
-            correo_notificacion_destino?.valor,
-            correo_notificacion_2?.valor
-        );
 
         res.status(200).json({
             message: 'Correos de notificacion actualizados correctamente',
             configuracion: {
                 correo_notificacion_1: correo_notificacion_1.valor,
                 correo_notificacion_2: correo_notificacion_2.valor,
-                correo_notificacion_destino: destino
+                correo_activo_1: correo_activo_1?.valor || '1',
+                correo_activo_2: correo_activo_2?.valor || '1'
             }
         });
     },

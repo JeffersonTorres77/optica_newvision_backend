@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-04-2026 a las 21:39:47
+-- Tiempo de generación: 04-05-2026 a las 11:07:51
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -34,8 +34,8 @@ CREATE TABLE `bancos_receptores_config` (
   `nombre` varchar(150) NOT NULL,
   `scope` enum('national','international') NOT NULL,
   `activo` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -100,13 +100,124 @@ CREATE TABLE `categorias` (
 
 INSERT INTO `categorias` (`id`, `nombre`) VALUES
 (1, 'Monturas'),
-(2, 'Cristales'),
+(2, 'Lentes'),
 (3, 'Líquidos'),
 (4, 'Estuches'),
-(5, 'Accesorios'),
-(6, 'Lentes de contacto'),
-(7, 'Filtro/Aditivos'),
-(8, 'Materiales');
+(5, 'Misceláneos'),
+(6, 'Lentes de contacto');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cierres_caja`
+--
+
+CREATE TABLE `cierres_caja` (
+  `id` varchar(100) NOT NULL,
+  `fecha` date NOT NULL,
+  `sede` varchar(50) NOT NULL,
+  `estado` varchar(30) NOT NULL DEFAULT 'abierto',
+  `moneda_principal` varchar(10) NOT NULL,
+  `tasa_dolar` double NOT NULL DEFAULT 1,
+  `tasa_euro` double NOT NULL DEFAULT 1,
+  `tasa_bolivar` double NOT NULL DEFAULT 1,
+  `usuario_apertura_cedula` varchar(20) NOT NULL,
+  `fecha_apertura` datetime NOT NULL,
+  `observaciones_apertura` text DEFAULT NULL,
+  `efectivo_inicial_total` double NOT NULL DEFAULT 0,
+  `efectivo_inicial_bs` double NOT NULL DEFAULT 0,
+  `efectivo_inicial_usd` double NOT NULL DEFAULT 0,
+  `efectivo_inicial_eur` double NOT NULL DEFAULT 0,
+  `usuario_cierre_cedula` varchar(20) DEFAULT NULL,
+  `fecha_cierre` datetime DEFAULT NULL,
+  `notas_cierre` text DEFAULT NULL,
+  `total_ingresos` double NOT NULL DEFAULT 0,
+  `total_egresos` double NOT NULL DEFAULT 0,
+  `total_neto` double NOT NULL DEFAULT 0,
+  `ventas_contado` double NOT NULL DEFAULT 0,
+  `ventas_credito` double NOT NULL DEFAULT 0,
+  `ventas_pendientes` double NOT NULL DEFAULT 0,
+  `efectivo_teorico_final` double NOT NULL DEFAULT 0,
+  `efectivo_real_final` double NOT NULL DEFAULT 0,
+  `efectivo_real_usd` double DEFAULT NULL,
+  `efectivo_real_eur` double DEFAULT NULL,
+  `efectivo_real_ves` double DEFAULT NULL,
+  `diferencia_total` double NOT NULL DEFAULT 0,
+  `estado_conciliacion` varchar(30) DEFAULT NULL,
+  `imprimir_resumen` tinyint(4) NOT NULL DEFAULT 1,
+  `enviar_email` tinyint(4) NOT NULL DEFAULT 0,
+  `adjuntar_comprobantes` tinyint(4) NOT NULL DEFAULT 1,
+  `motivo_anulacion` text DEFAULT NULL,
+  `fecha_revision` datetime DEFAULT NULL,
+  `created_by` varchar(20) NOT NULL,
+  `updated_by` varchar(20) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cierres_caja`
+--
+
+INSERT INTO `cierres_caja` (`id`, `fecha`, `sede`, `estado`, `moneda_principal`, `tasa_dolar`, `tasa_euro`, `tasa_bolivar`, `usuario_apertura_cedula`, `fecha_apertura`, `observaciones_apertura`, `efectivo_inicial_total`, `efectivo_inicial_bs`, `efectivo_inicial_usd`, `efectivo_inicial_eur`, `usuario_cierre_cedula`, `fecha_cierre`, `notas_cierre`, `total_ingresos`, `total_egresos`, `total_neto`, `ventas_contado`, `ventas_credito`, `ventas_pendientes`, `efectivo_teorico_final`, `efectivo_real_final`, `efectivo_real_usd`, `efectivo_real_eur`, `efectivo_real_ves`, `diferencia_total`, `estado_conciliacion`, `imprimir_resumen`, `enviar_email`, `adjuntar_comprobantes`, `motivo_anulacion`, `fecha_revision`, `created_by`, `updated_by`, `created_at`, `updated_at`) VALUES
+('CIERRE-2026-05-03-guatire', '2026-05-03', 'guatire', 'cerrado', 'dolar', 1, 0.91, 36.75, '25409904', '2026-05-03 08:56:08', 'Apertura de ejemplo creada para evaluar cierre y PDF', 150, 0, 150, 0, '25409904', '2026-05-03 08:56:08', 'Cierre de ejemplo generado para validar el PDF backend', 20, 12.5, 7.5, 0, 0, 0, 157.5, 157.5, 157.5, 0, 0, 0, 'cuadrado', 1, 0, 1, NULL, NULL, '25409904', '25409904', '2026-05-03 08:56:08', '2026-05-03 08:56:08');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cierres_caja_conciliaciones`
+--
+
+CREATE TABLE `cierres_caja_conciliaciones` (
+  `id` bigint(20) NOT NULL,
+  `cierre_id` varchar(100) NOT NULL,
+  `metodo` varchar(30) NOT NULL,
+  `banco` varchar(255) DEFAULT NULL,
+  `banco_codigo` varchar(50) DEFAULT NULL,
+  `destino_key` varchar(150) DEFAULT NULL,
+  `destino_label` varchar(255) DEFAULT NULL,
+  `monto_sistema` double NOT NULL DEFAULT 0,
+  `monto_real` double NOT NULL DEFAULT 0,
+  `diferencia` double NOT NULL DEFAULT 0,
+  `cantidad_sistema` int(11) DEFAULT NULL,
+  `cantidad_real` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `cierres_caja_transacciones_manuales`
+--
+
+CREATE TABLE `cierres_caja_transacciones_manuales` (
+  `id` varchar(100) NOT NULL,
+  `cierre_id` varchar(100) NOT NULL,
+  `fecha` datetime NOT NULL,
+  `tipo` varchar(30) NOT NULL,
+  `descripcion` varchar(255) NOT NULL,
+  `monto` double NOT NULL,
+  `moneda` varchar(10) NOT NULL,
+  `monto_sistema` double NOT NULL,
+  `metodo_pago` varchar(50) NOT NULL,
+  `categoria` varchar(100) DEFAULT NULL,
+  `observaciones` text DEFAULT NULL,
+  `comprobante` varchar(120) DEFAULT NULL,
+  `usuario_cedula` varchar(20) NOT NULL,
+  `estado` varchar(30) NOT NULL DEFAULT 'confirmado',
+  `origen` varchar(30) NOT NULL DEFAULT 'manual',
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `cierres_caja_transacciones_manuales`
+--
+
+INSERT INTO `cierres_caja_transacciones_manuales` (`id`, `cierre_id`, `fecha`, `tipo`, `descripcion`, `monto`, `moneda`, `monto_sistema`, `metodo_pago`, `categoria`, `observaciones`, `comprobante`, `usuario_cedula`, `estado`, `origen`, `created_at`, `updated_at`) VALUES
+('TRX-1777812968391', 'CIERRE-2026-05-03-guatire', '2026-05-03 06:15:00', 'egreso', 'Pago de mensajeria de ejemplo', 12.5, 'USD', 12.5, 'efectivo', 'gasto_operativo', 'Dato de ejemplo para PDF', 'PDF-EX-001', '25409904', 'confirmado', 'manual', '2026-05-03 08:56:08', '2026-05-03 08:56:08'),
+('TRX-1777812968403', 'CIERRE-2026-05-03-guatire', '2026-05-03 11:40:00', 'ingreso', 'Ajuste de caja de ejemplo', 20, 'USD', 20, 'efectivo', 'ajuste_operativo', 'Dato de ejemplo para PDF', 'PDF-EX-002', '25409904', 'confirmado', 'manual', '2026-05-03 08:56:08', '2026-05-03 08:56:08');
 
 -- --------------------------------------------------------
 
@@ -167,7 +278,11 @@ INSERT INTO `configuraciones` (`id`, `sede`, `clave`, `valor`, `descripcion`) VA
 (9, 'guatire', 'costo_total_consulta', '60', 'Costo total de las consultas'),
 (10, 'guarenas', 'costo_total_consulta', '40', 'Costo total de las consultas'),
 (11, 'guatire', 'costo_medico_consulta', '40', 'Costo de consulta del medico'),
-(12, 'guarenas', 'costo_medico_consulta', '30', 'Costo de consulta del medico');
+(12, 'guarenas', 'costo_medico_consulta', '30', 'Costo de consulta del medico'),
+(15, 'guatire', 'correo_notificacion_1', 'correo_1@dominio.com', 'Configuracion correo_notificacion_1 para la sede guatire'),
+(16, 'guatire', 'correo_notificacion_2', 'correo_2@dominio.com', 'Configuracion correo_notificacion_2 para la sede guatire'),
+(17, 'guatire', 'correo_activo_1', '1', 'Configuracion correo_activo_1 para la sede guatire'),
+(18, 'guatire', 'correo_activo_2', '1', 'Configuracion correo_activo_2 para la sede guatire');
 
 -- --------------------------------------------------------
 
@@ -256,7 +371,7 @@ INSERT INTO `historiales_medicos` (`id`, `numero`, `venta_key`, `pago_pendiente`
 CREATE TABLE `historial_rastreo_bcv` (
   `id` int(11) NOT NULL,
   `fecha` date NOT NULL,
-  `hora` varchar(8) NOT NULL,
+  `hora` varchar(8) DEFAULT NULL,
   `rastreado` tinyint(4) NOT NULL,
   `respuesta` text DEFAULT NULL,
   `comentario` text DEFAULT NULL,
@@ -426,7 +541,18 @@ INSERT INTO `logins` (`id`, `sede_id`, `usu_cedula`, `token`, `ip`, `created_at`
 (122, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NjEwNTgzNywiZXhwIjoxNzc2MTkyMjM3fQ.7CeUtFZZ91d2X8WYr_1WZClK9mqx5Cfr70SzZIV_cdU', '::1', '2026-04-13 14:43:57', '2026-04-13 14:43:57'),
 (123, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NjEwNTg4MCwiZXhwIjoxNzc2MTkyMjgwfQ.RQ6YVxEDzzvlRKhNXQz7fzrya8kBu6EE5RLh3six-ag', '::1', '2026-04-13 14:44:40', '2026-04-13 14:44:40'),
 (124, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NjEwNjkzOCwiZXhwIjoxNzc2MTkzMzM4fQ.4NJWVpNM3M055579-EidY4ksRmigY6SiaryNGLrtlQw', '::1', '2026-04-13 15:02:18', '2026-04-13 15:02:18'),
-(125, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzYxMDY5MzgsImV4cCI6MTc3NjE5MzMzOH0.iRa2fRzekOlikOC6I_LVttU-AshmpHFIyZFXjEX0GoA', '::1', '2026-04-13 15:02:18', '2026-04-13 15:02:18');
+(125, 'guarenas', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NzYxMDY5MzgsImV4cCI6MTc3NjE5MzMzOH0.iRa2fRzekOlikOC6I_LVttU-AshmpHFIyZFXjEX0GoA', '::1', '2026-04-13 15:02:18', '2026-04-13 15:02:18'),
+(126, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NjY4MjE5MywiZXhwIjoxNzc2NzY4NTkzfQ.j-7Ap-CE1HICoYhp78Yui-CmR3mWlTo73cV76Oh8s8E', '::1', '2026-04-20 06:49:53', '2026-04-20 06:49:53'),
+(127, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NzgxMDE1NCwiZXhwIjoxNzc3ODk2NTU0fQ.U3b6LuvKqar8xEustZHZhnOyxvbvKCA_V52Xfz0tE5s', '::1', '2026-05-03 08:09:14', '2026-05-03 08:09:14'),
+(128, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NzgxMDIzOSwiZXhwIjoxNzc3ODk2NjM5fQ.LjOgSofkCBXU3jcEIYdL_XI93RkfSd9nNyMCebZR698', '::1', '2026-05-03 08:10:39', '2026-05-03 08:10:39'),
+(129, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NzgxMDI1MCwiZXhwIjoxNzc3ODk2NjUwfQ.49JJedwUV3LeHX-IPlkbFZyHx_3NMIoLYB6rLsJJgb8', '::1', '2026-05-03 08:10:50', '2026-05-03 08:10:50'),
+(130, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NzgxMTA1NiwiZXhwIjoxNzc3ODk3NDU2fQ.mdfKlwpduuswTeKHt3rDb1WQFlaNdQ8KknvyRCmwc5E', '::1', '2026-05-03 08:24:16', '2026-05-03 08:24:16'),
+(131, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NzgxMTEzNCwiZXhwIjoxNzc3ODk3NTM0fQ.ZakUZx9VcUYTSEpwe39m4nm9ZTs1IbtJevztFx7z8ho', '::1', '2026-05-03 08:25:34', '2026-05-03 08:25:34'),
+(132, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NzgxMTE5NywiZXhwIjoxNzc3ODk3NTk3fQ.bmtWd5mRVNYl_7n8V81H5I4grgaHxp2I65uRSipohbs', '::1', '2026-05-03 08:26:37', '2026-05-03 08:26:37'),
+(133, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NzgxMTM0NywiZXhwIjoxNzc3ODk3NzQ3fQ.MRPwPpEHVQHlzi7eelclF2oNwu2sJ01lPApEwBmSfVk', '::1', '2026-05-03 08:29:07', '2026-05-03 08:29:07'),
+(134, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NzgxMjc3MywiZXhwIjoxNzc3ODk5MTczfQ.lHlbr6Mk5aDfuAXkU-FVLiD4iKk9_9y-gzTtU3lo5XA', '::1', '2026-05-03 08:52:53', '2026-05-03 08:52:53'),
+(135, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NzgxMjk2OCwiZXhwIjoxNzc3ODk5MzY4fQ.HbqIn3_KxfL3LLTkVSB2q-VGdI4oiy4L2nTv0-AKSE0', '::1', '2026-05-03 08:56:08', '2026-05-03 08:56:08'),
+(136, 'guatire', '25409904', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhdGlyZSIsInVzZXJDZWR1bGEiOiIyNTQwOTkwNCIsImlhdCI6MTc3NzgxMjk4MSwiZXhwIjoxNzc3ODk5MzgxfQ.KjEFxR0woNvfiUc1UXgB_1odSD0cZ9vriDwowcQFz4w', '::1', '2026-05-03 08:56:21', '2026-05-03 08:56:21');
 
 -- --------------------------------------------------------
 
@@ -529,10 +655,10 @@ INSERT INTO `otps` (`id`, `usu_cedula`, `otp`, `ip`, `correo`, `activo`, `verifi
 
 CREATE TABLE `pacientes` (
   `id` int(11) NOT NULL,
-  `pkey` varchar(70) NOT NULL,
+  `pkey` varchar(70) DEFAULT NULL,
   `sede_id` varchar(50) NOT NULL,
   `cedula` varchar(20) NOT NULL,
-  `sin_cedula` tinyint(4) NOT NULL DEFAULT 0,
+  `sin_cedula` tinyint(4) NOT NULL DEFAULT 1,
   `nombre` varchar(255) NOT NULL,
   `fecha_nacimiento` date NOT NULL,
   `telefono` varchar(20) NOT NULL,
@@ -563,7 +689,14 @@ CREATE TABLE `pacientes` (
 --
 
 INSERT INTO `pacientes` (`id`, `pkey`, `sede_id`, `cedula`, `sin_cedula`, `nombre`, `fecha_nacimiento`, `telefono`, `email`, `ocupacion`, `genero`, `direccion`, `redes_sociales`, `empresa_rif`, `created_at`, `updated_at`, `deleted_at`, `tiene_lentes`, `fotofobia`, `uso_dispositivo_electronico`, `traumatismo_ocular`, `traumatismo_ocular_descripcion`, `cirugia_ocular`, `cirugia_ocular_descripcion`, `alergias`, `antecedentes_personales`, `antecedentes_familiares`, `patologias`) VALUES
-(1, 'c4ca4238a0b923820dcc509a6f75849b', 'guarenas', '24367965', 0, 'Ruben dario Martinez castro', '1994-11-20', '04120000000', 'ruben@example.com', 'Ingeniero', 'm', 'Guarenas', '[]', NULL, '2026-03-17 07:44:51', '2026-03-17 07:44:51', NULL, 'No', 'No', 'Sí', 'No', '', 'No', '', 'Ninguna', '', '', 'Ninguna');
+(1, 'c4ca4238a0b923820dcc509a6f75849b', 'guarenas', '24367965', 0, 'Ruben dario Martinez castro', '1994-11-20', '04120000000', 'ruben@example.com', 'Ingeniero', 'm', 'Guarenas', '[]', NULL, '2026-03-17 07:44:51', '2026-03-17 07:44:51', NULL, 'No', 'No', 'Sí', 'No', '', 'No', '', 'Ninguna', '', '', 'Ninguna'),
+(2, '30000001', 'guatire', '30000001', 0, 'Cliente Prueba Abono', '1900-01-01', '04120000000', 'prueba.abono@example.com', 'No especificada', 'N', 'No especificada', '[]', NULL, '2026-05-04 04:59:42', '2026-05-04 04:59:42', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(3, '30000002', 'guatire', '30000002', 0, 'Cliente Contado API', '1900-01-01', '04120000001', 'cliente.contado@example.com', 'No especificada', 'N', 'No especificada', '[]', NULL, '2026-05-04 04:59:42', '2026-05-04 04:59:42', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(4, '70000001', 'guarenas', '70000001', 0, 'Filtro Uno', '1900-01-01', '04120000001', 'filtro1@test.com', 'No especificada', 'N', 'No especificada', '[]', NULL, '2026-05-04 04:59:42', '2026-05-04 04:59:42', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(5, '70000002', 'guarenas', '70000002', 0, 'Filtro Dos', '1900-01-01', '04120000002', 'filtro2@test.com', 'No especificada', 'N', 'No especificada', '[]', NULL, '2026-05-04 04:59:42', '2026-05-04 04:59:42', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(6, '70000003', 'guarenas', '70000003', 0, 'Filtro Tres', '1900-01-01', '04120000003', 'filtro3@test.com', 'No especificada', 'N', 'No especificada', '[]', NULL, '2026-05-04 04:59:42', '2026-05-04 04:59:42', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(7, '70000004', 'guarenas', '70000004', 0, 'Filtro Cuatro', '1900-01-01', '04120000004', 'filtro4@test.com', 'No especificada', 'N', 'No especificada', '[]', NULL, '2026-05-04 04:59:42', '2026-05-04 04:59:42', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(8, '70000005', 'guarenas', '70000005', 0, 'Filtro Cinco', '1900-01-01', '04120000005', 'filtro5@test.com', 'No especificada', 'N', 'No especificada', '[]', NULL, '2026-05-04 04:59:42', '2026-05-04 04:59:42', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -589,6 +722,12 @@ CREATE TABLE `productos` (
   `moneda` varchar(20) NOT NULL,
   `activo` tinyint(4) NOT NULL,
   `descripcion` text DEFAULT NULL,
+  `cristal_config` longtext DEFAULT NULL,
+  `montura_config` longtext DEFAULT NULL,
+  `lente_contacto_config` longtext DEFAULT NULL,
+  `liquido_config` longtext DEFAULT NULL,
+  `estuche_config` longtext DEFAULT NULL,
+  `accesorio_config` longtext DEFAULT NULL,
   `requiere_formula` tinyint(4) NOT NULL DEFAULT 0,
   `requiere_item_padre` tinyint(4) NOT NULL DEFAULT 0,
   `imagen_url` text DEFAULT NULL,
@@ -601,16 +740,16 @@ CREATE TABLE `productos` (
 -- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `productos` (`id`, `sede_id`, `nombre`, `marca`, `color`, `codigo`, `material`, `proveedor`, `categoria`, `modelo`, `stock`, `precio`, `aplica_iva`, `precio_con_iva`, `moneda`, `activo`, `descripcion`, `imagen_url`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(5, 'guarenas', 'Producto Chevere 1', 'Marca Generica 1', 'Azul', 'PR-000005', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -78, 862.0700, 0, 1000.0000, 'bolivar', 1, 'Descripcion generica de muestra', '/public/images/product-generic-image.jpg?t=1758311414341', '2025-09-19 19:50:14', '2026-04-07 11:30:07', NULL),
-(6, 'guarenas', 'Producto Chevere 2', 'Marca Generica 1', 'Azul', 'PR-000006', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -41, 2000.0000, 1, 2320.0000, 'bolivar', 1, 'Descripcion generica de muestra', '/public/images/product-generic-image.jpg?t=1758311675271', '2025-09-19 19:54:35', '2026-04-07 11:30:07', NULL),
-(7, 'guarenas', 'Producto Chevere 3', 'Marca Generica 2', 'Azul', 'PR-000006', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -1, 2000.0000, 1, 2320.0000, 'bolivar', 1, 'Descripcion generica de muestra', '/public/images/product-generic-image.jpg?t=1758311675271', '2025-09-19 19:54:35', '2025-11-16 19:01:25', NULL),
-(8, 'guarenas', 'Producto 5', 'Marca Generica 1', 'Azul', 'PR-000008', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -36, 431.0300, 0, 500.0000, 'bolivar', 1, 'Descripcion generica de muestra', '/public/images/product-generic-image.jpg?t=1763317141933', '2025-11-16 18:19:01', '2026-03-16 15:08:21', NULL),
-(9, 'guarenas', 'Producto Chevere 6', 'Marca Generica 1', 'Azul', 'PR-000009', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -12, 1724.1400, 1, 2000.0000, 'bolivar', 1, 'Descripcion generica de muestra', '/public/images/product-generic-image.jpg?t=1763317167002', '2025-11-16 18:19:27', '2026-03-16 15:08:21', NULL),
-(10, 'guatire', 'Lentes Guatire 1', 'Ray-Ban', 'Negro', 'GT-001', 'Pasta', NULL, 'Lentes de Sol', 'Wayfarer', -2, 150.0000, 1, 174.0000, 'dolar', 1, NULL, NULL, '2026-03-16 15:19:29', '2026-03-16 15:44:10', NULL),
-(11, 'guatire', 'Lentes Guatire 2', 'Oakley', 'Azul', 'GT-002', 'Metal', NULL, 'Lentes Deportivos', 'Holbrook', 1, 120.0000, 1, 139.2000, 'dolar', 1, NULL, NULL, '2026-03-16 15:19:29', '2026-04-11 15:46:57', NULL),
-(101, 'guarenas', 'Producto Pago A', 'Test', NULL, 'PAG-A', 'Pasta', NULL, 'Monturas', NULL, 28, 86.2100, 1, 100.0000, 'dolar', 1, NULL, NULL, '2026-03-16 17:13:29', '2026-04-11 17:13:30', NULL),
-(102, 'guarenas', 'Producto Pago B', 'Test', NULL, 'PAG-B', 'Pasta', NULL, 'Monturas', NULL, 82, 43.1000, 1, 50.0000, 'dolar', 1, NULL, NULL, '2026-03-16 17:13:29', '2026-04-11 17:13:30', NULL);
+INSERT INTO `productos` (`id`, `sede_id`, `nombre`, `marca`, `color`, `codigo`, `material`, `proveedor`, `categoria`, `modelo`, `stock`, `precio`, `aplica_iva`, `precio_con_iva`, `moneda`, `activo`, `descripcion`, `cristal_config`, `montura_config`, `lente_contacto_config`, `liquido_config`, `estuche_config`, `accesorio_config`, `requiere_formula`, `requiere_item_padre`, `imagen_url`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(5, 'guarenas', 'Producto Chevere 1', 'Marca Generica 1', 'Azul', 'PR-000005', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -78, 862.0700, 0, 1000.0000, 'bolivar', 1, 'Descripcion generica de muestra', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '/public/images/product-generic-image.jpg?t=1758311414341', '2025-09-19 19:50:14', '2026-04-07 11:30:07', NULL),
+(6, 'guarenas', 'Producto Chevere 2', 'Marca Generica 1', 'Azul', 'PR-000006', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -41, 2000.0000, 1, 2320.0000, 'bolivar', 1, 'Descripcion generica de muestra', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '/public/images/product-generic-image.jpg?t=1758311675271', '2025-09-19 19:54:35', '2026-04-07 11:30:07', NULL),
+(7, 'guarenas', 'Producto Chevere 3', 'Marca Generica 2', 'Azul', 'PR-000006', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -1, 2000.0000, 1, 2320.0000, 'bolivar', 1, 'Descripcion generica de muestra', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '/public/images/product-generic-image.jpg?t=1758311675271', '2025-09-19 19:54:35', '2025-11-16 19:01:25', NULL),
+(8, 'guarenas', 'Producto 5', 'Marca Generica 1', 'Azul', 'PR-000008', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -36, 431.0300, 0, 500.0000, 'bolivar', 1, 'Descripcion generica de muestra', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '/public/images/product-generic-image.jpg?t=1763317141933', '2025-11-16 18:19:01', '2026-03-16 15:08:21', NULL),
+(9, 'guarenas', 'Producto Chevere 6', 'Marca Generica 1', 'Azul', 'PR-000009', 'Plastico', 'Pepsi', 'Lentes', 'Modelo de prueba', -12, 1724.1400, 1, 2000.0000, 'bolivar', 1, 'Descripcion generica de muestra', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, '/public/images/product-generic-image.jpg?t=1763317167002', '2025-11-16 18:19:27', '2026-03-16 15:08:21', NULL),
+(10, 'guatire', 'Lentes Guatire 1', 'Ray-Ban', 'Negro', 'GT-001', 'Pasta', NULL, 'Lentes de Sol', 'Wayfarer', -2, 150.0000, 1, 174.0000, 'dolar', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-03-16 15:19:29', '2026-03-16 15:44:10', NULL),
+(11, 'guatire', 'Lentes Guatire 2', 'Oakley', 'Azul', 'GT-002', 'Metal', NULL, 'Lentes Deportivos', 'Holbrook', 1, 120.0000, 1, 139.2000, 'dolar', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-03-16 15:19:29', '2026-04-11 15:46:57', NULL),
+(101, 'guarenas', 'Producto Pago A', 'Test', NULL, 'PAG-A', 'Pasta', NULL, 'Monturas', NULL, 28, 86.2100, 1, 100.0000, 'dolar', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-03-16 17:13:29', '2026-04-11 17:13:30', NULL),
+(102, 'guarenas', 'Producto Pago B', 'Test', NULL, 'PAG-B', 'Pasta', NULL, 'Monturas', NULL, 82, 43.1000, 1, 50.0000, 'dolar', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, '2026-03-16 17:13:29', '2026-04-11 17:13:30', NULL);
 
 -- --------------------------------------------------------
 
@@ -904,17 +1043,17 @@ CREATE TABLE `ventas_pagos` (
 -- Volcado de datos para la tabla `ventas_pagos`
 --
 
-INSERT INTO `ventas_pagos` (`id`, `venta_key`, `numero_pago`, `tipo`, `monto`, `moneda_id`, `monto_moneda_base`, `referencia`, `bancoCodigo`, `bancoNombre`, `bancoReceptorCodigo`, `bancoReceptorNombre`, `bancoReceptor`, `notaPago`, `created_by`, `created_at`, `updated_at`) VALUES
-(1, 'e2b7697e-7c84-4dfe-8fee-db8a8022b3fd', 1, 'efectivo', 20.0000, 'dolar', 20.0000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 15:01:32', '2026-04-11 15:01:32'),
-(2, 'e2b7697e-7c84-4dfe-8fee-db8a8022b3fd', 2, 'pagomovil', 19995.9707, 'bolivar', 42.0100, '1212121', '0134', 'Banesco', '0104', 'Venezolano de Crédito', '0104 - Venezolano de Crédito', 'pago cuenta de jeffe', '25409904', '2026-04-11 15:01:32', '2026-04-11 15:01:32'),
-(3, 'e2b7697e-7c84-4dfe-8fee-db8a8022b3fd', 2, 'efectivo', 50.1000, 'euro', 57.9900, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 15:01:32', '2026-04-11 15:01:32'),
-(4, 'e2b7697e-7c84-4dfe-8fee-db8a8022b3fd', 3, 'pagomovil', 500.0000, 'bolivar', 5.0000, 'abc123', '0134', 'Banesco', '0104', 'Venezolano de Crédito', '0104 - Venezolano de Crédito', 'test salida', '25409904', '2026-04-11 15:33:01', '2026-04-11 15:33:01'),
-(5, '26890c60-b570-4a0b-b668-6c15b9c891b8', 1, 'efectivo', 139.2000, 'dolar', 139.2000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 15:46:57', '2026-04-11 15:46:57'),
-(6, '79eb5077-cf5f-4e98-9196-e63cb01216c4', 1, 'efectivo', 50.0000, 'dolar', 50.0000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 17:13:30', '2026-04-11 17:13:30'),
-(7, 'e55a0f8c-7e00-4a0a-a9f8-4ff90d3f9de8', 1, 'efectivo', 30.0000, 'dolar', 30.0000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 17:13:30', '2026-04-11 17:13:30'),
-(8, '56951388-741e-455b-ac4a-41cd6e6c44e4', 1, 'efectivo', 20.0000, 'dolar', 20.0000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 17:13:30', '2026-04-11 17:13:30'),
-(9, '67145e82-4751-4481-9be0-05a34ef4975c', 1, 'efectivo', 70.0000, 'dolar', 70.0000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 17:13:30', '2026-04-11 17:13:30'),
-(10, '026727da-abd9-4646-91cc-32cfa5069f11', 1, 'efectivo', 25.0000, 'dolar', 25.0000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 17:13:30', '2026-04-11 17:13:30');
+INSERT INTO `ventas_pagos` (`id`, `venta_key`, `numero_pago`, `tipo`, `monto`, `moneda_id`, `monto_moneda_base`, `referencia`, `bancoCodigo`, `bancoNombre`, `bancoReceptorCodigo`, `bancoReceptorNombre`, `bancoReceptor`, `cuentaReceptoraId`, `notaPago`, `created_by`, `created_at`, `updated_at`) VALUES
+(1, 'e2b7697e-7c84-4dfe-8fee-db8a8022b3fd', 1, 'efectivo', 20.0000, 'dolar', 20.0000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 15:01:32', '2026-04-11 15:01:32'),
+(2, 'e2b7697e-7c84-4dfe-8fee-db8a8022b3fd', 2, 'pagomovil', 19995.9707, 'bolivar', 42.0100, '1212121', '0134', 'Banesco', '0104', 'Venezolano de Crédito', '0104 - Venezolano de Crédito', NULL, 'pago cuenta de jeffe', '25409904', '2026-04-11 15:01:32', '2026-04-11 15:01:32'),
+(3, 'e2b7697e-7c84-4dfe-8fee-db8a8022b3fd', 2, 'efectivo', 50.1000, 'euro', 57.9900, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 15:01:32', '2026-04-11 15:01:32'),
+(4, 'e2b7697e-7c84-4dfe-8fee-db8a8022b3fd', 3, 'pagomovil', 500.0000, 'bolivar', 5.0000, 'abc123', '0134', 'Banesco', '0104', 'Venezolano de Crédito', '0104 - Venezolano de Crédito', NULL, 'test salida', '25409904', '2026-04-11 15:33:01', '2026-04-11 15:33:01'),
+(5, '26890c60-b570-4a0b-b668-6c15b9c891b8', 1, 'efectivo', 139.2000, 'dolar', 139.2000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 15:46:57', '2026-04-11 15:46:57'),
+(6, '79eb5077-cf5f-4e98-9196-e63cb01216c4', 1, 'efectivo', 50.0000, 'dolar', 50.0000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 17:13:30', '2026-04-11 17:13:30'),
+(7, 'e55a0f8c-7e00-4a0a-a9f8-4ff90d3f9de8', 1, 'efectivo', 30.0000, 'dolar', 30.0000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 17:13:30', '2026-04-11 17:13:30'),
+(8, '56951388-741e-455b-ac4a-41cd6e6c44e4', 1, 'efectivo', 20.0000, 'dolar', 20.0000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 17:13:30', '2026-04-11 17:13:30'),
+(9, '67145e82-4751-4481-9be0-05a34ef4975c', 1, 'efectivo', 70.0000, 'dolar', 70.0000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 17:13:30', '2026-04-11 17:13:30'),
+(10, '026727da-abd9-4646-91cc-32cfa5069f11', 1, 'efectivo', 25.0000, 'dolar', 25.0000, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '25409904', '2026-04-11 17:13:30', '2026-04-11 17:13:30');
 
 -- --------------------------------------------------------
 
@@ -1009,10 +1148,34 @@ ALTER TABLE `categorias`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `cierres_caja`
+--
+ALTER TABLE `cierres_caja`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_cierres_caja_fecha_sede` (`fecha`,`sede`),
+  ADD KEY `idx_cierres_caja_estado` (`estado`);
+
+--
+-- Indices de la tabla `cierres_caja_conciliaciones`
+--
+ALTER TABLE `cierres_caja_conciliaciones`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_cierres_caja_conciliaciones_cierre` (`cierre_id`),
+  ADD KEY `idx_cierres_caja_conciliaciones_metodo` (`metodo`);
+
+--
+-- Indices de la tabla `cierres_caja_transacciones_manuales`
+--
+ALTER TABLE `cierres_caja_transacciones_manuales`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_cierres_caja_transacciones_cierre` (`cierre_id`);
+
+--
 -- Indices de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `cedula` (`cedula`);
 
 --
 -- Indices de la tabla `configuraciones`
@@ -1024,7 +1187,8 @@ ALTER TABLE `configuraciones`
 -- Indices de la tabla `empresas`
 --
 ALTER TABLE `empresas`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_empresas_rif` (`rif`);
 
 --
 -- Indices de la tabla `historiales_medicos`
@@ -1043,7 +1207,8 @@ ALTER TABLE `historial_rastreo_bcv`
 -- Indices de la tabla `logins`
 --
 ALTER TABLE `logins`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sede_id` (`sede_id`);
 
 --
 -- Indices de la tabla `metodos_pago_config`
@@ -1073,7 +1238,10 @@ ALTER TABLE `otps`
 --
 ALTER TABLE `pacientes`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `pkey` (`pkey`);
+  ADD UNIQUE KEY `pkey` (`pkey`),
+  ADD KEY `idx_pacientes_cedula` (`cedula`),
+  ADD KEY `sede_id` (`sede_id`),
+  ADD KEY `empresa_rif` (`empresa_rif`);
 
 --
 -- Indices de la tabla `productos`
@@ -1197,6 +1365,12 @@ ALTER TABLE `categorias`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT de la tabla `cierres_caja_conciliaciones`
+--
+ALTER TABLE `cierres_caja_conciliaciones`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
@@ -1206,7 +1380,7 @@ ALTER TABLE `clientes`
 -- AUTO_INCREMENT de la tabla `configuraciones`
 --
 ALTER TABLE `configuraciones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `empresas`
@@ -1230,7 +1404,7 @@ ALTER TABLE `historial_rastreo_bcv`
 -- AUTO_INCREMENT de la tabla `logins`
 --
 ALTER TABLE `logins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
 
 --
 -- AUTO_INCREMENT de la tabla `metodos_pago_config`
@@ -1254,7 +1428,7 @@ ALTER TABLE `otps`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
@@ -1315,6 +1489,41 @@ ALTER TABLE `ventas_pagos_agrupados`
 --
 ALTER TABLE `ventas_productos`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `cierres_caja_conciliaciones`
+--
+ALTER TABLE `cierres_caja_conciliaciones`
+  ADD CONSTRAINT `cierres_caja_conciliaciones_ibfk_1` FOREIGN KEY (`cierre_id`) REFERENCES `cierres_caja` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `cierres_caja_transacciones_manuales`
+--
+ALTER TABLE `cierres_caja_transacciones_manuales`
+  ADD CONSTRAINT `cierres_caja_transacciones_manuales_ibfk_1` FOREIGN KEY (`cierre_id`) REFERENCES `cierres_caja` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `clientes`
+--
+ALTER TABLE `clientes`
+  ADD CONSTRAINT `clientes_ibfk_1` FOREIGN KEY (`cedula`) REFERENCES `pacientes` (`cedula`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `logins`
+--
+ALTER TABLE `logins`
+  ADD CONSTRAINT `logins_ibfk_1` FOREIGN KEY (`sede_id`) REFERENCES `sedes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `pacientes`
+--
+ALTER TABLE `pacientes`
+  ADD CONSTRAINT `pacientes_ibfk_5` FOREIGN KEY (`sede_id`) REFERENCES `sedes` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `pacientes_ibfk_6` FOREIGN KEY (`empresa_rif`) REFERENCES `empresas` (`rif`) ON DELETE SET NULL ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
