@@ -19,6 +19,7 @@ const sequelize = new Sequelize({
 async function testConnection() {
   try {
     await sequelize.authenticate();
+    await ensureEtiquetaProductosConfigTable();
     await ensurePacienteSedesTable();
     await ensurePacienteAliasesTable();
     await ensurePresupuestoOptionColumns();
@@ -28,6 +29,30 @@ async function testConnection() {
   } catch (error) {
     console.error('❌ Error de conexión a MySQL:', error);
     process.exit(1);
+  }
+}
+
+async function ensureEtiquetaProductosConfigTable() {
+  try {
+    await sequelize.query(`
+      CREATE TABLE IF NOT EXISTS etiquetas_productos_config (
+        id INT(11) NOT NULL AUTO_INCREMENT,
+        sede VARCHAR(50) NOT NULL,
+        fields LONGTEXT NOT NULL,
+        columns INT(11) NOT NULL DEFAULT 3,
+        label_width_mm INT(11) NOT NULL DEFAULT 63,
+        label_height_mm INT(11) NOT NULL DEFAULT 34,
+        show_border TINYINT(1) NOT NULL DEFAULT 1,
+        cantidad_masiva_default INT(11) DEFAULT NULL,
+        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        UNIQUE KEY uk_etiquetas_productos_config_sede (sede)
+      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+    `);
+  } catch (error) {
+    console.error('❌ Error asegurando tabla etiquetas_productos_config:', error);
+    throw error;
   }
 }
 
