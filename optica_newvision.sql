@@ -287,6 +287,25 @@ INSERT INTO `configuraciones` (`id`, `sede`, `clave`, `valor`, `descripcion`) VA
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `etiquetas_productos_config`
+--
+
+CREATE TABLE `etiquetas_productos_config` (
+  `id` int(11) NOT NULL,
+  `sede` varchar(50) NOT NULL,
+  `fields` longtext NOT NULL,
+  `columns` int(11) NOT NULL DEFAULT 3,
+  `label_width_mm` int(11) NOT NULL DEFAULT 63,
+  `label_height_mm` int(11) NOT NULL DEFAULT 34,
+  `show_border` tinyint(1) NOT NULL DEFAULT 1,
+  `cantidad_masiva_default` int(11) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `empresas`
 --
 
@@ -1184,6 +1203,14 @@ ALTER TABLE `configuraciones`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indices de la tabla `etiquetas_productos_config`
+--
+ALTER TABLE `etiquetas_productos_config`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uk_etiquetas_productos_config_sede` (`sede`),
+  ADD KEY `idx_etiquetas_productos_config_sede` (`sede`);
+
+--
 -- Indices de la tabla `empresas`
 --
 ALTER TABLE `empresas`
@@ -1375,6 +1402,12 @@ ALTER TABLE `cierres_caja_conciliaciones`
 --
 ALTER TABLE `clientes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT de la tabla `etiquetas_productos_config`
+--
+ALTER TABLE `etiquetas_productos_config`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `configuraciones`
