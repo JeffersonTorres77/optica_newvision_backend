@@ -19,6 +19,7 @@ const CatchGeneric = require('../utils/CatchGeneric');
 const VentaController = require('../controllers/VentaController');
 const CierreCajaController = require('../controllers/CierreCajaController');
 const ConfiguracionController = require('../controllers/ConfiguracionController');
+const EtiquetaProductoConfigController = require('../controllers/EtiquetaProductoConfigController');
 const OrdenTrabajoController = require('../controllers/OrdenTrabajoController');
 const EmpresaController = require('../controllers/EmpresaController');
 const PresupuestoController = require('../controllers/PresupuestoController');
@@ -78,6 +79,8 @@ router.put('/configuracion/bancos_receptores-update/:codigo', authMiddleware, Ca
 router.get('/configuracion/metodos_pago_config-get', authMiddleware, CatchGeneric(ConfiguracionController.metodos_pago_config_get));
 router.post('/configuracion/metodos_pago_config-save', authMiddleware, CatchGeneric(ConfiguracionController.metodos_pago_config_save));
 router.put('/configuracion/metodos_pago_config-update/:key', authMiddleware, CatchGeneric(ConfiguracionController.metodos_pago_config_update));
+router.get('/configuracion/etiquetas_productos-get', authMiddleware, CatchGeneric(EtiquetaProductoConfigController.get));
+router.put('/configuracion/etiquetas_productos-update', authMiddleware, CatchGeneric(EtiquetaProductoConfigController.update));
 
 router.get('/get-usuarios/:cedula?', authMiddleware, CatchGeneric(UsuarioController.get));
 router.post('/add-usuarios/', authMiddleware, CatchGeneric(UsuarioController.add));

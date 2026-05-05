@@ -506,6 +506,79 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Get Etiquetas productos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/etiquetas_productos-get?sede=guatire",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "etiquetas_productos-get"
+              ],
+              "query": [
+                {
+                  "key": "sede",
+                  "value": "guatire"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Etiquetas productos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"sede\": \"guatire\",\r\n    \"fields\": [\r\n        {\r\n            \"key\": \"codigo\",\r\n            \"label\": \"Codigo\",\r\n            \"enabled\": true,\r\n            \"order\": 0\r\n        },\r\n        {\r\n            \"key\": \"nombre\",\r\n            \"label\": \"Nombre\",\r\n            \"enabled\": true,\r\n            \"order\": 1\r\n        },\r\n        {\r\n            \"key\": \"marca\",\r\n            \"label\": \"Marca\",\r\n            \"enabled\": false,\r\n            \"order\": 2\r\n        },\r\n        {\r\n            \"key\": \"precio\",\r\n            \"label\": \"Precio\",\r\n            \"enabled\": true,\r\n            \"order\": 3\r\n        }\r\n    ],\r\n    \"columns\": 3,\r\n    \"labelWidthMm\": 63,\r\n    \"labelHeightMm\": 34,\r\n    \"showBorder\": false,\r\n    \"cantidadMasivaDefault\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/etiquetas_productos-update",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "etiquetas_productos-update"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
