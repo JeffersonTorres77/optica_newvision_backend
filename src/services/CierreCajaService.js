@@ -2,6 +2,7 @@ const { Op } = require('sequelize');
 const { sequelize } = require('../config/db');
 const FormatUtils = require('../utils/FormatUtils');
 const ConfiguracionService = require('./ConfiguracionService');
+const EnvioCorreo = require('../config/correo');
 const VentaService = require('./VentaService');
 const Venta = require('../models/Venta');
 const VentaPago = require('../models/VentaPago');
@@ -17,6 +18,7 @@ const Tasa = require('../models/Tasa');
 const CierreCaja = require('../models/CierreCaja');
 const CierreCajaTransaccionManual = require('../models/CierreCajaTransaccionManual');
 const CierreCajaConciliacion = require('../models/CierreCajaConciliacion');
+const VerificationUtils = require('../utils/VerificationUtils');
 
 const VENTA_INCLUDE = [
   { model: VentaPago, as: 'array_pagos' },
@@ -42,6 +44,29 @@ const VENTA_INCLUDE = [
 ];
 
 const CierreCajaService = {
+  decodificarTokenPublico(token) {
+    const valor = String(token || '').trim();
+    if (!valor) {
+      throw { message: 'El token del cierre es obligatorio.' };
+    }
+
+    try {
+      const base64 = valor.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(valor.length / 4) * 4, '=');
+      const json = Buffer.from(base64, 'base64').toString('utf8');
+      const payload = JSON.parse(json);
+      const sede = String(payload?.sede || '').trim().toLowerCase();
+      const fecha = String(payload?.fecha || '').trim();
+
+      if (!sede || !fecha) {
+        throw new Error('Token incompleto.');
+      }
+
+      return { sede, fecha };
+    } catch (error) {
+      throw { message: 'El token del cierre no es valido.' };
+    }
+  },
+
   normalizarFecha(fechaInput) {
     if (!fechaInput) {
       throw { message: 'La fecha es obligatoria.' };
@@ -465,6 +490,145 @@ const CierreCajaService = {
     return output;
   },
 
+  async obtenerDestinatariosCorreoCierre(sedeId) {
+    const configuracion = await ConfiguracionService.get_correos_notificacion(sedeId);
+    const candidatos = [
+      {
+        correo: String(configuracion?.correo_notificacion_1?.valor || '').trim(),
+        activo: String(configuracion?.correo_activo_1?.valor || '1').trim() !== '0'
+      },
+      {
+        correo: String(configuracion?.correo_notificacion_2?.valor || '').trim(),
+        activo: String(configuracion?.correo_activo_2?.valor || '1').trim() !== '0'
+      }
+    ];
+
+    return Array.from(new Set(
+      candidatos
+        .filter((item) => item.activo && VerificationUtils.verify_correo(item.correo))
+        .map((item) => item.correo.toLowerCase())
+    ));
+  },
+
+  construirHtmlCorreoCierre(payload) {
+    const fecha = this.formatearFechaHumana(payload?.fecha);
+    const sede = String(payload?.sede || '').trim() || 'general';
+    const usuario = String(payload?.usuarioCierre || '').trim() || 'Sistema';
+    const diferencia = FormatUtils.float(payload?.diferencia || 0);
+    const estado = String(payload?.estadoConciliacion || '').trim() || 'cuadrado';
+    const notas = String(payload?.notasCierre || '').trim() || 'Sin observaciones';
+    const publicUrl = String(payload?.documentoPdf?.publicUrl || '').trim();
+    const publicPrintUrl = String(payload?.documentoPdf?.publicPrintUrl || publicUrl).trim();
+
+    return `
+      <div style="font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;padding:24px;color:#102a43;">
+        <div style="max-width:720px;margin:0 auto;background:#ffffff;border:1px solid #d9e2ec;border-radius:18px;overflow:hidden;box-shadow:0 18px 36px rgba(15,23,42,0.08);">
+          <div style="background:linear-gradient(135deg,#0f4c81 0%,#3f8fc9 100%);padding:24px 28px;color:#ffffff;">
+            <div style="font-size:14px;opacity:0.9;margin-bottom:6px;">Óptica New Vision</div>
+            <div style="font-size:30px;font-weight:700;line-height:1.1;">Reporte de cierre de caja</div>
+            <div style="font-size:15px;opacity:0.92;margin-top:8px;">Sede ${sede} · Fecha ${fecha}</div>
+          </div>
+          <div style="padding:28px 28px 34px;">
+            <table role="presentation" width="100%" style="width:100%;border-collapse:separate;border-spacing:0 14px;">
+              <tr>
+                <td>
+                  <table role="presentation" width="100%" style="width:100%;border-collapse:separate;border-spacing:0;">
+                    <tr>
+                      <td valign="top" style="width:50%;padding:0 7px 0 0;">
+                        <div style="border:1px solid #d9e2ec;border-radius:14px;padding:16px;background:#f8fbff;min-height:98px;">
+                          <div style="font-size:12px;color:#627d98;text-transform:uppercase;font-weight:700;letter-spacing:.04em;">Responsable del cierre</div>
+                          <div style="font-size:20px;font-weight:700;margin-top:10px;line-height:1.35;color:#102a43;">${usuario}</div>
+                        </div>
+                      </td>
+                      <td valign="top" style="width:50%;padding:0 0 0 7px;">
+                        <div style="border:1px solid #d9e2ec;border-radius:14px;padding:16px;background:#f8fbff;min-height:98px;">
+                          <div style="font-size:12px;color:#627d98;text-transform:uppercase;font-weight:700;letter-spacing:.04em;">Estado conciliación</div>
+                          <div style="font-size:20px;font-weight:700;margin-top:10px;line-height:1.35;color:#102a43;">${estado}</div>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="border:1px solid #d9e2ec;border-radius:14px;padding:16px;background:#f8fbff;">
+                    <div style="font-size:12px;color:#627d98;text-transform:uppercase;font-weight:700;letter-spacing:.04em;">Diferencia total</div>
+                    <div style="font-size:22px;font-weight:700;margin-top:10px;line-height:1.3;color:${diferencia === 0 ? '#102a43' : diferencia > 0 ? '#0f766e' : '#b42318'};">${FormatUtils.float(diferencia)}</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="border:1px solid #d9e2ec;border-radius:14px;padding:16px;background:#ffffff;">
+                    <div style="font-size:12px;color:#627d98;text-transform:uppercase;font-weight:700;letter-spacing:.04em;">Notas del cierre</div>
+                    <div style="font-size:15px;line-height:1.7;color:#243b53;margin-top:10px;">${notas}</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding-top:6px;">
+                  <table role="presentation" style="border-collapse:separate;border-spacing:0;">
+                    <tr>
+                      <td style="padding:0 10px 0 0;">
+                        <a href="${publicUrl}" style="display:inline-block;background:#0f4c81;color:#ffffff;text-decoration:none;padding:13px 18px;border-radius:999px;font-weight:700;">Abrir cierre</a>
+                      </td>
+                      <td>
+                        <a href="${publicPrintUrl}" style="display:inline-block;background:#e6f0f8;color:#0f4c81;text-decoration:none;padding:13px 18px;border-radius:999px;font-weight:700;border:1px solid #bfd4e5;">Abrir para imprimir</a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding-top:6px;">
+                  <div style="border-top:1px solid #e7eef5;padding-top:16px;color:#6b7c93;font-size:12px;line-height:1.7;text-align:center;">
+                    <div>&copy; 2025 Óptica New Vision Lens 2020</div>
+                    <div>Operación centralizada para ${sede}</div>
+                    <div>v1.0</div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  async enviarCorreoCierreCaja({ cierre, payload, req }) {
+    if (payload?.opciones?.enviarEmail !== true) {
+      return { enviado: false, motivo: 'opcion-deshabilitada' };
+    }
+
+    if (!payload?.documentoPdf?.publicUrl) {
+      return { enviado: false, motivo: 'url-publica-no-disponible' };
+    }
+
+    const destinatarios = await this.obtenerDestinatariosCorreoCierre(cierre.sede);
+    if (!destinatarios.length) {
+      return { enviado: false, motivo: 'sin-destinatarios-configurados' };
+    }
+
+    const asunto = `Cierre de caja ${this.formatearFechaHumana(payload?.fecha || cierre.fecha)} · ${cierre.sede}`;
+    const html = this.construirHtmlCorreoCierre({
+      fecha: payload?.fecha || cierre.fecha,
+      sede: cierre.sede,
+      usuarioCierre: req?.user?.nombre,
+      diferencia: payload?.diferenciaTotal,
+      estadoConciliacion: payload?.estadoConciliacion,
+      notasCierre: payload?.notasCierre,
+      documentoPdf: payload?.documentoPdf
+    });
+
+    const info = await EnvioCorreo.send(destinatarios.join(','), asunto, html);
+    return {
+      enviado: true,
+      destinatarios,
+      messageId: info?.messageId || null
+    };
+  },
+
   agruparConciliaciones(conciliaciones) {
     const output = {
       punto: [],
@@ -582,8 +746,7 @@ const CierreCajaService = {
       };
       output.opciones = {
         imprimirResumen: !!cierre.imprimir_resumen,
-        enviarEmail: !!cierre.enviar_email,
-        adjuntarComprobantes: !!cierre.adjuntar_comprobantes
+        enviarEmail: !!cierre.enviar_email
       };
       output.transaccionesManuales = [];
 
@@ -639,6 +802,23 @@ const CierreCajaService = {
       transaccionesManuales: transaccionesManualesOutput,
       estadisticas: this.calcularEstadisticasVentas(ventasFormateadas)
     };
+  },
+
+  async obtenerResumenPublicoPorToken(token) {
+    const { sede, fecha } = this.decodificarTokenPublico(token);
+    const fechaNormalizada = this.normalizarFecha(fecha);
+    const resumen = await this.obtenerResumenDiario(fechaNormalizada, sede);
+    const cierre = resumen?.cierreExistente;
+
+    if (!cierre) {
+      throw { message: 'No existe un cierre disponible para la fecha indicada.' };
+    }
+
+    if (!['cerrado', 'revisado'].includes(String(cierre.estado || '').trim().toLowerCase())) {
+      throw { message: 'El cierre indicado aun no esta disponible para consulta publica.' };
+    }
+
+    return resumen;
   },
 
   async abrirCaja(payload, req) {
@@ -807,7 +987,6 @@ const CierreCajaService = {
       cierre.estado_conciliacion = String(payload.estadoConciliacion || '').trim() || (Math.abs(Number(payload.diferenciaTotal || 0)) > 0.01 ? 'diferencia' : 'cuadrado');
       cierre.imprimir_resumen = payload.opciones?.imprimirResumen !== false;
       cierre.enviar_email = payload.opciones?.enviarEmail === true;
-      cierre.adjuntar_comprobantes = payload.opciones?.adjuntarComprobantes !== false;
       cierre.updated_by = req.user.cedula;
       await cierre.save({ transaction: t });
 
@@ -846,6 +1025,19 @@ const CierreCajaService = {
       throw error;
     }
 
+    let resultadoCorreo = { enviado: false, motivo: 'no-intentado' };
+
+    try {
+      resultadoCorreo = await this.enviarCorreoCierreCaja({ cierre, payload, req });
+    } catch (error) {
+      console.error('No se pudo enviar el correo del cierre de caja:', error);
+      resultadoCorreo = {
+        enviado: false,
+        motivo: 'error-envio',
+        detalle: error?.message || error?.toString?.() || 'Error desconocido'
+      };
+    }
+
     return {
       message: 'ok',
       cierre: {
@@ -855,7 +1047,8 @@ const CierreCajaService = {
         usuarioCierre: req.user.nombre,
         diferencia: FormatUtils.float(cierre.diferencia_total || 0),
         notasCierre: cierre.notas_cierre
-      }
+      },
+      correo: resultadoCorreo
     };
   },
 

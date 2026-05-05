@@ -122,6 +122,7 @@ router.post('/estadisticas-financieras', authMiddleware, CatchGeneric(VentaContr
 router.put('/ventas-anular/:venta_key', authMiddleware, CatchGeneric(VentaController.anular));
 router.put('/ventas-abonar/:venta_key', authMiddleware, CatchGeneric(VentaController.abonar));
 
+router.get('/cierre-caja/publico', CatchGeneric(CierreCajaController.publico));
 router.get('/cierre-caja/resumen', authMiddleware, CatchGeneric(CierreCajaController.resumen));
 router.post('/cierre-caja/apertura', authMiddleware, CatchGeneric(CierreCajaController.apertura));
 router.post('/cierre-caja/transacciones-manuales', authMiddleware, CatchGeneric(CierreCajaController.transaccion_manual_add));

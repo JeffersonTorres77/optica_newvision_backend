@@ -175,17 +175,6 @@ const CierreCaja = sequelize.define('CierreCaja', {
       this.setDataValue('enviar_email', value ? 1 : 0);
     }
   },
-  adjuntar_comprobantes: {
-    type: DataTypes.TINYINT(4),
-    allowNull: false,
-    defaultValue: 1,
-    get() {
-      return this.getDataValue('adjuntar_comprobantes') === 1;
-    },
-    set(value) {
-      this.setDataValue('adjuntar_comprobantes', value ? 1 : 0);
-    }
-  },
   motivo_anulacion: {
     type: DataTypes.TEXT,
     allowNull: true,

@@ -9,6 +9,11 @@ const CierreCajaController = {
     res.status(200).json(output);
   },
 
+  publico: async (req, res) => {
+    const output = await CierreCajaService.obtenerResumenPublicoPorToken(req.query.token);
+    res.status(200).json(output);
+  },
+
   apertura: async (req, res) => {
     const output = await CierreCajaService.abrirCaja(req.body, req);
     res.status(200).json(output);
