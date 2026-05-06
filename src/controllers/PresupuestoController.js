@@ -1,6 +1,11 @@
 const PresupuestoService = require('../services/PresupuestoService');
 
 const PresupuestoController = {
+  publico: async (req, res) => {
+    const output = await PresupuestoService.publico(req.query?.token);
+    res.status(200).json(output);
+  },
+
   get: async (req, res) => {
     const id = String(req.params.id || '').trim() || null;
     const output = await PresupuestoService.get(req, id);
@@ -9,6 +14,16 @@ const PresupuestoController = {
 
   add: async (req, res) => {
     const output = await PresupuestoService.add(req.body, req);
+    res.status(200).json(output);
+  },
+
+  enviarCorreo: async (req, res) => {
+    const id = String(req.params.id || '').trim();
+    if (!id) {
+      throw { message: 'Debe enviar el id del presupuesto en la URL.' };
+    }
+
+    const output = await PresupuestoService.enviarCorreo(id, req.body, req);
     res.status(200).json(output);
   },
 

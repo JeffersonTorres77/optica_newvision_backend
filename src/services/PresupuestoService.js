@@ -3,6 +3,7 @@ const { sequelize } = require('../config/db');
 const VerificationUtils = require('../utils/VerificationUtils');
 const FormatUtils = require('../utils/FormatUtils');
 const ConfiguracionService = require('./ConfiguracionService');
+const EnvioCorreo = require('../config/correo');
 const Presupuesto = require('../models/Presupuesto');
 const PresupuestoItem = require('../models/PresupuestoItem');
 const Producto = require('../models/Producto');
@@ -74,6 +75,12 @@ const PRESUPUESTO_INCLUDE = [
     as: 'asesor_user',
     required: false,
     attributes: ['id', 'cedula', 'nombre']
+  },
+  {
+    model: require('../models/Sede'),
+    as: 'sede',
+    required: false,
+    attributes: ['id', 'nombre', 'nombre_optica', 'rif', 'direccion', 'telefono', 'email', 'direccion_fiscal']
   }
 ];
 
@@ -122,6 +129,14 @@ function normalizarBanderaBooleana(valor) {
 
     if (['false', '0', 'no', 'null', 'undefined', ''].includes(texto)) {
       return false;
+    }
+
+    function codificarTokenPublico(payload) {
+      return Buffer.from(JSON.stringify(payload), 'utf8')
+        .toString('base64')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/g, '');
     }
   }
 
@@ -536,6 +551,37 @@ function extraerFormulaExternaInput(payload, fallback = null) {
 
 function generarPresupuestoKey() {
   return `PTO-${Date.now()}-${Math.random().toString(36).slice(2, 10).toUpperCase()}`;
+}
+
+async function resolverPresupuestoKey(inputKey, transaction) {
+  const keyNormalizado = normalizarTexto(inputKey);
+
+  if (keyNormalizado) {
+    const existente = await Presupuesto.findOne({
+      where: { presupuesto_key: keyNormalizado },
+      paranoid: false,
+      transaction
+    });
+
+    if (existente) {
+      throw { message: 'El identificador público del presupuesto ya existe. Intente nuevamente.' };
+    }
+
+    return keyNormalizado;
+  }
+
+  while (true) {
+    const candidato = generarPresupuestoKey();
+    const existente = await Presupuesto.findOne({
+      where: { presupuesto_key: candidato },
+      paranoid: false,
+      transaction
+    });
+
+    if (!existente) {
+      return candidato;
+    }
+  }
 }
 
 function normalizarFecha(valor, fallback = null) {
@@ -1180,6 +1226,17 @@ function mapPresupuestoOutput(presupuesto) {
       pacienteKey: plain.paciente_key_origen || null,
       pacienteId: plain.paciente_id_origen || null
     },
+    sede: plain.sede
+      ? {
+          id: plain.sede.id,
+          nombre: plain.sede.nombre,
+          nombreOptica: plain.sede.nombre_optica,
+          rif: plain.sede.rif,
+          direccion: plain.sede.direccion_fiscal || plain.sede.direccion || null,
+          telefono: plain.sede.telefono || null,
+          email: plain.sede.email || null
+        }
+      : null,
     vendedor: plain.vendedor_nombre || plain.asesor_user?.nombre || null,
     asesor: plain.asesor_user
       ? {
@@ -1234,7 +1291,162 @@ async function obtenerPresupuestoPorId(id, sedeId) {
   return mapPresupuestoOutput(presupuesto);
 }
 
+async function obtenerPresupuestoPorKeyPublico(presupuestoKey) {
+  const presupuesto = await Presupuesto.findOne({
+    where: { presupuesto_key: presupuestoKey },
+    include: PRESUPUESTO_INCLUDE
+  });
+
+  if (!presupuesto) {
+    throw { message: 'El presupuesto solicitado no existe.' };
+  }
+
+  return mapPresupuestoOutput(presupuesto);
+}
+
 const PresupuestoService = {
+  decodificarTokenPublico(token) {
+    const valor = String(token || '').trim();
+    if (!valor) {
+      throw { message: 'El token del presupuesto es obligatorio.' };
+    }
+
+    try {
+      const base64 = valor.replace(/-/g, '+').replace(/_/g, '/').padEnd(Math.ceil(valor.length / 4) * 4, '=');
+      const json = Buffer.from(base64, 'base64').toString('utf8');
+      const payload = JSON.parse(json);
+      const presupuestoKey = String(payload?.presupuestoKey || '').trim();
+
+      if (!presupuestoKey) {
+        throw new Error('Token incompleto.');
+      }
+
+      return { presupuestoKey };
+    } catch (error) {
+      throw { message: 'El token del presupuesto no es valido.' };
+    }
+  },
+
+  construirHtmlCorreoPresupuesto(payload) {
+    const codigo = String(payload?.presupuesto?.codigo || '').trim() || 'Presupuesto';
+    const cliente = String(payload?.presupuesto?.cliente?.nombreCompleto || '').trim() || 'cliente';
+    const fechaVencimiento = payload?.presupuesto?.fechaVencimiento
+      ? new Date(payload.presupuesto.fechaVencimiento).toLocaleDateString('es-VE')
+      : 'No definida';
+    const total = Number(payload?.presupuesto?.total || 0);
+    const monedaRaw = String(payload?.presupuesto?.moneda || '').trim();
+    const monedaNormalizada = String(monedaRaw || 'USD').toLowerCase();
+    const simboloMoneda = ['eur', 'euro', '€'].includes(monedaNormalizada)
+      ? '€'
+      : ['ves', 'bolivar', 'bolívar', 'bs', 'bs.'].includes(monedaNormalizada)
+        ? 'Bs.'
+        : '$';
+    const publicUrl = String(payload?.documentoPdf?.publicUrl || '').trim();
+    const publicPrintUrl = String(payload?.documentoPdf?.publicPrintUrl || publicUrl).trim();
+
+    return `
+      <div style="font-family:Arial,Helvetica,sans-serif;background:#f4f7fb;padding:24px;color:#102a43;">
+        <div style="max-width:720px;margin:0 auto;background:#ffffff;border:1px solid #d9e2ec;border-radius:18px;overflow:hidden;box-shadow:0 18px 36px rgba(15,23,42,0.08);">
+          <div style="background:linear-gradient(135deg,#0f4c81 0%,#3f8fc9 100%);padding:24px 28px;color:#ffffff;">
+            <div style="font-size:14px;opacity:0.9;margin-bottom:6px;">Óptica New Vision</div>
+            <div style="font-size:30px;font-weight:700;line-height:1.1;">Su presupuesto está listo</div>
+            <div style="font-size:15px;opacity:0.92;margin-top:8px;">${codigo}</div>
+          </div>
+          <div style="padding:28px 28px 34px;">
+            <div style="font-size:15px;line-height:1.7;color:#243b53;margin-bottom:18px;">
+              Hola ${cliente}, le compartimos su presupuesto óptico. Puede abrirlo en línea o enviarlo directamente a impresión.
+            </div>
+            <table role="presentation" width="100%" style="width:100%;border-collapse:separate;border-spacing:0 14px;">
+              <tr>
+                <td>
+                  <table role="presentation" width="100%" style="width:100%;border-collapse:separate;border-spacing:0;">
+                    <tr>
+                      <td valign="top" style="width:50%;padding:0 7px 0 0;">
+                        <div style="border:1px solid #d9e2ec;border-radius:14px;padding:16px;background:#f8fbff;min-height:98px;">
+                          <div style="font-size:12px;color:#627d98;text-transform:uppercase;font-weight:700;letter-spacing:.04em;">Código</div>
+                          <div style="font-size:20px;font-weight:700;margin-top:10px;line-height:1.35;color:#102a43;">${codigo}</div>
+                        </div>
+                      </td>
+                      <td valign="top" style="width:50%;padding:0 0 0 7px;">
+                        <div style="border:1px solid #d9e2ec;border-radius:14px;padding:16px;background:#f8fbff;min-height:98px;">
+                          <div style="font-size:12px;color:#627d98;text-transform:uppercase;font-weight:700;letter-spacing:.04em;">Vencimiento</div>
+                          <div style="font-size:20px;font-weight:700;margin-top:10px;line-height:1.35;color:#102a43;">${fechaVencimiento}</div>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div style="border:1px solid #d9e2ec;border-radius:14px;padding:16px;background:#f8fbff;">
+                    <div style="font-size:12px;color:#627d98;text-transform:uppercase;font-weight:700;letter-spacing:.04em;">Total estimado</div>
+                    <div style="font-size:22px;font-weight:700;margin-top:10px;line-height:1.3;color:#102a43;">${simboloMoneda} ${FormatUtils.float(total)}</div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding-top:6px;">
+                  <table role="presentation" style="border-collapse:separate;border-spacing:0;">
+                    <tr>
+                      <td style="padding:0 10px 0 0;">
+                        <a href="${publicUrl}" style="display:inline-block;background:#0f4c81;color:#ffffff;text-decoration:none;padding:13px 18px;border-radius:999px;font-weight:700;">Abrir presupuesto</a>
+                      </td>
+                      <td>
+                        <a href="${publicPrintUrl}" style="display:inline-block;background:#e6f0f8;color:#0f4c81;text-decoration:none;padding:13px 18px;border-radius:999px;font-weight:700;border:1px solid #bfd4e5;">Abrir para imprimir</a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding-top:6px;">
+                  <div style="border-top:1px solid #e7eef5;padding-top:16px;color:#6b7c93;font-size:12px;line-height:1.7;text-align:center;">
+                    <div>&copy; 2025 Óptica New Vision Lens 2020</div>
+                    <div>Presupuesto generado para ${cliente}</div>
+                    <div>v1.0</div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    `;
+  },
+
+  async enviarCorreoPresupuesto({ presupuesto, payload }) {
+    if (payload?.opcionesCorreo?.enviarEmail !== true) {
+      return { enviado: false, motivo: 'opcion-deshabilitada' };
+    }
+
+    const destinatario = String(payload?.opcionesCorreo?.correoDestino || presupuesto?.cliente?.email || '').trim().toLowerCase();
+    if (!VerificationUtils.verify_correo(destinatario)) {
+      return { enviado: false, motivo: 'correo-destino-invalido' };
+    }
+
+    if (!payload?.documentoPdf?.publicUrl) {
+      return { enviado: false, motivo: 'url-publica-no-disponible' };
+    }
+
+    const asunto = `Presupuesto ${presupuesto?.codigo || ''} · Óptica New Vision`.trim();
+    const html = this.construirHtmlCorreoPresupuesto({ presupuesto, documentoPdf: payload?.documentoPdf });
+    const info = await EnvioCorreo.send(destinatario, asunto, html);
+
+    return {
+      enviado: true,
+      destinatarios: [destinatario],
+      messageId: info?.messageId || null,
+      documentoPdf: payload?.documentoPdf || null
+    };
+  },
+
+  async publico(token) {
+    const { presupuestoKey } = this.decodificarTokenPublico(token);
+    const presupuesto = await obtenerPresupuestoPorKeyPublico(presupuestoKey);
+    return { message: 'ok', presupuesto };
+  },
+
   async get(req, id = null) {
     if (!req.user) {
       throw { message: 'Sesion invalida.' };
@@ -1322,8 +1534,9 @@ const PresupuestoService = {
       const asesor = await resolverAsesor(asesorId, t);
       const formulaExterna = extraerFormulaExternaInput(payload);
       const contextoHistoria = extraerContextoHistoriaInput(payload);
+      const presupuestoKey = await resolverPresupuestoKey(payload.presupuestoKey, t);
       const presupuesto = await Presupuesto.create({
-        presupuesto_key: generarPresupuestoKey(),
+        presupuesto_key: presupuestoKey,
         codigo,
         sede_id: req.sede.id,
         cliente_ref_id: clienteReferencia ? clienteReferencia.id : null,
@@ -1368,14 +1581,62 @@ const PresupuestoService = {
       );
 
       await t.commit();
+
+      const presupuestoCreado = await obtenerPresupuestoPorId(presupuesto.id, req.sede.id);
+      let correo = { enviado: false, motivo: 'no-intentado' };
+
+      try {
+        correo = await this.enviarCorreoPresupuesto({
+          presupuesto: presupuestoCreado,
+          payload
+        });
+      } catch (error) {
+        console.error('No se pudo enviar el correo del presupuesto:', error);
+        correo = {
+          enviado: false,
+          motivo: 'error-envio',
+          detalle: error?.message || null
+        };
+      }
+
       return {
         message: 'ok',
-        presupuesto: await obtenerPresupuestoPorId(presupuesto.id, req.sede.id)
+        presupuesto: presupuestoCreado,
+        correo
       };
     } catch (error) {
       await t.rollback();
       throw error;
     }
+  },
+
+  async enviarCorreo(id, payload, req) {
+    if (!req.user) {
+      throw { message: 'Sesion invalida.' };
+    }
+
+    const presupuesto = await obtenerPresupuestoPorId(id, req.sede.id);
+    if (!presupuesto) {
+      throw { message: 'El presupuesto enviado no existe.' };
+    }
+
+    let correo = { enviado: false, motivo: 'no-intentado' };
+    try {
+      correo = await this.enviarCorreoPresupuesto({ presupuesto, payload });
+    } catch (error) {
+      console.error('No se pudo enviar el correo del presupuesto:', error);
+      correo = {
+        enviado: false,
+        motivo: 'error-envio',
+        detalle: error?.message || null
+      };
+    }
+
+    return {
+      message: 'ok',
+      presupuesto,
+      correo
+    };
   },
 
   async update(id, payload, req) {
