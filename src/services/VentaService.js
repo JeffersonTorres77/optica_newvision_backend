@@ -865,6 +865,7 @@ const VentaService = {
             key: objVenta.venta_key,
             numero_venta: "V-" + String(objVenta.numero_control).padStart(6, "0"),
             numero_recibo: "R-" + String(objVenta.numero_control).padStart(6, "0"),
+            fecha: objVenta.fecha || objVenta.created_at,
             tipoVenta: objVenta.tipo_venta,
             moneda: objVenta.moneda,
             monedaSistema: moneda_base_tasa.id,

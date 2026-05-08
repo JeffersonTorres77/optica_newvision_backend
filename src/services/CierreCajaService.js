@@ -123,6 +123,10 @@ const CierreCajaService = {
     }
   },
 
+  esMismaFechaOperativa(fechaA, fechaB) {
+    return this.formatearFecha(this.normalizarFecha(fechaA)) === this.formatearFecha(this.normalizarFecha(fechaB));
+  },
+
   construirCierreId(fecha, sedeId) {
     return `CIERRE-${this.formatearFecha(fecha)}-${sedeId}`;
   },
@@ -825,6 +829,10 @@ const CierreCajaService = {
     const fecha = this.normalizarFecha(payload.fecha);
     const sedeId = await this.resolverSedeOperacion(req, payload.sede, false);
     const cierreExistente = await this.obtenerCierrePorFechaSede(fecha, sedeId);
+
+    if (!this.esMismaFechaOperativa(fecha, new Date())) {
+      throw { message: 'Solo se puede iniciar la caja del dia actual.' };
+    }
 
     if (cierreExistente) {
       throw { message: `Ya existe un cierre de caja para la fecha ${this.formatearFecha(fecha)} en la sede ${sedeId}.` };

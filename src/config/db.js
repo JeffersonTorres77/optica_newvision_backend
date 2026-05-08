@@ -22,6 +22,7 @@ async function testConnection() {
     await ensureEtiquetaProductosConfigTable();
     await ensurePacienteSedesTable();
     await ensurePacienteAliasesTable();
+    await ensurePresupuestoTables();
     await ensurePresupuestoOptionColumns();
     await ensureHistoriaMedicaSedeColumn();
     await consolidatePacientesByCedula();
@@ -52,6 +53,119 @@ async function ensureEtiquetaProductosConfigTable() {
     `);
   } catch (error) {
     console.error('❌ Error asegurando tabla etiquetas_productos_config:', error);
+    throw error;
+  }
+}
+
+async function hasTable(tableName) {
+  const resultado = await sequelize.query(`
+    SELECT COUNT(*) AS total
+    FROM information_schema.tables
+    WHERE table_schema = DATABASE()
+      AND table_name = :tableName
+  `, {
+    replacements: { tableName },
+    type: QueryTypes.SELECT
+  });
+
+  return Number(resultado?.[0]?.total || 0) > 0;
+}
+
+async function ensurePresupuestoTables() {
+  try {
+    const existePresupuestos = await hasTable('presupuestos');
+
+    if (!existePresupuestos) {
+      await sequelize.query(`
+        CREATE TABLE IF NOT EXISTS presupuestos (
+          id BIGINT NOT NULL AUTO_INCREMENT,
+          presupuesto_key VARCHAR(100) NOT NULL,
+          codigo VARCHAR(50) NOT NULL,
+          sede_id VARCHAR(50) NOT NULL,
+          cliente_ref_id INT NULL,
+          cliente_tipo_persona VARCHAR(20) NOT NULL DEFAULT 'natural',
+          cliente_cedula VARCHAR(20) NOT NULL,
+          cliente_nombre VARCHAR(255) NOT NULL,
+          cliente_telefono VARCHAR(20) NULL,
+          cliente_email VARCHAR(255) NULL,
+          cliente_direccion TEXT NULL,
+          cliente_razon_social VARCHAR(255) NULL,
+          historia_medica_id VARCHAR(100) NULL,
+          historia_numero VARCHAR(100) NULL,
+          paciente_key_origen VARCHAR(100) NULL,
+          paciente_id_origen VARCHAR(100) NULL,
+          vendedor_nombre VARCHAR(255) NULL,
+          asesor_id INT NULL,
+          moneda VARCHAR(20) NOT NULL,
+          iva_porcentaje DECIMAL(8,2) NOT NULL DEFAULT 16.00,
+          subtotal DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+          descuento_total DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+          iva DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+          total DECIMAL(14,2) NOT NULL DEFAULT 0.00,
+          observaciones TEXT NULL,
+          formula_externa TINYINT(4) NOT NULL DEFAULT 0,
+          formula_externa_refraccion_final LONGTEXT NULL,
+          opciones_cotizadas LONGTEXT NULL,
+          opcion_principal_id VARCHAR(100) NULL,
+          estado VARCHAR(30) NOT NULL DEFAULT 'vigente',
+          fecha_creacion DATETIME NOT NULL,
+          fecha_vencimiento DATETIME NOT NULL,
+          dias_vencimiento INT NOT NULL DEFAULT 7,
+          origen VARCHAR(30) NOT NULL DEFAULT 'manual',
+          venta_key_origen VARCHAR(100) NULL,
+          archivado_at DATETIME NULL,
+          created_by VARCHAR(20) NOT NULL,
+          updated_by VARCHAR(20) NULL,
+          created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          deleted_at DATETIME NULL,
+          PRIMARY KEY (id),
+          UNIQUE KEY uq_presupuestos_key (presupuesto_key),
+          UNIQUE KEY uq_presupuestos_sede_codigo (sede_id, codigo),
+          KEY idx_presupuestos_sede_estado (sede_id, estado),
+          KEY idx_presupuestos_sede_vencimiento (sede_id, fecha_vencimiento),
+          KEY idx_presupuestos_sede_cliente_cedula (sede_id, cliente_cedula),
+          KEY idx_presupuestos_created_by (created_by),
+          KEY idx_presupuestos_asesor_id (asesor_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+      `);
+    }
+
+    const existePresupuestoItems = await hasTable('presupuesto_items');
+
+    if (!existePresupuestoItems) {
+      await sequelize.query(`
+        CREATE TABLE IF NOT EXISTS presupuesto_items (
+          id BIGINT NOT NULL AUTO_INCREMENT,
+          presupuesto_id BIGINT NOT NULL,
+          posicion INT NOT NULL DEFAULT 1,
+          producto_id INT NULL,
+          producto_codigo VARCHAR(255) NULL,
+          descripcion TEXT NOT NULL,
+          cantidad INT NOT NULL,
+          precio_unitario DECIMAL(14,2) NOT NULL,
+          descuento_porcentaje DECIMAL(8,2) NOT NULL DEFAULT 0.00,
+          subtotal_linea DECIMAL(14,2) NOT NULL,
+          total_linea DECIMAL(14,2) NOT NULL,
+          moneda VARCHAR(20) NOT NULL,
+          precio_original DECIMAL(14,2) NULL,
+          moneda_original VARCHAR(20) NULL,
+          tasa_conversion DECIMAL(14,6) NULL,
+          configuracion_tecnica LONGTEXT NULL,
+          created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          PRIMARY KEY (id),
+          KEY idx_presupuesto_items_presupuesto (presupuesto_id, posicion),
+          KEY idx_presupuesto_items_producto (producto_id),
+          CONSTRAINT fk_presupuesto_items_presupuesto
+            FOREIGN KEY (presupuesto_id) REFERENCES presupuestos (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci
+      `);
+    }
+  } catch (error) {
+    console.error('❌ Error asegurando tablas de presupuestos:', error);
     throw error;
   }
 }
