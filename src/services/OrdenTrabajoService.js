@@ -108,7 +108,6 @@ const OrdenTrabajoService = {
                         examen_ocular_refraccion: historia_medica.examen_ocular_refraccion,
                         examen_ocular_refraccion_final: historia_medica.examen_ocular_refraccion_final,
                         examen_ocular_avsc_avae_otros: historia_medica.examen_ocular_avsc_avae_otros,
-                        recomendaciones: historia_medica.recomendaciones,
                         datosConsulta: datosConsulta
                     } : null,
                     tipo: orden.venta.cliente_tipo,

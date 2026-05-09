@@ -3,6 +3,7 @@ const Configuracion = require('../models/Configuracion');
 const OrdenTrabajo = require('../models/OrdenTrabajo');
 const OrdenTrabajoService = require('../services/OrdenTrabajoService');
 const VerificationUtils = require('../utils/VerificationUtils');
+const Producto = require('../models/Producto');
 
 const OrdenTrabajoController = {
     get: async (req, res) => {
@@ -11,13 +12,73 @@ const OrdenTrabajoController = {
                 where: { sede: req.sede.id },
                 order: [['created_at', 'DESC']]
             });
-        const array_ordenes_id = [];
 
+        const array_ordenes_id = [];
         for (let orden of ordenes) {
             array_ordenes_id.push(orden.id);
         }
 
-        res.status(200).json({ message: 'ok', ordenes_trabajo: await OrdenTrabajoService.formatear_get_orden_trabajo(array_ordenes_id) });
+        const ordenes_formateadas = await OrdenTrabajoService.formatear_get_orden_trabajo(array_ordenes_id);
+        const productoIds = [...new Set(ordenes_formateadas
+            .flatMap(orden => (orden.productos || []).map(producto => producto.id))
+            .filter(Boolean))];
+
+        const productos_detallados = productoIds.length > 0
+            ? await Producto.findAll({
+                where: { id: productoIds }
+            })
+            : [];
+
+        const productos_por_id = productos_detallados.reduce((map, producto) => {
+            map[producto.id] = producto;
+            return map;
+        }, {});
+
+        const ordenes_homologadas = ordenes_formateadas.map(orden => ({
+            ...orden,
+            productos: (orden.productos || []).map(producto => {
+                const productoPlano = (producto && typeof producto.get === 'function')
+                    ? producto.get({ plain: true })
+                    : (producto?.dataValues ? { ...producto.dataValues } : { ...(producto || {}) });
+
+                const detalle = productos_por_id[productoPlano.id] || {};
+                const categoriaRaw = detalle.categoria || productoPlano.categoria || null;
+                const categoria = String(categoriaRaw || '').trim().toLowerCase();
+                const cristalConfig = detalle.cristal_config || null;
+                const monturaConfig = detalle.montura_config || null;
+
+                const camposCategoria = categoria === 'cristales'
+                    ? {
+                        marca: cristalConfig?.marca || null,
+                        presentacion: cristalConfig?.presentacion || productoPlano.marca || null,
+                        tipoCristal: cristalConfig?.tipoCristal || cristalConfig?.modelo || productoPlano.modelo || null,
+                        tratamientos: cristalConfig?.tratamientos || [],
+                        rangoFormula: cristalConfig?.rangoFormula || null
+                    }
+                    : categoria === 'monturas'
+                        ? {
+                            color: monturaConfig?.color || productoPlano.color || detalle.color || null,
+                            material: monturaConfig?.material || productoPlano.material || detalle.material || null
+                        }
+                        : {};
+
+                return {
+                    id: productoPlano.id || detalle.id || null,
+                    nombre: productoPlano.nombre || detalle.nombre || null,
+                    codigo: productoPlano.codigo || detalle.codigo || null,
+                    categoria: categoriaRaw,
+                    modelo: productoPlano.modelo || detalle.modelo || null,
+                    marca: productoPlano.marca || detalle.marca || null,
+                    material: productoPlano.material || monturaConfig?.material || detalle.material || null,
+                    color: productoPlano.color || monturaConfig?.color || detalle.color || null,
+                    precio: Number(productoPlano.precio ?? detalle.precio ?? 0),
+                    precioConIva: Number(productoPlano.precioConIva ?? productoPlano.precio_con_iva ?? detalle.precio_con_iva ?? 0),
+                    ...camposCategoria
+                };
+            })
+        }));
+
+        res.status(200).json({ message: 'ok', ordenes_trabajo: ordenes_homologadas });
     },
 
     change_status: async (req, res) => {
