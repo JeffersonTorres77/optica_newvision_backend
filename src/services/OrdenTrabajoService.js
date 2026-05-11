@@ -126,7 +126,16 @@ const OrdenTrabajoService = {
                     nombre: (asesor_user) ? asesor_user.nombre : null,
                     cargo: (asesor_user && asesor_user.cargo) ? asesor_user.cargo.nombre : null
                 },
-                productos: orden.venta.array_productos.map(producto => producto.datos_producto),
+                productos: orden.venta.array_productos.map(producto => {
+                    const datosProducto = producto.datos_producto
+                        ? producto.datos_producto.get({ plain: true })
+                        : null;
+
+                    return {
+                        ...(datosProducto || {}),
+                        cantidad: Number(producto.cantidad || 0)
+                    };
+                }),
                 estado: orden.estado,
                 fechaInicioProceso: orden.fecha_inicio_proceso,
                 fechaCreacion: orden.created_at,

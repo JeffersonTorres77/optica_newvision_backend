@@ -66,6 +66,7 @@ const OrdenTrabajoController = {
                     id: productoPlano.id || detalle.id || null,
                     nombre: productoPlano.nombre || detalle.nombre || null,
                     codigo: productoPlano.codigo || detalle.codigo || null,
+                    cantidad: Number(productoPlano.cantidad ?? 0),
                     categoria: categoriaRaw,
                     modelo: productoPlano.modelo || detalle.modelo || null,
                     marca: productoPlano.marca || detalle.marca || null,
