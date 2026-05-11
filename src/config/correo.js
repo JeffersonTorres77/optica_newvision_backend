@@ -14,6 +14,25 @@ const transporter = nodemailer.createTransport({
     debug: false
 });
 
+function htmlToText(html) {
+    return String(html || '')
+        .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+        .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<\/p>/gi, '\n\n')
+        .replace(/<\/div>/gi, '\n')
+        .replace(/<\/tr>/gi, '\n')
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/&amp;/gi, '&')
+        .replace(/&lt;/gi, '<')
+        .replace(/&gt;/gi, '>')
+        .replace(/\r/g, '')
+        .replace(/\n{3,}/g, '\n\n')
+        .replace(/[ \t]{2,}/g, ' ')
+        .trim();
+}
+
 const correo = {
     send: async (to, subject, html) => {
         try {
@@ -24,6 +43,7 @@ const correo = {
                 to, // Destinatario
                 subject, // Asunto
                 html: html, // Cuerpo del correo (HTML opcional),
+                text: htmlToText(html),
                 headers: {
                     'X-Mailer': 'NodeMailer',
                     'X-Priority': '1'

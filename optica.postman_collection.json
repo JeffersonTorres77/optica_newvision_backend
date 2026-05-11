@@ -19,7 +19,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"sede\": \"guatire\",\r\n    \"cedula\": \"25409904\",\r\n    \"password\": \"11554570\"\r\n}",
+              "raw": "{\r\n    \"sede\": \"guatire\",\r\n    \"cedula\": \"24367965\",\r\n    \"password\": \"123456\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -502,6 +502,79 @@
                 "api",
                 "configuracion",
                 "moneda_base-update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Etiquetas productos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/etiquetas_productos-get?sede=guatire",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "etiquetas_productos-get"
+              ],
+              "query": [
+                {
+                  "key": "sede",
+                  "value": "guatire"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Etiquetas productos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"sede\": \"guatire\",\r\n    \"fields\": [\r\n        {\r\n            \"key\": \"codigo\",\r\n            \"label\": \"Codigo\",\r\n            \"enabled\": true,\r\n            \"order\": 0\r\n        },\r\n        {\r\n            \"key\": \"nombre\",\r\n            \"label\": \"Nombre\",\r\n            \"enabled\": true,\r\n            \"order\": 1\r\n        },\r\n        {\r\n            \"key\": \"marca\",\r\n            \"label\": \"Marca\",\r\n            \"enabled\": false,\r\n            \"order\": 2\r\n        },\r\n        {\r\n            \"key\": \"precio\",\r\n            \"label\": \"Precio\",\r\n            \"enabled\": true,\r\n            \"order\": 3\r\n        }\r\n    ],\r\n    \"columns\": 3,\r\n    \"labelWidthMm\": 63,\r\n    \"labelHeightMm\": 34,\r\n    \"showBorder\": false,\r\n    \"cantidadMasivaDefault\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/configuracion/etiquetas_productos-update",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "configuracion",
+                "etiquetas_productos-update"
               ]
             }
           },
@@ -1385,16 +1458,20 @@
       "name": "Productos",
       "item": [
         {
-          "name": "Get",
+          "name": "Get - Listado",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/api/producto-get",
               "host": [
@@ -1409,16 +1486,49 @@
           "response": []
         },
         {
+          "name": "Get - Por ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/producto-get/{{producto_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "producto-get",
+                "{{producto_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Get categorias",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTc5NDA1MDAsImV4cCI6MTc1ODAyNjkwMH0.zwZuwFu9P1qCzEUrhMN24A16eeS9i12Im7MlwZIQEk4",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
               "raw": "{{base_url}}/api/categorias-get",
               "host": [
@@ -1434,93 +1544,74 @@
         },
         {
           "name": "Add",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
-                "type": "text"
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "if (data && data.producto && data.producto.id) {",
+                  "  pm.collectionVariables.set('producto_id', String(data.producto.id));",
+                  "}"
+                ],
+                "type": "text/javascript"
               }
-            ],
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "nombre",
-                  "value": "Filtro/Aditivos - Luz azul",
-                  "type": "text"
-                },
-                {
-                  "key": "marca",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "color",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "material",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "proveedor",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "categoria",
-                  "value": "Filtro/Aditivos",
-                  "type": "text"
-                },
-                {
-                  "key": "modelo",
-                  "value": "Luz azul",
-                  "type": "text"
-                },
-                {
                   "key": "stock",
-                  "value": "5",
+                  "value": "3",
                   "type": "text"
                 },
                 {
                   "key": "precio",
-                  "value": "15",
+                  "value": "25",
                   "type": "text"
                 },
                 {
                   "key": "aplicaIva",
-                  "value": "0",
-                  "type": "text"
-                },
-                {
-                  "key": "requiere_formula",
                   "value": "false",
                   "type": "text"
                 },
                 {
-                  "key": "requiere_item_padre",
+                  "key": "requiere_formula",
                   "value": "true",
                   "type": "text"
                 },
                 {
-                  "key": "moneda",
-                  "value": "euro",
-                  "description": "Ya no es necesaria",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
-                  "key": "activo",
-                  "value": "1",
+                  "key": "requiere_item_padre",
+                  "value": "false",
                   "type": "text"
                 },
                 {
-                  "key": "descripcion",
-                  "value": "Filtro adicional para protección frente a pantallas.",
+                  "key": "activo",
+                  "value": "true",
+                  "type": "text"
+                },
+                {
+                  "key": "costoLaboratorio",
+                  "value": "12.5",
+                  "type": "text"
+                },
+                {
+                  "key": "cristalConfig",
+                  "value": "{\"categoria\":\"Cristales\",\"marca\":\"Hoya\",\"tipoCristal\":\"Monofocal visión sencilla\",\"presentacion\":\"Stock\",\"modelo\":\"Monofocal visión sencilla\",\"material\":\"CR-39\",\"color\":null,\"proveedor\":\"Laboratorio QA\",\"tratamientos\":[\"Antirreflejo\"],\"rangoFormula\":\"Esf. +4.00 a -6.00\",\"materialOtro\":\"\",\"descripcion\":\"Producto QA para validar CRUD de cristales desde Postman.\"}",
                   "type": "text"
                 },
                 {
@@ -1547,65 +1638,34 @@
         {
           "name": "Update",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjMzMTU5MDMsImV4cCI6MTc2MzQwMjMwM30.DAnserMMmeGRf4eDu7895sS_VRCkpwqmp8WUZ3zZRgs",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "nombre",
-                  "value": "Cristales - Monofocal visión sencilla",
-                  "type": "text"
-                },
-                {
-                  "key": "marca",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "color",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "material",
-                  "value": "",
-                  "type": "text"
-                },
-                {
-                  "key": "proveedor",
-                  "value": "Laboratorio principal",
-                  "type": "text"
-                },
-                {
-                  "key": "categoria",
-                  "value": "Cristales",
-                  "type": "text"
-                },
-                {
-                  "key": "modelo",
-                  "value": "Monofocal visión sencilla",
-                  "type": "text"
-                },
-                {
                   "key": "stock",
-                  "value": "5",
+                  "value": "4",
                   "type": "text"
                 },
                 {
                   "key": "precio",
-                  "value": "12",
+                  "value": "31",
                   "type": "text"
                 },
                 {
                   "key": "aplicaIva",
-                  "value": "0",
+                  "value": "false",
                   "type": "text"
                 },
                 {
@@ -1619,39 +1679,37 @@
                   "type": "text"
                 },
                 {
-                  "key": "moneda",
-                  "value": "euro",
-                  "description": "Ya no es necesaria",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
                   "key": "activo",
                   "value": "true",
                   "type": "text"
                 },
                 {
-                  "key": "descripcion",
-                  "value": "Cristal monofocal actualizado con proveedor principal.",
+                  "key": "costoLaboratorio",
+                  "value": "15.75",
+                  "type": "text"
+                },
+                {
+                  "key": "cristalConfig",
+                  "value": "{\"categoria\":\"Cristales\",\"marca\":\"Essilor\",\"tipoCristal\":\"Monofocal visión sencilla\",\"presentacion\":\"Semi-terminado\",\"modelo\":\"Monofocal visión sencilla\",\"material\":\"Policarbonato\",\"color\":null,\"proveedor\":\"Laboratorio QA 2\",\"tratamientos\":[\"Antirreflejo\",\"Filtro azul\"],\"rangoFormula\":\"Esf. +6.00 a -8.00\",\"materialOtro\":\"\",\"descripcion\":\"Producto QA actualizado desde Postman.\"}",
                   "type": "text"
                 },
                 {
                   "key": "imagen",
                   "type": "file",
-                  "src": "/C:/Users/Personal/OneDrive/ImÃ¡genes/2-25632_m.jpg",
+                  "src": "/C:/Users/Personal/OneDrive/Imágenes/2-25632_m.jpg",
                   "disabled": true
                 }
               ]
             },
             "url": {
-              "raw": "{{base_url}}/api/producto-update/9",
+              "raw": "{{base_url}}/api/producto-update/{{producto_id}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
                 "producto-update",
-                "9"
+                "{{producto_id}}"
               ]
             }
           },
@@ -1660,23 +1718,27 @@
         {
           "name": "Delete",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NTcxOTQxMDcsImV4cCI6MTc1NzI4MDUwN30.iyeNnGw0EX7_h09FPyEXMLoBEuwdDa2mM9KrhEAsB40",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
-              "raw": "{{base_url}}/api/producto-delete/1",
+              "raw": "{{base_url}}/api/producto-delete/{{producto_id}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
                 "producto-delete",
-                "1"
+                "{{producto_id}}"
               ]
             }
           },
@@ -1690,7 +1752,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWRlX2lkIjoiZ3VhcmVuYXMiLCJ1c2VyQ2VkdWxhIjoiMjU0MDk5MDQiLCJpYXQiOjE3NjI5Njg3NDgsImV4cCI6MTc2MzA1NTE0OH0.SUZlV7Ui-JQyWa_nnF1WZPFOvGvSY6C4WSovDET34Ng",
+                  "value": "{{token}}",
                   "type": "string"
                 }
               ]
@@ -1698,14 +1760,14 @@
             "method": "PUT",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/producto-remove-image/5",
+              "raw": "{{base_url}}/api/producto-remove-image/{{producto_id}}",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "api",
                 "producto-remove-image",
-                "5"
+                "{{producto_id}}"
               ]
             }
           },
@@ -2894,7 +2956,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"cierreId\": \"{{cierre_id}}\",\r\n    \"fecha\": \"{{cierre_fecha}}\",\r\n    \"efectivo\": {\r\n        \"teoricoFinal\": 107.5,\r\n        \"realFinal\": 107.5,\r\n        \"diferencia\": 0,\r\n        \"detalleReal\": {\r\n            \"usd\": 107.5,\r\n            \"eur\": 0,\r\n            \"ves\": 0\r\n        }\r\n    },\r\n    \"conciliacion\": {\r\n        \"punto\": [],\r\n        \"transferencia\": [],\r\n        \"pagomovil\": [],\r\n        \"zelle\": []\r\n    },\r\n    \"diferenciaTotal\": 0,\r\n    \"estadoConciliacion\": \"cuadrado\",\r\n    \"notasCierre\": \"Cierre validado para Postman\",\r\n    \"opciones\": {\r\n        \"imprimirResumen\": true,\r\n        \"enviarEmail\": false,\r\n        \"adjuntarComprobantes\": true\r\n    }\r\n}",
+              "raw": "{\r\n    \"cierreId\": \"{{cierre_id}}\",\r\n    \"fecha\": \"{{cierre_fecha}}\",\r\n    \"efectivo\": {\r\n        \"teoricoFinal\": 107.5,\r\n        \"realFinal\": 107.5,\r\n        \"diferencia\": 0,\r\n        \"detalleReal\": {\r\n            \"usd\": 107.5,\r\n            \"eur\": 0,\r\n            \"ves\": 0\r\n        }\r\n    },\r\n    \"conciliacion\": {\r\n        \"punto\": [],\r\n        \"transferencia\": [],\r\n        \"pagomovil\": [],\r\n        \"zelle\": []\r\n    },\r\n    \"diferenciaTotal\": 0,\r\n    \"estadoConciliacion\": \"cuadrado\",\r\n    \"notasCierre\": \"Cierre validado para Postman\",\r\n    \"opciones\": {\r\n        \"imprimirResumen\": true,\r\n        \"enviarEmail\": false\r\n    },\r\n    \"documentoPdf\": {\r\n        \"modulo\": \"cierre-caja\",\r\n        \"renderer\": \"frontend-public-report-token\",\r\n        \"publicUrl\": \"https://tu-frontend.com/PDF/cierre-caja?token=eyJzZWRlIjoiZ3VhdGlyZSIsImZlY2hhIjoiMjAyNi0wNC0xNCJ9\",\r\n        \"publicPrintUrl\": \"https://tu-frontend.com/PDF/cierre-caja?token=eyJzZWRlIjoiZ3VhdGlyZSIsImZlY2hhIjoiMjAyNi0wNC0xNCJ9&autoprint=1\"\r\n    }\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3023,6 +3085,211 @@
         ]
       }
     }
+  ,
+    {
+      "name": "Presupuestos",
+      "item": [
+        {
+          "name": "Presupuestos - Listar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/presupuestos-get",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "presupuestos-get"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Presupuestos - Obtener por ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/presupuestos-get/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "presupuestos-get",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Presupuestos - Crear",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"cliente\": {\r\n    \"tipoPersona\": \"natural\",\r\n    \"cedula\": \"24367965\",\r\n    \"nombreCompleto\": \"Ruben Dario Martinez Castro\",\r\n    \"telefono\": \"04123920817\",\r\n    \"email\": \"rubemm@gmail.com\",\r\n    \"direccion\": \"Guatire, Miranda\"\r\n  },\r\n  \"fechaCreacion\": \"2026-04-27T10:00:00.000Z\",\r\n  \"fechaVencimiento\": \"2026-05-04T10:00:00.000Z\",\r\n  \"diasVencimiento\": 7,\r\n  \"vendedor\": \"Ruben Martinez\",\r\n  \"observaciones\": \"Paciente solicita comparar monturas con dos progresivos.\",\r\n  \"estado\": \"vigente\",\r\n  \"ivaPorcentaje\": 16,\r\n  \"formulaExterna\": {\r\n    \"activa\": true,\r\n    \"refraccionFinal\": {\r\n      \"od\": {\r\n        \"esfera\": \"+0.25\",\r\n        \"cilindro\": \"-0.50\",\r\n        \"eje\": \"4\",\r\n        \"adicion\": \"+1.25\",\r\n        \"alt\": \"10\",\r\n        \"dp\": \"10\"\r\n      },\r\n      \"oi\": {\r\n        \"esfera\": \"+0.25\",\r\n        \"cilindro\": \"-0.25\",\r\n        \"eje\": \"3\",\r\n        \"adicion\": \"+1.25\",\r\n        \"alt\": \"20\",\r\n        \"dp\": \"20\"\r\n      }\r\n    }\r\n  },\r\n  \"opcionPrincipalId\": \"opcion-2\",\r\n  \"opciones\": [\r\n    {\r\n      \"id\": \"opcion-1\",\r\n      \"nombre\": \"Opcion 1\",\r\n      \"observaciones\": \"Montura demo con progresivo digital intermedio.\",\r\n      \"esPrincipal\": false,\r\n      \"subtotal\": 93.1,\r\n      \"descuentoTotal\": 0,\r\n      \"iva\": 14.9,\r\n      \"total\": 108,\r\n      \"productos\": [\r\n        {\r\n          \"productoId\": 40,\r\n          \"codigo\": \"PR-000040\",\r\n          \"descripcion\": \"Progresivo digital intermedio CR-39\",\r\n          \"precioUnitario\": 43.1,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 43.1,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        },\r\n        {\r\n          \"productoId\": 36,\r\n          \"codigo\": \"PR-000036\",\r\n          \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n          \"precioUnitario\": 50,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 50,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"id\": \"opcion-2\",\r\n      \"nombre\": \"Opcion 2\",\r\n      \"observaciones\": \"Mantiene la montura y cambia a progresivo premium.\",\r\n      \"esPrincipal\": true,\r\n      \"subtotal\": 150,\r\n      \"descuentoTotal\": 0,\r\n      \"iva\": 24,\r\n      \"total\": 174,\r\n      \"productos\": [\r\n        {\r\n          \"productoId\": 48,\r\n          \"codigo\": \"PR-000048\",\r\n          \"descripcion\": \"Progresivo premium\",\r\n          \"precioUnitario\": 100,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 100,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        },\r\n        {\r\n          \"productoId\": 36,\r\n          \"codigo\": \"PR-000036\",\r\n          \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n          \"precioUnitario\": 50,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 50,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"productos\": [\r\n    {\r\n      \"productoId\": 48,\r\n      \"codigo\": \"PR-000048\",\r\n      \"descripcion\": \"Progresivo premium\",\r\n      \"precioUnitario\": 100,\r\n      \"cantidad\": 1,\r\n      \"descuentoPorcentaje\": 0,\r\n      \"moneda\": \"USD\",\r\n      \"precioOriginal\": 100,\r\n      \"monedaOriginal\": \"USD\",\r\n      \"tasaConversion\": 1\r\n    },\r\n    {\r\n      \"productoId\": 36,\r\n      \"codigo\": \"PR-000036\",\r\n      \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n      \"precioUnitario\": 50,\r\n      \"cantidad\": 1,\r\n      \"descuentoPorcentaje\": 0,\r\n      \"moneda\": \"USD\",\r\n      \"precioOriginal\": 50,\r\n      \"monedaOriginal\": \"USD\",\r\n      \"tasaConversion\": 1\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/presupuestos-add",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "presupuestos-add"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Presupuestos - Actualizar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"cliente\": {\r\n    \"tipoPersona\": \"natural\",\r\n    \"cedula\": \"24367965\",\r\n    \"nombreCompleto\": \"Ruben Dario Martinez Castro\",\r\n    \"telefono\": \"04123920817\",\r\n    \"email\": \"rubemm@gmail.com\",\r\n    \"direccion\": \"Guatire, Miranda\"\r\n  },\r\n  \"fechaCreacion\": \"2026-04-27T10:00:00.000Z\",\r\n  \"fechaVencimiento\": \"2026-05-07T10:00:00.000Z\",\r\n  \"diasVencimiento\": 10,\r\n  \"vendedor\": \"Ruben Martinez\",\r\n  \"observaciones\": \"Se ajusta la opcion principal y se conserva comparativo para el paciente.\",\r\n  \"estado\": \"vigente\",\r\n  \"ivaPorcentaje\": 16,\r\n  \"formulaExterna\": {\r\n    \"activa\": true,\r\n    \"refraccionFinal\": {\r\n      \"od\": {\r\n        \"esfera\": \"+0.25\",\r\n        \"cilindro\": \"-0.50\",\r\n        \"eje\": \"4\",\r\n        \"adicion\": \"+1.25\",\r\n        \"alt\": \"10\",\r\n        \"dp\": \"10\"\r\n      },\r\n      \"oi\": {\r\n        \"esfera\": \"+0.25\",\r\n        \"cilindro\": \"-0.25\",\r\n        \"eje\": \"3\",\r\n        \"adicion\": \"+1.25\",\r\n        \"alt\": \"20\",\r\n        \"dp\": \"20\"\r\n      }\r\n    }\r\n  },\r\n  \"opcionPrincipalId\": \"opcion-3\",\r\n  \"opciones\": [\r\n    {\r\n      \"id\": \"opcion-1\",\r\n      \"nombre\": \"Opcion 1\",\r\n      \"observaciones\": \"Opcion conservadora.\",\r\n      \"esPrincipal\": false,\r\n      \"subtotal\": 93.1,\r\n      \"descuentoTotal\": 0,\r\n      \"iva\": 14.9,\r\n      \"total\": 108,\r\n      \"productos\": [\r\n        {\r\n          \"productoId\": 40,\r\n          \"codigo\": \"PR-000040\",\r\n          \"descripcion\": \"Progresivo digital intermedio CR-39\",\r\n          \"precioUnitario\": 43.1,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 43.1,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        },\r\n        {\r\n          \"productoId\": 36,\r\n          \"codigo\": \"PR-000036\",\r\n          \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n          \"precioUnitario\": 50,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 50,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"id\": \"opcion-2\",\r\n      \"nombre\": \"Opcion 2\",\r\n      \"observaciones\": \"Se mantiene como alternativa intermedia.\",\r\n      \"esPrincipal\": false,\r\n      \"subtotal\": 150,\r\n      \"descuentoTotal\": 0,\r\n      \"iva\": 24,\r\n      \"total\": 174,\r\n      \"productos\": [\r\n        {\r\n          \"productoId\": 48,\r\n          \"codigo\": \"PR-000048\",\r\n          \"descripcion\": \"Progresivo premium\",\r\n          \"precioUnitario\": 100,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 100,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        },\r\n        {\r\n          \"productoId\": 36,\r\n          \"codigo\": \"PR-000036\",\r\n          \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n          \"precioUnitario\": 50,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 50,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        }\r\n      ]\r\n    },\r\n    {\r\n      \"id\": \"opcion-3\",\r\n      \"nombre\": \"Opcion 3\",\r\n      \"observaciones\": \"Nueva opcion principal con descuento promocional.\",\r\n      \"esPrincipal\": true,\r\n      \"subtotal\": 145,\r\n      \"descuentoTotal\": 5,\r\n      \"iva\": 22.4,\r\n      \"total\": 162.4,\r\n      \"productos\": [\r\n        {\r\n          \"productoId\": 48,\r\n          \"codigo\": \"PR-000048\",\r\n          \"descripcion\": \"Progresivo premium\",\r\n          \"precioUnitario\": 100,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 5,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 100,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        },\r\n        {\r\n          \"productoId\": 36,\r\n          \"codigo\": \"PR-000036\",\r\n          \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n          \"precioUnitario\": 50,\r\n          \"cantidad\": 1,\r\n          \"descuentoPorcentaje\": 0,\r\n          \"moneda\": \"USD\",\r\n          \"precioOriginal\": 50,\r\n          \"monedaOriginal\": \"USD\",\r\n          \"tasaConversion\": 1\r\n        }\r\n      ]\r\n    }\r\n  ],\r\n  \"productos\": [\r\n    {\r\n      \"productoId\": 48,\r\n      \"codigo\": \"PR-000048\",\r\n      \"descripcion\": \"Progresivo premium\",\r\n      \"precioUnitario\": 100,\r\n      \"cantidad\": 1,\r\n      \"descuentoPorcentaje\": 5,\r\n      \"moneda\": \"USD\",\r\n      \"precioOriginal\": 100,\r\n      \"monedaOriginal\": \"USD\",\r\n      \"tasaConversion\": 1\r\n    },\r\n    {\r\n      \"productoId\": 36,\r\n      \"codigo\": \"PR-000036\",\r\n      \"descripcion\": \"Monturas New Vision Demo Demo_Ejecutivo Acetato\",\r\n      \"precioUnitario\": 50,\r\n      \"cantidad\": 1,\r\n      \"descuentoPorcentaje\": 0,\r\n      \"moneda\": \"USD\",\r\n      \"precioOriginal\": 50,\r\n      \"monedaOriginal\": \"USD\",\r\n      \"tasaConversion\": 1\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/presupuestos-update/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "presupuestos-update",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Presupuestos - Renovar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"dias\": 7\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/presupuestos-renovar/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "presupuestos-renovar",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Presupuestos - Eliminar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/presupuestos-delete/1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "presupuestos-delete",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
   ],
   "variable": [
     {
@@ -3031,6 +3298,10 @@
     },
     {
       "key": "token",
+      "value": ""
+    },
+    {
+      "key": "producto_id",
       "value": ""
     },
     {

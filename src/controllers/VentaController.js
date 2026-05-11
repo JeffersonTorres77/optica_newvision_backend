@@ -202,13 +202,17 @@ const VentaController = {
         const objEspecialista = (especialistaCedula) ? await VentaService.get_usuario_by_cedula(especialistaCedula) : false;
         let productos_array_db = [];
         if (tipoVenta === 'solo_productos' || tipoVenta === 'consulta_productos') {
-            productos_array_db = await VentaService.add_producto_db(productos || []);
+            productos_array_db = await VentaService.add_producto_db(productos || [], req.sede.id);
         }
 
         if (tipoVenta === 'solo_consulta' || tipoVenta === 'consulta_productos') {
             const historiaId = (consulta) ? consulta.historiaId : null;
             if (!historiaId) {
                 throw { message: "El ID de la historia médica es obligatorio para este tipo de venta." };
+            }
+
+            if (!objPaciente) {
+                throw { message: 'La venta con consulta requiere un paciente válido en la sede activa.' };
             }
         }
         const array_tasas = await VentaService.get_tasas_actuales();
@@ -312,7 +316,10 @@ const VentaController = {
 
             if (tipoVenta === 'solo_consulta' || tipoVenta === 'consulta_productos') {
                 const historiaId = (consulta) ? consulta.historiaId : null;
-                await VentaService.validar_historia_medica(historiaId, t, objVenta.venta_key, objVenta.pago_completo);
+                await VentaService.validar_historia_medica(historiaId, t, objVenta.venta_key, objVenta.pago_completo, {
+                    paciente_key: objPaciente ? objPaciente.pkey : null,
+                    sede_id: req.sede.id
+                });
                 await VentaService.sincronizar_costos_consulta(t, FormatUtils.float(consulta.pagoMedico), FormatUtils.float(consulta.pagoOptica), req.sede.id);
             }
 
@@ -687,7 +694,7 @@ const VentaController = {
         });
 
         if (!objVenta) {
-            throw { message: `La venta no existe: ${venta_id}.` };
+            throw { message: `La venta no existe: ${venta_key}.` };
         }
         if (objVenta.sede != req.sede.id) {
             throw { message: `No se puede anular ventas de otra sede.` };
@@ -695,7 +702,7 @@ const VentaController = {
         if (objVenta.estatus_venta == 'anulada') {
             throw { message: `La venta ya esta anulada.` };
         }
-        if (motivo_cancelacion.trim() === "") {
+        if (typeof motivo_cancelacion !== 'string' || motivo_cancelacion.trim() === '') {
             throw { message: `El motivo de la cancelacion no puede estar vacia.` };
         }
 
@@ -706,6 +713,16 @@ const VentaController = {
             objVenta.motivo_cancelacion = motivo_cancelacion;
             await objVenta.save({ transaction: t });
             await VentaService.anular_descontada_inventario(t, objVenta.array_productos);
+
+            const objVentaConsulta = await VentaConsulta.findOne({
+                where: { venta_key: objVenta.venta_key },
+                transaction: t
+            });
+
+            if (objVentaConsulta) {
+                await VentaService.recalcular_estado_historia_medica(objVentaConsulta.historia_id, t);
+            }
+
             await t.commit();
         }
         catch (error) {
@@ -822,11 +839,10 @@ const VentaController = {
                 // Sincronizar pago_pendiente en la historia médica si existe
                 const objVentaConsulta = await VentaConsulta.findOne({ where: { venta_key: objVenta.venta_key }, transaction: t });
                 if (objVentaConsulta) {
-                    const objHistorial = await HistorialMedico.findOne({ where: { id: objVentaConsulta.historia_id }, transaction: t });
-                    if (objHistorial) {
-                        objHistorial.pago_pendiente = false;
-                        await objHistorial.save({ transaction: t });
-                    }
+                    await VentaService.validar_historia_medica(objVentaConsulta.historia_id, t, objVenta.venta_key, true, {
+                        paciente_key: objVenta.paciente_key || null,
+                        sede_id: req.sede.id
+                    });
                 }
             }
 

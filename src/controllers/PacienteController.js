@@ -1,9 +1,12 @@
 const VerificationUtils = require('../utils/VerificationUtils');
 const Paciente = require('./../models/Paciente');
+const PacienteSede = require('./../models/PacienteSede');
+const PacienteAlias = require('./../models/PacienteAlias');
 const Cliente = require('./../models/Cliente');
 const HashUtils = require('../utils/HashUtil');
 const { Op } = require('sequelize');
 const Empresa = require('../models/Empresa');
+const Sede = require('../models/Sede');
 const EmpresaService = require('../services/EmpresaService');
 
 const PacienteController = {
@@ -91,9 +94,59 @@ const PacienteController = {
 
         // Validamos usuario duplicado
         if (!sin_cedula) {
-            const count = await Paciente.count({ where: { sede_id: req.sede.id, cedula: informacionPersonal.cedula } });
-            if (count > 0) {
-                throw { message: `Ya esta registrado un paciente con la cedula '${informacionPersonal.cedula}' en la sede '${req.sede.id}'.` };
+            const pacienteMismaSede = await buscarPacienteDisponibleEnSedePorCedula(informacionPersonal.cedula, req.sede.id);
+            if (pacienteMismaSede) {
+                const sedeActualNombre = await obtenerNombreSede(req.sede.id);
+                const sedeOrigenId = String(pacienteMismaSede.sede_id || '').trim();
+                const sedeOrigenNombre = sedeOrigenId ? await obtenerNombreSede(sedeOrigenId) : '';
+
+                if (sedeOrigenId && sedeOrigenId !== String(req.sede.id || '').trim()) {
+                    throw {
+                        message: `El paciente con la cedula '${informacionPersonal.cedula}' ya esta asociado a la sede '${sedeActualNombre || req.sede.id}'. Su sede de origen es '${sedeOrigenNombre || sedeOrigenId}'.`
+                    };
+                }
+
+                throw { message: `Ya esta registrado un paciente con la cedula '${informacionPersonal.cedula}' en la sede '${sedeActualNombre || req.sede.id}'.` };
+            }
+
+            const pacienteGlobal = await Paciente.findOne({
+                where: { cedula: informacionPersonal.cedula },
+                include: ['empresa']
+            });
+
+            if (pacienteGlobal) {
+                const asociacionesPrevias = await PacienteSede.findAll({
+                    where: { paciente_key: pacienteGlobal.pkey },
+                    attributes: ['sede_id', 'created_at']
+                });
+
+                const sedesPreviasIds = asociacionesPrevias
+                    .map((registro) => String(registro.sede_id || '').trim())
+                    .filter((sedeId) => sedeId && sedeId !== req.sede.id);
+
+                const sedesPrevias = sedesPreviasIds.length
+                    ? (await Sede.findAll({
+                        where: { id: sedesPreviasIds },
+                        attributes: ['id', 'nombre']
+                    })).map((sede) => {
+                        const sedeId = String(sede.id || '').trim();
+                        const asociacion = asociacionesPrevias.find((registro) => String(registro.sede_id || '').trim() === sedeId);
+
+                        return {
+                            id: sedeId,
+                            nombre: String(sede.nombre || sede.id || '').trim(),
+                            fechaAsociacion: asociacion?.created_at || null
+                        };
+                    })
+                    : [];
+
+                await asegurarPacienteEnSede(pacienteGlobal.pkey, req.sede.id);
+                return res.status(200).json({
+                    message: 'ok',
+                    paciente: await construirPacienteOutput(pacienteGlobal.get({ plain: true }), pacienteGlobal.empresa || null),
+                    reutilizado: true,
+                    sedesPrevias
+                });
             }
         }
         else {
@@ -154,50 +207,10 @@ const PacienteController = {
 
         objPaciente.pkey = HashUtils.generate(objPaciente.id);
         objPaciente.save();
+        await asegurarPacienteEnSede(objPaciente.pkey, req.sede.id);
 
         const paciente = objPaciente.get({ plain: true });
-        const paciente_output = {
-            id: paciente.id,
-            key: paciente.pkey,
-            sedeId: paciente.sede_id,
-            created_at: paciente.created_at,
-            updated_at: paciente.updated_at,
-            informacionPersonal: {
-                esMenorSinCedula: paciente.sin_cedula,
-                nombreCompleto: paciente.nombre,
-                cedula: paciente.cedula,
-                telefono: paciente.telefono,
-                email: paciente.email,
-                fechaNacimiento: paciente.fecha_nacimiento,
-                ocupacion: paciente.ocupacion,
-                genero: paciente.genero,
-                direccion: paciente.direccion
-            },
-            redesSociales: paciente.redes_sociales,
-            historiaClinica: {
-                usuarioLentes: paciente.tiene_lentes,
-                fotofobia: paciente.fotofobia,
-                usoDispositivo: paciente.uso_dispositivo_electronico,
-                traumatismoOcular: paciente.traumatismo_ocular,
-                traumatismoOcularDescripcion: paciente.traumatismo_ocular_descripcion,
-                cirugiaOcular: paciente.cirugia_ocular,
-                cirugiaOcularDescripcion: paciente.cirugia_ocular_descripcion,
-                alergicoA: paciente.alergias,
-                antecedentesPersonales: paciente.antecedentes_personales,
-                antecedentesFamiliares: paciente.antecedentes_familiares,
-                patologias: paciente.patologias,
-            },
-            informacionEmpresa: (obj_empresa) ? {
-                referidoEmpresa: true,
-                empresaRif: obj_empresa.rif,
-                empresaNombre: obj_empresa.nombre,
-                empresaDireccion: obj_empresa.direccion,
-                empresaCorreo: obj_empresa.correo,
-                empresaTelefono: obj_empresa.telefono
-            } : {
-                referidoEmpresa: false
-            }
-        };
+        const paciente_output = await construirPacienteOutput(paciente, obj_empresa);
         res.status(200).json({ message: 'ok', paciente: paciente_output });
     },
 
@@ -207,11 +220,11 @@ const PacienteController = {
         }
 
         const id = req.params.id;
-        const objPaciente = await Paciente.findOne({ where: { pkey: id } });
+        const objPaciente = await resolverPacientePorKey(id);
         if (!objPaciente) {
             throw { message: "El paciente enviado no existe." };
         }
-        if (objPaciente.sede_id != req.sede.id) {
+        if (!(await pacienteDisponibleEnSede(objPaciente, req.sede.id))) {
             throw { message: "No se puede modificar pacientes de otras sedes." };
         }
 
@@ -297,9 +310,15 @@ const PacienteController = {
 
         // Validamos usuario duplicado
         if (!sin_cedula) {
-            const count = await Paciente.count({ where: { id: { [Op.ne]: objPaciente.id }, sede_id: req.sede.id, cedula: informacionPersonal.cedula } });
-            if (count > 0) {
-                throw { message: `Ya esta registrado un paciente con la cedula '${informacionPersonal.cedula}' en la sede '${req.sede.id}'.` };
+            const pacienteGlobal = await Paciente.findOne({
+                where: {
+                    id: { [Op.ne]: objPaciente.id },
+                    cedula: informacionPersonal.cedula
+                }
+            });
+
+            if (pacienteGlobal) {
+                throw { message: `Ya existe un paciente global con la cedula '${informacionPersonal.cedula}'.` };
             }
         }
         else {
@@ -426,7 +445,7 @@ const PacienteController = {
 
         if (paciente_id) {
             pacientes_db = await Paciente.findAll({
-                where: { pkey: paciente_id },
+                where: { pkey: await resolverPacienteKeyCanonico(paciente_id) },
                 attributes: attributes,
                 include: ['sede', 'empresa']
             });
@@ -439,51 +458,110 @@ const PacienteController = {
 
         let pacientes_output = [];
         for (let paciente of pacientes_db) {
-            pacientes_output.push({
-                id: paciente.id,
-                key: paciente.pkey,
-                sedeId: paciente.sede_id,
-                created_at: paciente.created_at,
-                updated_at: paciente.updated_at,
-                informacionPersonal: {
-                    esMenorSinCedula: paciente.sin_cedula,
-                    nombreCompleto: paciente.nombre,
-                    cedula: paciente.cedula,
-                    telefono: paciente.telefono,
-                    email: paciente.email,
-                    fechaNacimiento: paciente.fecha_nacimiento,
-                    ocupacion: paciente.ocupacion,
-                    genero: paciente.genero,
-                    direccion: paciente.direccion
-                },
-                redesSociales: paciente.redes_sociales,
-                historiaClinica: {
-                    usuarioLentes: paciente.tiene_lentes,
-                    fotofobia: paciente.fotofobia,
-                    usoDispositivo: paciente.uso_dispositivo_electronico,
-                    traumatismoOcular: paciente.traumatismo_ocular,
-                    traumatismoOcularDescripcion: paciente.traumatismo_ocular_descripcion,
-                    cirugiaOcular: paciente.cirugia_ocular,
-                    cirugiaOcularDescripcion: paciente.cirugia_ocular_descripcion,
-                    alergicoA: paciente.alergias,
-                    antecedentesPersonales: paciente.antecedentes_personales,
-                    antecedentesFamiliares: paciente.antecedentes_familiares,
-                    patologias: paciente.patologias,
-                },
-                informacionEmpresa: (paciente.empresa) ? {
-                    referidoEmpresa: true,
-                    empresaRif: paciente.empresa.rif,
-                    empresaNombre: paciente.empresa.nombre,
-                    empresaDireccion: paciente.empresa.direccion,
-                    empresaCorreo: paciente.empresa.correo,
-                    empresaTelefono: paciente.empresa.telefono
-                } : {
-                    referidoEmpresa: false
-                }
-            });
+            pacientes_output.push(await construirPacienteOutput(paciente.get({ plain: true }), paciente.empresa || null));
         }
 
         res.status(200).json({ message: 'ok', pacientes: pacientes_output });
+    },
+
+    buscarCoincidencias: async (req, res) => {
+        if (!req.user) {
+            throw { message: "Sesion invalida." };
+        }
+
+        const tipo = String(req.query.tipo || 'cedula').trim().toLowerCase();
+        const cedula = String(req.query.cedula || '').trim();
+
+        if (!cedula || !VerificationUtils.verify_cedula(cedula)) {
+            throw { message: "La cedula no es valida." };
+        }
+
+        if (!['cedula', 'representante'].includes(tipo)) {
+            throw { message: "El tipo de busqueda no es valido." };
+        }
+
+        if (tipo === 'cedula') {
+            const paciente = await Paciente.findOne({
+                where: { cedula },
+                include: ['sede', 'empresa']
+            });
+
+            if (!paciente) {
+                return res.status(200).json({
+                    message: 'ok',
+                    tipo,
+                    estado: 'no_encontrado',
+                    paciente: null
+                });
+            }
+
+            const disponibleEnSedeActual = await pacienteDisponibleEnSede(paciente, req.sede.id);
+
+            return res.status(200).json({
+                message: 'ok',
+                tipo,
+                estado: disponibleEnSedeActual ? 'asociado_sede_actual' : 'disponible_en_otra_sede',
+                paciente: await construirPacienteOutput(paciente.get({ plain: true }), paciente.empresa || null)
+            });
+        }
+
+        const pacientesDb = await Paciente.findAll({
+            where: {
+                cedula,
+                sin_cedula: true
+            },
+            include: ['sede', 'empresa'],
+            order: [['updated_at', 'DESC'], ['created_at', 'DESC']]
+        });
+
+        const pacientes = [];
+        for (const paciente of pacientesDb) {
+            const output = await construirPacienteOutput(paciente.get({ plain: true }), paciente.empresa || null);
+            pacientes.push({
+                ...output,
+                disponibleEnSedeActual: await pacienteDisponibleEnSede(paciente, req.sede.id)
+            });
+        }
+
+        return res.status(200).json({
+            message: 'ok',
+            tipo,
+            estado: pacientes.length ? 'coincidencias' : 'no_encontrado',
+            pacientes
+        });
+    },
+
+    enlazarASedeActual: async (req, res) => {
+        if (!req.user) {
+            throw { message: "Sesion invalida." };
+        }
+
+        const pacienteKey = String(req.params.id || '').trim();
+        if (!pacienteKey) {
+            throw { message: "Paciente no existe." };
+        }
+
+        const paciente = await resolverPacientePorKey(pacienteKey);
+        if (!paciente) {
+            throw { message: "Paciente no existe." };
+        }
+
+        const yaDisponible = await pacienteDisponibleEnSede(paciente, req.sede.id);
+        if (!yaDisponible) {
+            await asegurarPacienteEnSede(paciente.pkey, req.sede.id);
+        }
+
+        const pacienteCompleto = await Paciente.findOne({
+            where: { pkey: paciente.pkey },
+            include: ['sede', 'empresa']
+        });
+
+        return res.status(200).json({
+            message: 'ok',
+            paciente: await construirPacienteOutput(pacienteCompleto.get({ plain: true }), pacienteCompleto.empresa || null),
+            reutilizado: true,
+            yaDisponible
+        });
     },
 
     delete: async (req, res) => {
@@ -493,11 +571,11 @@ const PacienteController = {
 
         const paciente_id = req.params.id;
 
-        const paciente = await Paciente.findOne({ where: { pkey: paciente_id } });
+        const paciente = await resolverPacientePorKey(paciente_id);
         if (!paciente) {
             throw { message: "Paciente no existe." };
         }
-        if (paciente.sede_id != req.sede.id) {
+        if (!(await pacienteDisponibleEnSede(paciente, req.sede.id))) {
             throw { message: "No se puede eliminar pacientes de otras sedes." };
         }
         await paciente.destroy();
@@ -505,6 +583,207 @@ const PacienteController = {
         res.status(200).json({ message: 'ok' });
     },
 };
+
+async function asegurarPacienteEnSede(pacienteKey, sedeId) {
+    const pacienteNormalizado = String(pacienteKey || '').trim();
+    const sedeNormalizada = String(sedeId || '').trim();
+
+    if (!pacienteNormalizado || !sedeNormalizada) {
+        return;
+    }
+
+    await PacienteSede.findOrCreate({
+        where: {
+            paciente_key: pacienteNormalizado,
+            sede_id: sedeNormalizada
+        },
+        defaults: {
+            paciente_key: pacienteNormalizado,
+            sede_id: sedeNormalizada
+        }
+    });
+}
+
+async function resolverPacienteKeyCanonico(pacienteKey) {
+    const pacienteNormalizado = String(pacienteKey || '').trim();
+    if (!pacienteNormalizado) {
+        return null;
+    }
+
+    const alias = await PacienteAlias.findOne({ where: { alias_key: pacienteNormalizado } });
+    return String(alias?.paciente_key || pacienteNormalizado).trim();
+}
+
+async function resolverPacientePorKey(pacienteKey) {
+    const canonico = await resolverPacienteKeyCanonico(pacienteKey);
+    if (!canonico) {
+        return null;
+    }
+
+    return Paciente.findOne({ where: { pkey: canonico } });
+}
+
+async function pacienteDisponibleEnSede(paciente, sedeId) {
+    if (!paciente) {
+        return false;
+    }
+
+    if (String(paciente.sede_id || '').trim() === String(sedeId || '').trim()) {
+        return true;
+    }
+
+    const asociacion = await PacienteSede.findOne({
+        where: {
+            paciente_key: String(paciente.pkey || '').trim(),
+            sede_id: String(sedeId || '').trim()
+        }
+    });
+
+    return Boolean(asociacion);
+}
+
+async function buscarPacienteDisponibleEnSedePorCedula(cedula, sedeId) {
+    const cedulaNormalizada = String(cedula || '').trim();
+    if (!cedulaNormalizada) {
+        return null;
+    }
+
+    const pacienteDirecto = await Paciente.findOne({
+        where: {
+            sede_id: sedeId,
+            cedula: cedulaNormalizada
+        }
+    });
+
+    if (pacienteDirecto) {
+        return pacienteDirecto;
+    }
+
+    const asociaciones = await PacienteSede.findAll({
+        where: { sede_id: sedeId },
+        attributes: ['paciente_key']
+    });
+    const keys = asociaciones
+        .map((item) => String(item.paciente_key || '').trim())
+        .filter(Boolean);
+
+    if (!keys.length) {
+        return null;
+    }
+
+    return Paciente.findOne({
+        where: {
+            pkey: { [Op.in]: keys },
+            cedula: cedulaNormalizada
+        }
+    });
+}
+
+async function obtenerNombreSede(sedeId) {
+    const sedeNormalizada = String(sedeId || '').trim();
+    if (!sedeNormalizada) {
+        return '';
+    }
+
+    const sede = await Sede.findOne({ where: { id: sedeNormalizada }, attributes: ['nombre'] });
+    return String(sede?.nombre || sedeNormalizada).trim();
+}
+
+async function obtenerSedesAsociadasPaciente(paciente) {
+    const sedes = new Map();
+    const sedePrincipalId = String(paciente?.sede_id || '').trim();
+
+    if (sedePrincipalId) {
+        sedes.set(sedePrincipalId, {
+            id: sedePrincipalId,
+            nombre: String(paciente?.sede?.nombre || sedePrincipalId).trim() || sedePrincipalId
+        });
+    }
+
+    const asociaciones = await PacienteSede.findAll({
+        where: { paciente_key: String(paciente?.pkey || '').trim() },
+        attributes: ['sede_id']
+    });
+
+    const sedesFaltantes = asociaciones
+        .map((item) => String(item.sede_id || '').trim())
+        .filter((sedeId) => sedeId && !sedes.has(sedeId));
+
+    if (sedesFaltantes.length) {
+        const sedesDb = await Sede.findAll({
+            where: { id: sedesFaltantes },
+            attributes: ['id', 'nombre']
+        });
+
+        for (const sede of sedesDb) {
+            const sedeId = String(sede.id || '').trim();
+            if (!sedeId) {
+                continue;
+            }
+
+            sedes.set(sedeId, {
+                id: sedeId,
+                nombre: String(sede.nombre || sedeId).trim() || sedeId
+            });
+        }
+
+        for (const sedeId of sedesFaltantes) {
+            if (!sedes.has(sedeId)) {
+                sedes.set(sedeId, { id: sedeId, nombre: sedeId });
+            }
+        }
+    }
+
+    return Array.from(sedes.values());
+}
+
+async function construirPacienteOutput(paciente, empresa) {
+    const sedesAsociadas = await obtenerSedesAsociadasPaciente(paciente);
+
+    return {
+        id: paciente.id,
+        key: paciente.pkey,
+        sedeId: paciente.sede_id,
+        sedesAsociadas,
+        created_at: paciente.created_at,
+        updated_at: paciente.updated_at,
+        informacionPersonal: {
+            esMenorSinCedula: paciente.sin_cedula,
+            nombreCompleto: paciente.nombre,
+            cedula: paciente.cedula,
+            telefono: paciente.telefono,
+            email: paciente.email,
+            fechaNacimiento: paciente.fecha_nacimiento,
+            ocupacion: paciente.ocupacion,
+            genero: paciente.genero,
+            direccion: paciente.direccion
+        },
+        redesSociales: paciente.redes_sociales,
+        historiaClinica: {
+            usuarioLentes: paciente.tiene_lentes,
+            fotofobia: paciente.fotofobia,
+            usoDispositivo: paciente.uso_dispositivo_electronico,
+            traumatismoOcular: paciente.traumatismo_ocular,
+            traumatismoOcularDescripcion: paciente.traumatismo_ocular_descripcion,
+            cirugiaOcular: paciente.cirugia_ocular,
+            cirugiaOcularDescripcion: paciente.cirugia_ocular_descripcion,
+            alergicoA: paciente.alergias,
+            antecedentesPersonales: paciente.antecedentes_personales,
+            antecedentesFamiliares: paciente.antecedentes_familiares,
+            patologias: paciente.patologias,
+        },
+        informacionEmpresa: empresa ? {
+            referidoEmpresa: true,
+            empresaRif: empresa.rif,
+            empresaNombre: empresa.nombre,
+            empresaDireccion: empresa.direccion,
+            empresaCorreo: empresa.correo,
+            empresaTelefono: empresa.telefono
+        } : {
+            referidoEmpresa: false
+        }
+    };
+}
 
 function validar_estructura_informacion_personal(objeto) {
     return (

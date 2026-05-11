@@ -1,6 +1,7 @@
 const Cliente = require('../models/Cliente');
 const Empresa = require('../models/Empresa');
 const Paciente = require('../models/Paciente');
+const PacienteSede = require('../models/PacienteSede');
 const VerificationUtils = require('../utils/VerificationUtils');
 const { Op } = require('sequelize');
 
@@ -55,6 +56,9 @@ const ClienteController = {
             telefono: null,
             email: null,
             es_paciente: false,
+            pacienteKey: null,
+            pacienteId: null,
+            pacienteSedeId: null,
             informacionEmpresa: {
                 referidoEmpresa: false,
                 empresaRif: null,
@@ -89,6 +93,9 @@ const ClienteController = {
 
         if (paciente) {
             datos.es_paciente = true;
+            datos.pacienteKey = paciente.pkey || null;
+            datos.pacienteId = paciente.id ? String(paciente.id) : null;
+            datos.pacienteSedeId = paciente.sede_id || null;
             if (paciente.empresa) {
                 const empresa = paciente.empresa;
                 datos.informacionEmpresa.referidoEmpresa = true;

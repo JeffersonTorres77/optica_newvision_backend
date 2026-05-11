@@ -108,7 +108,6 @@ const OrdenTrabajoService = {
                         examen_ocular_refraccion: historia_medica.examen_ocular_refraccion,
                         examen_ocular_refraccion_final: historia_medica.examen_ocular_refraccion_final,
                         examen_ocular_avsc_avae_otros: historia_medica.examen_ocular_avsc_avae_otros,
-                        recomendaciones: historia_medica.recomendaciones,
                         datosConsulta: datosConsulta
                     } : null,
                     tipo: orden.venta.cliente_tipo,
@@ -127,7 +126,16 @@ const OrdenTrabajoService = {
                     nombre: (asesor_user) ? asesor_user.nombre : null,
                     cargo: (asesor_user && asesor_user.cargo) ? asesor_user.cargo.nombre : null
                 },
-                productos: orden.venta.array_productos.map(producto => producto.datos_producto),
+                productos: orden.venta.array_productos.map(producto => {
+                    const datosProducto = producto.datos_producto
+                        ? producto.datos_producto.get({ plain: true })
+                        : null;
+
+                    return {
+                        ...(datosProducto || {}),
+                        cantidad: Number(producto.cantidad || 0)
+                    };
+                }),
                 estado: orden.estado,
                 fechaInicioProceso: orden.fecha_inicio_proceso,
                 fechaCreacion: orden.created_at,

@@ -19,8 +19,10 @@ const CatchGeneric = require('../utils/CatchGeneric');
 const VentaController = require('../controllers/VentaController');
 const CierreCajaController = require('../controllers/CierreCajaController');
 const ConfiguracionController = require('../controllers/ConfiguracionController');
+const EtiquetaProductoConfigController = require('../controllers/EtiquetaProductoConfigController');
 const OrdenTrabajoController = require('../controllers/OrdenTrabajoController');
 const EmpresaController = require('../controllers/EmpresaController');
+const PresupuestoController = require('../controllers/PresupuestoController');
 
 const router = express.Router();
 
@@ -77,6 +79,8 @@ router.put('/configuracion/bancos_receptores-update/:codigo', authMiddleware, Ca
 router.get('/configuracion/metodos_pago_config-get', authMiddleware, CatchGeneric(ConfiguracionController.metodos_pago_config_get));
 router.post('/configuracion/metodos_pago_config-save', authMiddleware, CatchGeneric(ConfiguracionController.metodos_pago_config_save));
 router.put('/configuracion/metodos_pago_config-update/:key', authMiddleware, CatchGeneric(ConfiguracionController.metodos_pago_config_update));
+router.get('/configuracion/etiquetas_productos-get', authMiddleware, CatchGeneric(EtiquetaProductoConfigController.get));
+router.put('/configuracion/etiquetas_productos-update', authMiddleware, CatchGeneric(EtiquetaProductoConfigController.update));
 
 router.get('/get-usuarios/:cedula?', authMiddleware, CatchGeneric(UsuarioController.get));
 router.post('/add-usuarios/', authMiddleware, CatchGeneric(UsuarioController.add));
@@ -92,7 +96,9 @@ router.get('/tasas-history/:id/:fecha_inicio?/:fecha_final?', authMiddleware, Ca
 router.put('/tasas-rastreo-automatico/:id', authMiddleware, CatchGeneric(TasasController.rastreo_automatico));
 
 router.get('/paciente-get/:id?', authMiddleware, CatchGeneric(PacienteController.get));
+router.get('/paciente-buscar/', authMiddleware, CatchGeneric(PacienteController.buscarCoincidencias));
 router.post('/paciente-add/', authMiddleware, CatchGeneric(PacienteController.add));
+router.post('/paciente-enlazar/:id', authMiddleware, CatchGeneric(PacienteController.enlazarASedeActual));
 router.put('/paciente-update/:id?', authMiddleware, CatchGeneric(PacienteController.update));
 router.delete('/paciente-delete/:id?', authMiddleware, CatchGeneric(PacienteController.delete));
 
@@ -116,6 +122,7 @@ router.post('/estadisticas-financieras', authMiddleware, CatchGeneric(VentaContr
 router.put('/ventas-anular/:venta_key', authMiddleware, CatchGeneric(VentaController.anular));
 router.put('/ventas-abonar/:venta_key', authMiddleware, CatchGeneric(VentaController.abonar));
 
+router.get('/cierre-caja/publico', CatchGeneric(CierreCajaController.publico));
 router.get('/cierre-caja/resumen', authMiddleware, CatchGeneric(CierreCajaController.resumen));
 router.post('/cierre-caja/apertura', authMiddleware, CatchGeneric(CierreCajaController.apertura));
 router.post('/cierre-caja/transacciones-manuales', authMiddleware, CatchGeneric(CierreCajaController.transaccion_manual_add));
@@ -128,6 +135,24 @@ router.get('/clientes-get', authMiddleware, CatchGeneric(ClienteController.get))
 router.post('/clientes-add', authMiddleware, CatchGeneric(ClienteController.add));
 router.put('/clientes-update/:cedula', authMiddleware, CatchGeneric(ClienteController.update));
 router.delete('/clientes-delete/:cedula', authMiddleware, CatchGeneric(ClienteController.delete));
+
+router.get('/presupuestos/publico', CatchGeneric(PresupuestoController.publico));
+router.get('/presupuestos-get/:id?', authMiddleware, CatchGeneric(PresupuestoController.get));
+router.post('/presupuestos-add', authMiddleware, CatchGeneric(PresupuestoController.add));
+router.post('/presupuestos-enviar-correo/:id', authMiddleware, CatchGeneric(PresupuestoController.enviarCorreo));
+router.put('/presupuestos-update/:id', authMiddleware, CatchGeneric(PresupuestoController.update));
+router.delete('/presupuestos-delete/:id', authMiddleware, CatchGeneric(PresupuestoController.delete));
+router.put('/presupuestos-renovar/:id', authMiddleware, CatchGeneric(PresupuestoController.renovar));
+router.post('/presupuestos-auto-archivar', authMiddleware, CatchGeneric(PresupuestoController.auto_archivar));
+
+router.get('/presupuestos', authMiddleware, CatchGeneric(PresupuestoController.get));
+router.get('/presupuestos/:id', authMiddleware, CatchGeneric(PresupuestoController.get));
+router.post('/presupuestos', authMiddleware, CatchGeneric(PresupuestoController.add));
+router.post('/presupuestos/:id/enviar-correo', authMiddleware, CatchGeneric(PresupuestoController.enviarCorreo));
+router.put('/presupuestos/:id', authMiddleware, CatchGeneric(PresupuestoController.update));
+router.delete('/presupuestos/:id', authMiddleware, CatchGeneric(PresupuestoController.delete));
+router.put('/presupuestos/:id/renovar', authMiddleware, CatchGeneric(PresupuestoController.renovar));
+router.post('/presupuestos/auto-archivar', authMiddleware, CatchGeneric(PresupuestoController.auto_archivar));
 
 router.get('/orden-trabajo-get', authMiddleware, CatchGeneric(OrdenTrabajoController.get));
 router.put('/orden-trabajo-change-status', authMiddleware, CatchGeneric(OrdenTrabajoController.change_status));

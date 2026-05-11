@@ -1,7 +1,72 @@
 const HistorialMedico = require('../models/HistorialMedico');
 const Paciente = require('../models/Paciente');
+const PacienteAlias = require('../models/PacienteAlias');
 const Usuario = require('../models/Usuario');
+const { Op } = require('sequelize');
+const Venta = require('../models/Venta');
+const VentaConsulta = require('../models/VentaConsulta');
 const VerificationUtils = require('../utils/VerificationUtils');
+
+function ordenarVentasPorRecencia(actual, siguiente) {
+    const actualTiempo = new Date(actual.fecha || actual.created_at || 0).getTime();
+    const siguienteTiempo = new Date(siguiente.fecha || siguiente.created_at || 0).getTime();
+
+    if (siguienteTiempo !== actualTiempo) {
+        return siguienteTiempo - actualTiempo;
+    }
+
+    return Number(siguiente.id || 0) - Number(actual.id || 0);
+}
+
+function formatearNumeroVenta(numeroControl) {
+    const numero = Number(numeroControl || 0);
+
+    if (!Number.isFinite(numero) || numero <= 0) {
+        return null;
+    }
+
+    return `V-${String(numero).padStart(6, '0')}`;
+}
+
+async function obtenerTrazabilidadVentaHistorial(historiaId) {
+    const ventasConsulta = await VentaConsulta.findAll({ where: { historia_id: historiaId } });
+
+    if (ventasConsulta.length === 0) {
+        return {
+            ventaActiva: null,
+            ventasRelacionadas: []
+        };
+    }
+
+    const ventaKeys = Array.from(new Set(
+        ventasConsulta
+            .map((ventaConsulta) => `${ventaConsulta.venta_key || ''}`.trim())
+            .filter(Boolean)
+    ));
+
+    const ventas = ventaKeys.length > 0
+        ? await Venta.findAll({ where: { venta_key: { [Op.in]: ventaKeys } } })
+        : [];
+
+    const ventasRelacionadas = ventas
+        .sort(ordenarVentasPorRecencia)
+        .map((venta) => ({
+            ventaKey: venta.venta_key,
+            numeroControl: venta.numero_control,
+            numeroVenta: formatearNumeroVenta(venta.numero_control),
+            numero_venta: formatearNumeroVenta(venta.numero_control),
+            estadoVenta: venta.estatus_venta,
+            estadoPago: venta.estatus_pago,
+            pagoCompleto: !!venta.pago_completo,
+            fecha: venta.fecha,
+            anulada: venta.estatus_venta === 'anulada'
+        }));
+
+    return {
+        ventaActiva: ventasRelacionadas.find((venta) => !venta.anulada) || null,
+        ventasRelacionadas
+    };
+}
 
 const HistorialMedicoController = {
     add: async (req, res) => {
@@ -23,7 +88,7 @@ const HistorialMedicoController = {
         const formulaOriginal = (datosConsulta && datosConsulta.formulaOriginal) ? datosConsulta.formulaOriginal : {};
         const formulaOriginalMedicoOrigen = (formulaOriginal && formulaOriginal.medicoOrigen) ? formulaOriginal.medicoOrigen : {};
 
-        const objPaciente = await Paciente.findOne({ where: { pkey: pacienteId } });
+        const objPaciente = await resolverPacientePorKey(pacienteId);
         if (!objPaciente) {
             throw { message: `El paciente no existe.` };
         }
@@ -40,6 +105,7 @@ const HistorialMedicoController = {
             // ========================================
             numero: `H-${fecha_especial}-${count_especial}`,
             fecha: fecha,
+            sede_id: req.sede.id,
             paciente_id: objPaciente.pkey,
             // ========================================
             motivo_consulta: datosConsulta.motivo,
@@ -108,6 +174,7 @@ const HistorialMedicoController = {
             nHistoria: historial.numero,
             pacienteId: historial.paciente_id,
             ventaKey: historial.venta_key,
+            trazabilidadVenta: await obtenerTrazabilidadVentaHistorial(historial.id),
 
             datosConsulta: {
                 pagoPendiente: historial.pago_pendiente,
@@ -176,7 +243,7 @@ const HistorialMedicoController = {
             throw { message: `Historial medico '${historial_numero}' no existe.` };
         }
 
-        const objPaciente = await Paciente.findOne({ where: { pkey: objHistorial.paciente_id } });
+        const objPaciente = await resolverPacientePorKey(objHistorial.paciente_id);
         if (!objPaciente) {
             throw { message: `El paciente del historial medico '${historial_numero}' no existe.` };
         }
@@ -264,6 +331,7 @@ const HistorialMedicoController = {
             nHistoria: historial.numero,
             pacienteId: historial.paciente_id,
             ventaKey: historial.venta_key,
+            trazabilidadVenta: await obtenerTrazabilidadVentaHistorial(historial.id),
 
             datosConsulta: {
                 pagoPendiente: historial.pago_pendiente,
@@ -377,6 +445,7 @@ const HistorialMedicoController = {
                 ventaKey: historial.venta_key,
                 pagoPendiente: historial.pago_pendiente,
                 sedeId: historial.paciente ? historial.paciente.sede_id : null,
+                trazabilidadVenta: await obtenerTrazabilidadVentaHistorial(historial.id),
 
                 datosConsulta: {
                     motivo: historial.motivo_consulta,
@@ -440,10 +509,19 @@ const HistorialMedicoController = {
         }
 
         const paciente_id = req.params.paciente_id;
+        const sedeQuery = String(req.query.sede || '').trim().toLowerCase();
         let historiales_bd = [];
 
+        const where = { paciente_id: paciente_id };
+
+        if (sedeQuery && sedeQuery !== 'todas') {
+            where.sede_id = sedeQuery;
+        } else if (!sedeQuery) {
+            where.sede_id = req.sede.id;
+        }
+
         historiales_bd = await HistorialMedico.findAll({
-            where: { paciente_id: paciente_id },
+            where,
             include: ['paciente']
         });
 
@@ -481,7 +559,9 @@ const HistorialMedicoController = {
                 id: historial.id,
                 nHistoria: historial.numero,
                 pacienteId: historial.paciente_id,
+                sedeId: historial.sede_id || historial?.paciente?.sede_id || null,
                 ventaKey: historial.venta_key,
+                trazabilidadVenta: await obtenerTrazabilidadVentaHistorial(historial.id),
 
                 datosConsulta: {
                     pagoPendiente: historial.pago_pendiente,
@@ -552,7 +632,7 @@ const HistorialMedicoController = {
             throw { message: `Historial medico '${historial_numero}' no existe.` };
         }
 
-        const objPaciente = await Paciente.findOne({ where: { pkey: objHistorial.paciente_id } });
+        const objPaciente = await resolverPacientePorKey(objHistorial.paciente_id);
         if (!objPaciente) {
             throw { message: `El paciente del historial medico '${historial_numero}' no existe.` };
         }
@@ -566,5 +646,17 @@ const HistorialMedicoController = {
         res.status(200).json({ message: 'ok' });
     },
 };
+
+async function resolverPacientePorKey(pacienteKey) {
+    const pacienteNormalizado = String(pacienteKey || '').trim();
+    if (!pacienteNormalizado) {
+        return null;
+    }
+
+    const alias = await PacienteAlias.findOne({ where: { alias_key: pacienteNormalizado } });
+    const keyCanonica = String(alias?.paciente_key || pacienteNormalizado).trim();
+
+    return Paciente.findOne({ where: { pkey: keyCanonica } });
+}
 
 module.exports = HistorialMedicoController;
