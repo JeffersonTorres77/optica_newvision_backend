@@ -252,8 +252,13 @@ function construirDescripcionSimple(...partes) {
     return descripcion ? `${descripcion}.` : '';
 }
 
+function formatearClaseMontura(valor) {
+    const clase = normalizarTextoNullable(valor)?.replace(/^clase\s+/i, '')?.trim();
+    return clase ? `Clase ${clase}` : '';
+}
+
 function construirNombreMontura(config) {
-    return construirNombreComercialProducto('Monturas', config?.marca, config?.modelo, config?.material);
+    return construirNombreComercialProducto('Monturas', config?.marca, config?.modelo, config?.material, formatearClaseMontura(config?.clase));
 }
 
 function construirDescripcionMontura(config) {
@@ -262,7 +267,8 @@ function construirDescripcionMontura(config) {
         construirNombreSimple(config?.marca, config?.modelo),
         config?.color ? `color ${config.color}` : '',
         config?.material ? `material ${config.material}` : '',
-        config?.proveedor ? `proveedor ${config.proveedor}` : ''
+        config?.proveedor ? `proveedor ${config.proveedor}` : '',
+        formatearClaseMontura(config?.clase)
     );
 }
 
@@ -325,6 +331,7 @@ function normalizarMonturaConfig(config, legacy = {}) {
         categoria: normalizarCategoriaProducto(config?.categoria ?? legacy.categoria ?? 'Monturas'),
         marca: normalizarTexto(config?.marca ?? legacy.marca),
         modelo: normalizarTexto(config?.modelo ?? legacy.modelo),
+        clase: normalizarTextoNullable(config?.clase ?? legacy.clase),
         color: normalizarTexto(config?.color ?? legacy.color),
         material: normalizarTexto(config?.material ?? legacy.material),
         proveedor: normalizarTexto(config?.proveedor ?? legacy.proveedor),
@@ -425,6 +432,7 @@ function resolverPersistenciaPorCategoria(categoria, body) {
         marca: body.marca,
         categoria: body.categoria,
         presentacion: body.presentacion,
+        clase: body.clase,
         color: body.color,
         material: body.material,
         proveedor: body.proveedor,
@@ -714,6 +722,7 @@ function construirProductoOutput(producto, imagenUrl) {
                     nombre: normalizarTextoNullable(monturaConfig.nombre),
                     marca: normalizarTextoNullable(monturaConfig.marca),
                     modelo: normalizarTextoNullable(monturaConfig.modelo),
+                    clase: normalizarTextoNullable(monturaConfig.clase),
                     color: normalizarTextoNullable(monturaConfig.color),
                     material: normalizarTextoNullable(monturaConfig.material),
                     proveedor: normalizarTextoNullable(monturaConfig.proveedor),
