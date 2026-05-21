@@ -8,6 +8,9 @@ const path = require('path');
 const HashUtils = require('./utils/HashUtil');
 const Paciente = require('./models/Paciente');
 const HistorialMedico = require('./models/HistorialMedico');
+const authMiddleware = require('./middlewares/authMiddleware');
+const CatchGeneric = require('./utils/CatchGeneric');
+const ProductoController = require('./controllers/ProductoController');
 
 require('./crons/RastrearBcv')();
 require('./crons/ArchivarOrdenesTrabajo')();
@@ -58,6 +61,9 @@ app.get('/', async (req, res) => {
 
 //   res.json({ message: "OK", total_pacientes: countPacientes, total_historias: countHistorias });
 // });
+
+app.post('/api/producto-import-masivo', authMiddleware, CatchGeneric(ProductoController.import_massive));
+app.post('/api/producto_importar_masivo', authMiddleware, CatchGeneric(ProductoController.import_massive));
 
 app.use('/api', routes);
 
