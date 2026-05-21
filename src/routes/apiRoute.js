@@ -112,6 +112,7 @@ router.get('/producto-get/:id?', authMiddleware, CatchGeneric(ProductoController
 router.get('/categorias-get', authMiddleware, CatchGeneric(ProductoController.get_categorias));
 router.post('/producto-add', authMiddleware, CatchGeneric(ProductoController.add));
 router.post('/producto-import-masivo', authMiddleware, CatchGeneric(ProductoController.import_massive));
+router.post('/producto_importar_masivo', authMiddleware, CatchGeneric(ProductoController.import_massive));
 router.put('/producto-update/:id', authMiddleware, CatchGeneric(ProductoController.update));
 router.delete('/producto-delete/:id', authMiddleware, CatchGeneric(ProductoController.delete));
 router.put('/producto-remove-image/:id', authMiddleware, CatchGeneric(ProductoController.remove_image));
