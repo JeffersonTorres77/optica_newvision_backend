@@ -252,8 +252,13 @@ function construirDescripcionSimple(...partes) {
     return descripcion ? `${descripcion}.` : '';
 }
 
+function formatearClaseMontura(valor) {
+    const clase = normalizarTextoNullable(valor)?.replace(/^clase\s+/i, '')?.trim();
+    return clase ? `Clase ${clase}` : '';
+}
+
 function construirNombreMontura(config) {
-    return construirNombreComercialProducto('Monturas', config?.marca, config?.modelo, config?.material);
+    return construirNombreComercialProducto('Monturas', config?.marca, config?.modelo, config?.material, formatearClaseMontura(config?.clase));
 }
 
 function construirDescripcionMontura(config) {
@@ -262,7 +267,8 @@ function construirDescripcionMontura(config) {
         construirNombreSimple(config?.marca, config?.modelo),
         config?.color ? `color ${config.color}` : '',
         config?.material ? `material ${config.material}` : '',
-        config?.proveedor ? `proveedor ${config.proveedor}` : ''
+        config?.proveedor ? `proveedor ${config.proveedor}` : '',
+        formatearClaseMontura(config?.clase)
     );
 }
 
@@ -325,6 +331,7 @@ function normalizarMonturaConfig(config, legacy = {}) {
         categoria: normalizarCategoriaProducto(config?.categoria ?? legacy.categoria ?? 'Monturas'),
         marca: normalizarTexto(config?.marca ?? legacy.marca),
         modelo: normalizarTexto(config?.modelo ?? legacy.modelo),
+        clase: normalizarTextoNullable(config?.clase ?? legacy.clase),
         color: normalizarTexto(config?.color ?? legacy.color),
         material: normalizarTexto(config?.material ?? legacy.material),
         proveedor: normalizarTexto(config?.proveedor ?? legacy.proveedor),
@@ -425,6 +432,7 @@ function resolverPersistenciaPorCategoria(categoria, body) {
         marca: body.marca,
         categoria: body.categoria,
         presentacion: body.presentacion,
+        clase: body.clase,
         color: body.color,
         material: body.material,
         proveedor: body.proveedor,
@@ -588,6 +596,328 @@ function resolverCategoriaDesdeBody(body) {
     );
 }
 
+function normalizarBooleanDesdeEntrada(valor) {
+    if (typeof valor === 'boolean') {
+        return valor;
+    }
+
+    if (typeof valor === 'number') {
+        if (valor === 1) {
+            return true;
+        }
+
+        if (valor === 0) {
+            return false;
+        }
+    }
+
+    const texto = normalizarTexto(String(valor ?? '')).toLowerCase();
+    if (['true', '1', 'si', 'sí', 'yes'].includes(texto)) {
+        return true;
+    }
+
+    if (['false', '0', 'no'].includes(texto)) {
+        return false;
+    }
+
+    return null;
+}
+
+function normalizarNumeroDesdeEntrada(valor) {
+    if (valor === null || valor === undefined || String(valor).trim() === '') {
+        return null;
+    }
+
+    let normalizado = String(valor).trim().replace(/[^\d,.-]/g, '');
+    const ultimoPunto = normalizado.lastIndexOf('.');
+    const ultimaComa = normalizado.lastIndexOf(',');
+
+    if (ultimoPunto !== -1 && ultimaComa !== -1) {
+        if (ultimoPunto > ultimaComa) {
+            normalizado = normalizado.replace(/,/g, '');
+        } else {
+            normalizado = normalizado.replace(/\./g, '').replace(',', '.');
+        }
+    } else if (ultimaComa !== -1) {
+        normalizado = normalizado.replace(',', '.');
+    }
+
+    const numero = Number(normalizado);
+    return Number.isFinite(numero) ? numero : null;
+}
+
+function construirClaveDuplicadoProducto({ nombre, marca, color, categoria }) {
+    return JSON.stringify({
+        nombre: normalizarTexto(nombre).toLowerCase(),
+        marca: normalizarTexto(marca).toLowerCase(),
+        color: normalizarTexto(color).toLowerCase(),
+        categoria: normalizarTexto(categoria).toLowerCase()
+    });
+}
+
+async function validarProductoParaPersistencia({ body, sedeId, productoActual = null }) {
+    const {
+        nombre,
+        stock,
+        precio,
+        requiere_formula: requiereFormulaPar,
+        requiere_item_padre: requiereItemPadrePar,
+        activo: activoPar,
+        aplicaIva: aplicaIvaPar
+    } = body;
+
+    const activo = normalizarBooleanDesdeEntrada(activoPar);
+    const aplicaIva = normalizarBooleanDesdeEntrada(aplicaIvaPar);
+    const requiereFormula = normalizarBooleanDesdeEntrada(requiereFormulaPar);
+    const requiereItemPadre = normalizarBooleanDesdeEntrada(requiereItemPadrePar ?? false);
+    const categoriaNormalizada = resolverCategoriaDesdeBody(body);
+    const datosCategoria = resolverPersistenciaPorCategoria(categoriaNormalizada, body);
+    const nombreProducto = normalizarTexto(nombre) || datosCategoria.nombre;
+    const stockNumber = normalizarNumeroDesdeEntrada(stock);
+    const precioNumber = normalizarNumeroDesdeEntrada(precio);
+
+    if (!VerificationUtils.verify_nombre(nombreProducto)) {
+        throw { status: 400, message: 'El nombre no puede quedar vacio.' };
+    }
+    if (!VerificationUtils.verify_nombre(categoriaNormalizada)) {
+        throw { status: 400, message: 'La categoria no puede quedar vacio.' };
+    }
+    if (!VerificationUtils.verify_numero(stockNumber) || stockNumber < 0) {
+        throw { status: 400, message: 'El stock debe ser numerico y mayor o igual a cero.' };
+    }
+    if (!VerificationUtils.verify_numero(precioNumber) || precioNumber < 0) {
+        throw { status: 400, message: 'El precio debe ser numerico y mayor o igual a cero.' };
+    }
+    if (!VerificationUtils.verify_boolean(activo)) {
+        throw { status: 400, message: "El parametro 'activo' debe ser booleano." };
+    }
+    if (!VerificationUtils.verify_boolean(aplicaIva)) {
+        throw { status: 400, message: "El parametro 'aplicaIva' debe ser booleano." };
+    }
+    if (!VerificationUtils.verify_boolean(requiereFormula)) {
+        throw { status: 400, message: "El parametro 'requiere_formula' debe ser booleano." };
+    }
+    if (!VerificationUtils.verify_boolean(requiereItemPadre)) {
+        throw { status: 400, message: "El parametro 'requiere_item_padre' debe ser booleano." };
+    }
+    if (!CATEGORIAS_COMERCIALES.includes(categoriaNormalizada)) {
+        throw { status: 400, message: 'La categoria enviada no forma parte del contrato comercial actual.' };
+    }
+
+    const monedaBase = await ConfiguracionService.get_moneda_base(sedeId);
+    const objTasa = await Tasa.findOne({ where: { id: monedaBase.valor } });
+    if (!objTasa) {
+        throw { status: 400, message: 'La moneda enviada no existe: ' + monedaBase.valor + '.' };
+    }
+
+    const whereDuplicado = {
+        sede_id: sedeId,
+        nombre: nombreProducto,
+        marca: datosCategoria.marca,
+        color: datosCategoria.color,
+        categoria: categoriaNormalizada
+    };
+
+    if (productoActual?.id) {
+        whereDuplicado.id = { [Op.ne]: productoActual.id };
+    }
+
+    const productoDuplicado = await Producto.findOne({ where: whereDuplicado });
+
+    let precioSinIva = Number(precioNumber);
+    if (aplicaIva) {
+        precioSinIva = Number(precioNumber * (100 / 116));
+    }
+
+    return {
+        objTasa,
+        categoriaNormalizada,
+        datosCategoria,
+        nombreProducto,
+        stockNumber: Math.trunc(stockNumber),
+        precioNumber: Number(precioNumber.toFixed(2)),
+        precioSinIva: Number(precioSinIva.toFixed(2)),
+        activo,
+        aplicaIva,
+        requiereFormula,
+        requiereItemPadre,
+        productoDuplicado
+    };
+}
+
+async function persistirProducto({ body, sedeId, productoActual = null, permitirSumarStockDuplicado = false }) {
+    const validacion = await validarProductoParaPersistencia({ body, sedeId, productoActual });
+
+    if (validacion.productoDuplicado && !permitirSumarStockDuplicado) {
+        throw { status: 400, message: 'Ya existe un producto con el mismo nombre, marca, color y categoria en la sede actual.' };
+    }
+
+    const productoDestino = validacion.productoDuplicado || productoActual || Producto.build({
+        sede_id: sedeId,
+        codigo: null,
+        imagen_url: '/public/images/product-generic-image.jpg?t=' + Date.now()
+    });
+    const esNuevo = !productoDestino.id;
+
+    productoDestino.sede_id = sedeId;
+    productoDestino.nombre = validacion.nombreProducto;
+    productoDestino.marca = validacion.datosCategoria.marca;
+    productoDestino.color = validacion.datosCategoria.color;
+    productoDestino.material = validacion.datosCategoria.material;
+    productoDestino.proveedor = validacion.datosCategoria.proveedor;
+    productoDestino.categoria = validacion.categoriaNormalizada;
+    productoDestino.modelo = validacion.datosCategoria.modelo;
+    productoDestino.stock = validacion.productoDuplicado && permitirSumarStockDuplicado
+        ? Number(productoDestino.stock ?? 0) + validacion.stockNumber
+        : validacion.stockNumber;
+    productoDestino.precio = validacion.precioSinIva;
+    productoDestino.aplica_iva = validacion.aplicaIva;
+    productoDestino.precio_con_iva = validacion.precioNumber;
+    productoDestino.moneda = validacion.objTasa.id;
+    productoDestino.activo = validacion.activo;
+    productoDestino.descripcion = validacion.datosCategoria.descripcion;
+    productoDestino.cristal_config = validacion.datosCategoria.cristal_config;
+    productoDestino.montura_config = validacion.datosCategoria.montura_config;
+    productoDestino.lente_contacto_config = validacion.datosCategoria.lente_contacto_config;
+    productoDestino.liquido_config = validacion.datosCategoria.liquido_config;
+    productoDestino.estuche_config = validacion.datosCategoria.estuche_config;
+    productoDestino.accesorio_config = validacion.datosCategoria.accesorio_config;
+    productoDestino.requiere_formula = validacion.requiereFormula;
+    productoDestino.requiere_item_padre = validacion.requiereItemPadre;
+
+    await productoDestino.save();
+
+    if (esNuevo) {
+        productoDestino.codigo = `PR-${productoDestino.id.toString().padStart(6, '0')}`;
+        await productoDestino.save();
+    }
+
+    return {
+        producto: productoDestino,
+        accion: validacion.productoDuplicado && permitirSumarStockDuplicado
+            ? 'stock_sumado'
+            : esNuevo
+                ? 'creado'
+                : 'actualizado',
+        duplicadoDetectado: Boolean(validacion.productoDuplicado)
+    };
+}
+
+function construirPayloadImportacionDesdeFila(fila = {}) {
+    const categoria = normalizarCategoriaProducto(fila.categoria);
+    const tratamientosTexto = normalizarTexto(fila.tratamientos);
+    const tratamientos = tratamientosTexto
+        ? tratamientosTexto.split('|').map(item => normalizarTexto(item)).filter(Boolean)
+        : [];
+    const material = normalizarTexto(fila.material).replace(/\bcr-?39\b/i, 'CR39');
+    const materialOtro = normalizarTexto(fila.material_otro);
+    const nombrePersonalizado = normalizarTexto(fila.nombre_personalizado);
+    const descripcionPersonalizada = normalizarTexto(fila.descripcion_personalizada);
+    const proveedor = normalizarTexto(fila.proveedor);
+    const modelo = normalizarTexto(fila.modelo);
+    const marca = normalizarTexto(fila.marca);
+    const color = normalizarTexto(fila.color);
+    const tipoCristal = normalizarTexto(fila.tipo_cristal);
+    const tipoLenteContacto = normalizarTexto(fila.tipo_lente_contacto || fila.tipo_lente);
+
+    const body = {
+        categoria,
+        nombre: nombrePersonalizado,
+        descripcion: descripcionPersonalizada,
+        stock: fila.stock,
+        precio: fila.precio_venta,
+        aplicaIva: tieneValorInformativo(fila.aplica_iva) ? fila.aplica_iva : false,
+        requiere_formula: tieneValorInformativo(fila.requiere_formula) ? fila.requiere_formula : false,
+        requiere_item_padre: false,
+        activo: tieneValorInformativo(fila.activo) ? fila.activo : true
+    };
+
+    switch (categoria) {
+        case 'Cristales':
+            body.cristalConfig = JSON.stringify({
+                categoria: 'Cristales',
+                nombre: nombrePersonalizado || null,
+                marca,
+                tipoCristal,
+                presentacion: normalizarTexto(fila.presentacion),
+                modelo: tipoCristal,
+                material: materialOtro ? 'Otro' : material,
+                color: null,
+                proveedor,
+                tratamientos,
+                rangoFormula: normalizarTexto(fila.rango_formula),
+                costoLaboratorio: normalizarNumeroDesdeEntrada(fila.costo_laboratorio),
+                materialOtro,
+                descripcion: descripcionPersonalizada || null
+            });
+            break;
+        case 'Monturas':
+            body.monturaConfig = JSON.stringify({
+                categoria: 'Monturas',
+                nombre: nombrePersonalizado || null,
+                marca,
+                modelo,
+                clase: normalizarTexto(fila.clase),
+                color,
+                material,
+                proveedor,
+                descripcion: descripcionPersonalizada || null
+            });
+            break;
+        case 'Lentes de contacto':
+            body.lenteContactoConfig = JSON.stringify({
+                categoria: 'Lentes de contacto',
+                nombre: nombrePersonalizado || null,
+                marca,
+                tipoLenteContacto,
+                modelo: modelo || tipoLenteContacto,
+                color,
+                material: material || null,
+                proveedor,
+                rangoFormula: normalizarTexto(fila.rango_formula),
+                descripcion: descripcionPersonalizada || null
+            });
+            break;
+        case 'Líquidos':
+            body.liquidoConfig = JSON.stringify({
+                categoria: 'Líquidos',
+                nombre: nombrePersonalizado || null,
+                marca,
+                modelo,
+                proveedor,
+                descripcion: descripcionPersonalizada || null
+            });
+            break;
+        case 'Estuches':
+            body.estucheConfig = JSON.stringify({
+                categoria: 'Estuches',
+                nombre: nombrePersonalizado || null,
+                marca,
+                modelo,
+                material,
+                proveedor,
+                descripcion: descripcionPersonalizada || null
+            });
+            break;
+        case 'Accesorios':
+            body.accesorioConfig = JSON.stringify({
+                categoria: 'Accesorios',
+                nombre: nombrePersonalizado || null,
+                marca,
+                modelo,
+                color,
+                material,
+                proveedor,
+                descripcion: descripcionPersonalizada || null
+            });
+            break;
+        default:
+            break;
+    }
+
+    return body;
+}
+
 function construirBloquesConfigProducto(producto) {
     const descripcionLegacy = parseDescripcionCristalLegacy(producto.descripcion);
     const legacyBase = {
@@ -714,6 +1044,7 @@ function construirProductoOutput(producto, imagenUrl) {
                     nombre: normalizarTextoNullable(monturaConfig.nombre),
                     marca: normalizarTextoNullable(monturaConfig.marca),
                     modelo: normalizarTextoNullable(monturaConfig.modelo),
+                    clase: normalizarTextoNullable(monturaConfig.clase),
                     color: normalizarTextoNullable(monturaConfig.color),
                     material: normalizarTextoNullable(monturaConfig.material),
                     proveedor: normalizarTextoNullable(monturaConfig.proveedor),
@@ -805,112 +1136,18 @@ const ProductoController = {
                 }
             }
 
-            const cristalConfigBody = parseJsonObjectFlexible(req.body.cristalConfig);
-            const {
-                nombre,
-                categoria,
-                stock,
-                precio,
-                requiere_formula: requiereFormulaPar,
-                requiere_item_padre: requiereItemPadrePar,
-                activo: activo_string,
-                descripcion,
-                aplicaIva: aplicaIva_string
-            } = req.body;
+            let resultadoPersistencia;
 
-            const activo = normalizarBooleanFlexible(activo_string);
-            const aplicaIva = normalizarBooleanFlexible(aplicaIva_string);
-            const requiereFormula = normalizarBooleanFlexible(requiereFormulaPar);
-            const requiereItemPadre = normalizarBooleanFlexible(requiereItemPadrePar);
-            const categoriaNormalizada = resolverCategoriaDesdeBody(req.body);
-            const datosCategoria = resolverPersistenciaPorCategoria(categoriaNormalizada, req.body);
-            const nombreProducto = normalizarTexto(nombre) || datosCategoria.nombre;
-
-            if (!VerificationUtils.verify_nombre(nombreProducto)) {
-                return res.status(400).json({ message: "El nombre no puede quedar vacio." });
-            }
-            if (!VerificationUtils.verify_nombre(categoriaNormalizada)) {
-                return res.status(400).json({ message: "La categoria no puede quedar vacio." });
-            }
-            if (!VerificationUtils.verify_numero(stock)) {
-                return res.status(400).json({ message: "El stock debe ser numerico" });
-            }
-            if (!VerificationUtils.verify_numero(precio)) {
-                return res.status(400).json({ message: "El precio debe ser numerico" });
-            }
-            if (!VerificationUtils.verify_boolean(activo)) {
-                return res.status(400).json({ message: "El parametro 'activo' debe ser booleano." });
-            }
-            if (!VerificationUtils.verify_boolean(aplicaIva)) {
-                return res.status(400).json({ message: "El parametro 'aplicaIva' debe ser booleano." });
-            }
-            if (!VerificationUtils.verify_boolean(requiereFormula)) {
-                return res.status(400).json({ message: "El parametro 'requiere_formula' debe ser booleano." });
-            }
-            if (!VerificationUtils.verify_boolean(requiereItemPadre)) {
-                return res.status(400).json({ message: "El parametro 'requiere_item_padre' debe ser booleano." });
-            }
-            if (!CATEGORIAS_COMERCIALES.includes(categoriaNormalizada)) {
-                return res.status(400).json({ message: "La categoria enviada no forma parte del contrato comercial actual." });
+            try {
+                resultadoPersistencia = await persistirProducto({
+                    body: req.body,
+                    sedeId: req.sede.id
+                });
+            } catch (error) {
+                return res.status(error.status || 400).json({ message: error.message || 'No se pudo registrar el producto.' });
             }
 
-            const moneda_base = await ConfiguracionService.get_moneda_base(req.sede.id);
-            const moneda = moneda_base.valor;
-            
-            const objTasa = await Tasa.findOne({ where: { id: moneda } });
-            if (!objTasa) {
-                return res.status(400).json({ message: "La moneda enviada no existe: " + moneda + "." });
-            }
-
-            const count = await Producto.count({
-                where: {
-                    sede_id: req.sede.id,
-                    nombre: nombreProducto,
-                    marca: datosCategoria.marca,
-                    color: datosCategoria.color,
-                    categoria: categoriaNormalizada
-                }
-            });
-            if (count > 0) {
-                return res.status(400).json({ message: "Ya existe un producto con el mismo nombre, marca, color y categoria en la sede actual." });
-            }
-
-            let precio_number = Number(precio);
-            let precio_sin_iva = Number(precio_number);
-            if(aplicaIva) {
-                precio_sin_iva = Number(precio_number * ( 100 / 116 ));
-            }
-
-            const objProducto = await Producto.create({
-                sede_id: req.sede.id,
-                nombre: nombreProducto,
-                marca: datosCategoria.marca,
-                color: datosCategoria.color,
-                codigo: null,
-                material: datosCategoria.material,
-                proveedor: datosCategoria.proveedor,
-                categoria: categoriaNormalizada,
-                modelo: datosCategoria.modelo,
-                stock: stock,
-                precio: Number(precio_sin_iva.toFixed(2)),
-                aplica_iva: aplicaIva,
-                precio_con_iva: Number(precio_number.toFixed(2)),
-                moneda: objTasa.id,
-                activo: activo,
-                    descripcion: datosCategoria.descripcion,
-                cristal_config: datosCategoria.cristal_config,
-                montura_config: datosCategoria.montura_config,
-                lente_contacto_config: datosCategoria.lente_contacto_config,
-                liquido_config: datosCategoria.liquido_config,
-                estuche_config: datosCategoria.estuche_config,
-                accesorio_config: datosCategoria.accesorio_config,
-                requiere_formula: requiereFormula,
-                requiere_item_padre: requiereItemPadre,
-                imagen_url: "/public/images/product-generic-image.jpg?t=" + Date.now()
-            });
-
-            objProducto.codigo = `PR-${objProducto.id.toString().padStart(6, '0')}`;
-            await objProducto.save();
+            const objProducto = resultadoPersistencia.producto;
 
             const producto = objProducto.get({ plain: true });
             const producto_output = construirProductoOutput(producto);
@@ -979,106 +1216,27 @@ const ProductoController = {
                     return res.status(400).json({ message: err.message });
                 }
             }
-            const cristalConfigBody = parseJsonObjectFlexible(req.body.cristalConfig);
-            const {
-                nombre,
-                categoria,
-                stock,
-                precio,
-                requiere_formula: requiereFormulaPar,
-                requiere_item_padre: requiereItemPadrePar,
-                activo: activo_string,
-                descripcion,
-                aplicaIva: aplicaIva_string
-            } = req.body;
+            let resultadoPersistencia;
 
-            const activo = normalizarBooleanFlexible(activo_string);
-            const aplicaIva = normalizarBooleanFlexible(aplicaIva_string);
-            const requiereFormula = normalizarBooleanFlexible(requiereFormulaPar);
-            const requiereItemPadre = normalizarBooleanFlexible(requiereItemPadrePar);
-            const categoriaNormalizada = resolverCategoriaDesdeBody(req.body);
-            const datosCategoria = resolverPersistenciaPorCategoria(categoriaNormalizada, req.body);
-            const nombreProducto = normalizarTexto(nombre) || datosCategoria.nombre;
-
-            if (!VerificationUtils.verify_nombre(nombreProducto)) {
-                return res.status(400).json({ message: "El nombre no puede quedar vacio." });
-            }
-            if (!VerificationUtils.verify_nombre(categoriaNormalizada)) {
-                return res.status(400).json({ message: "La categoria no puede quedar vacio." });
-            }
-            if (!VerificationUtils.verify_numero(stock)) {
-                return res.status(400).json({ message: "El stock debe ser numerico" });
-            }
-            if (!VerificationUtils.verify_numero(precio)) {
-                return res.status(400).json({ message: "El precio debe ser numerico" });
-            }
-            if (!VerificationUtils.verify_boolean(activo)) {
-                return res.status(400).json({ message: "El parametro 'activo' debe ser booleano." });
-            }
-            if (!VerificationUtils.verify_boolean(aplicaIva)) {
-                return res.status(400).json({ message: "El parametro 'aplicaIva' debe ser booleano." });
-            }
-            if (!VerificationUtils.verify_boolean(requiereFormula)) {
-                return res.status(400).json({ message: "El parametro 'requiere_formula' debe ser booleano." });
-            }
-            if (!VerificationUtils.verify_boolean(requiereItemPadre)) {
-                return res.status(400).json({ message: "El parametro 'requiere_item_padre' debe ser booleano." });
-            }
-            if (!CATEGORIAS_COMERCIALES.includes(categoriaNormalizada)) {
-                return res.status(400).json({ message: "La categoria enviada no forma parte del contrato comercial actual." });
+            try {
+                resultadoPersistencia = await persistirProducto({
+                    body: req.body,
+                    sedeId: req.sede.id,
+                    productoActual: objProducto
+                });
+            } catch (error) {
+                return res.status(error.status || 400).json({ message: error.message || 'No se pudo actualizar el producto.' });
             }
 
-            const count = await Producto.count({
-                where: {
-                    id: { [Op.ne]: objProducto.id },
-                    sede_id: req.sede.id,
-                    nombre: nombreProducto,
-                    marca: datosCategoria.marca,
-                    color: datosCategoria.color,
-                    categoria: categoriaNormalizada
-                }
-            });
-            if (count > 0) {
-                return res.status(400).json({ message: "Ya existe un producto con el mismo nombre, marca, color y categoria en la sede actual." });
-            }
+            const productoActualizado = resultadoPersistencia.producto;
 
-            let precio_number = Number(precio);
-            let precio_sin_iva = Number(precio_number);
-            if(aplicaIva) {
-                precio_sin_iva = Number(precio_number * ( 100 / 116 ));
-            }
-
-            objProducto.nombre = nombreProducto;
-            objProducto.marca = datosCategoria.marca;
-            objProducto.color = datosCategoria.color;
-            objProducto.material = datosCategoria.material;
-            objProducto.proveedor = datosCategoria.proveedor;
-            objProducto.categoria = categoriaNormalizada;
-            objProducto.modelo = datosCategoria.modelo;
-            objProducto.stock = stock;
-            objProducto.precio = Number(precio_sin_iva.toFixed(2));
-            objProducto.aplica_iva = aplicaIva;
-            objProducto.precio_con_iva = Number(precio_number.toFixed(2));
-            objProducto.activo = activo;
-            objProducto.descripcion = datosCategoria.descripcion;
-            objProducto.cristal_config = datosCategoria.cristal_config;
-            objProducto.montura_config = datosCategoria.montura_config;
-            objProducto.lente_contacto_config = datosCategoria.lente_contacto_config;
-            objProducto.liquido_config = datosCategoria.liquido_config;
-            objProducto.estuche_config = datosCategoria.estuche_config;
-            objProducto.accesorio_config = datosCategoria.accesorio_config;
-            objProducto.requiere_formula = requiereFormula;
-            objProducto.requiere_item_padre = requiereItemPadre;
-
-            await objProducto.save();
-
-            const producto = objProducto.get({ plain: true });
+            const producto = productoActualizado.get({ plain: true });
             const producto_output = construirProductoOutput(producto);
 
             if (req.file) {
                 // Renombra el archivo subido con el ID del producto
                 const extension = path.extname(req.file.filename);
-                const nuevoNombre = `product-${objProducto.id}${extension}`;
+                const nuevoNombre = `product-${productoActualizado.id}${extension}`;
                 const oldPath = path.join("./public/images", req.nombre_imagen + extension);
                 const newPath = path.join("./public/images", nuevoNombre);
 
@@ -1086,12 +1244,99 @@ const ProductoController = {
                 fs.renameSync(oldPath, newPath);
 
                 // Actualiza la URL de la imagen en el producto
-                objProducto.imagen_url = `/public/images/${nuevoNombre}?t=${Date.now()}`;
-                await objProducto.save();
-                producto_output.imagen_url = objProducto.imagen_url;
+                productoActualizado.imagen_url = `/public/images/${nuevoNombre}?t=${Date.now()}`;
+                await productoActualizado.save();
+                producto_output.imagen_url = productoActualizado.imagen_url;
             }
 
             res.status(200).json({ message: 'ok', iva: IVA_PORCENTAJE, producto: producto_output });
+        });
+    },
+
+    import_massive: async (req, res) => {
+        if (!req.user) {
+            throw { message: 'Sesion invalida.' };
+        }
+
+        const filas = Array.isArray(req.body?.productos) ? req.body.productos : [];
+        if (filas.length === 0) {
+            return res.status(400).json({ message: 'Debe enviar al menos un producto para importar.' });
+        }
+
+        const resultados = [];
+        const duplicadosProcesados = new Map();
+
+        for (let index = 0; index < filas.length; index += 1) {
+            const fila = filas[index] || {};
+            const numeroFila = Number(fila.__rowNum__ ?? index + 2);
+
+            try {
+                const body = construirPayloadImportacionDesdeFila(fila);
+                const validacion = await validarProductoParaPersistencia({
+                    body,
+                    sedeId: req.sede.id
+                });
+                const claveDuplicado = construirClaveDuplicadoProducto({
+                    nombre: validacion.nombreProducto,
+                    marca: validacion.datosCategoria.marca,
+                    color: validacion.datosCategoria.color,
+                    categoria: validacion.categoriaNormalizada
+                });
+
+                if (duplicadosProcesados.has(claveDuplicado)) {
+                    throw {
+                        status: 400,
+                        message: `La fila duplica otra fila del mismo archivo para '${validacion.nombreProducto}'. Unifique el stock antes de importar.`
+                    };
+                }
+
+                duplicadosProcesados.set(claveDuplicado, numeroFila);
+
+                const resultado = await persistirProducto({
+                    body,
+                    sedeId: req.sede.id,
+                    permitirSumarStockDuplicado: true
+                });
+
+                resultados.push({
+                    fila: numeroFila,
+                    accion: resultado.accion,
+                    codigo: resultado.producto.codigo,
+                    nombre: resultado.producto.nombre,
+                    stock: Number(resultado.producto.stock ?? 0),
+                    message: resultado.accion === 'stock_sumado'
+                        ? 'Producto existente detectado. Se sumo el stock al inventario actual.'
+                        : resultado.accion === 'creado'
+                            ? 'Producto creado correctamente.'
+                            : 'Producto actualizado correctamente.'
+                });
+            } catch (error) {
+                resultados.push({
+                    fila: numeroFila,
+                    accion: 'error',
+                    message: error.message || 'No se pudo importar la fila.'
+                });
+            }
+        }
+
+        const resumen = resultados.reduce((acc, item) => {
+            if (item.accion === 'creado') {
+                acc.creados += 1;
+            } else if (item.accion === 'stock_sumado') {
+                acc.stockActualizado += 1;
+            } else if (item.accion === 'actualizado') {
+                acc.actualizados += 1;
+            } else {
+                acc.errores += 1;
+            }
+
+            return acc;
+        }, { total: filas.length, creados: 0, stockActualizado: 0, actualizados: 0, errores: 0 });
+
+        res.status(200).json({
+            message: 'ok',
+            resumen,
+            resultados
         });
     },
 
